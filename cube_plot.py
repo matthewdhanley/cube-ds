@@ -11,7 +11,7 @@ import logging, logging.config
 TAI_EPOCH = dt.datetime(2000,1,1,11,59,27)
 YEARMIN = 2017
 YEARMAX = 2020
-PACKETS_DIR = "Y:\\Phase_Development\\CSIM FD\\Telemetry\\json\\xb1"
+PACKETS_DIR = "PUT DIR HERE"
 CONFIG_FILE = "cube_ds.cfg"
 
 def convert_tlm_time(time_array):
@@ -324,7 +324,7 @@ def get_time_data(st,et,files):
 	return returnTime, returnData
 
 
-def getLogger():
+def get_logger():
 	"""
 	Create a logging object for easy logging
 	:return: logging object
@@ -332,12 +332,12 @@ def getLogger():
 	# set up logger from config file
 	if os.path.isfile(CONFIG_FILE):
 		logging.config.fileConfig(CONFIG_FILE)
-		logger = logging.getLogger('cube_ds')
+		logger = logging.get_logger('cube_ds')
 	else:
 		# use defaults if no config file
 		format = '%(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s'
 		logging.basicConfig(format=format)
-		logger = logging.getLogger('cube_ds')
+		logger = logging.get_logger('cube_ds')
 		logger.warning(CONFIG_FILE+' not found. Using defaults for logging.')
 
 	logger.info('Logger started.')
@@ -386,16 +386,30 @@ def plot_data(tlm,t,d):
 
 	return fig
 
+
+def usage():
+	"""
+	Prints usage statement.
+	:return: None.
+	"""
+	print("\n\npython "+sys.argv[0]+" \"package mnemonic\" [YYYY,DOY,HH,MM,SS] [YYYY,DOY,HH,MM,SS]")
+	print("Required packages: matplotlib, json, re, datetime, os, sys, and logging")
+
+
 def main():
 
 	# global logger
 	global logger
-	logger = getLogger()
+	logger = get_logger()
 
 	# input arguments
-	tlm = sys.argv[1]
-	st = sys.argv[2]
-	et = sys.argv[3]
+	try:
+		tlm = sys.argv[1]
+		st = sys.argv[2]
+		et = sys.argv[3]
+	except IndexError:
+		usage()
+		exit(0)
 
 	# extract the package and mnemonic from input string
 	package, mnemonic = get_package_item(tlm)
