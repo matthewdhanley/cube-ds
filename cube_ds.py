@@ -8,7 +8,7 @@ import re
 import os
 import configparser
 
-
+CONFIG_FILE = "cube_ds.cfg"
 decimation = 0.5  # hertz
 
 
@@ -378,10 +378,21 @@ class TlmPoint():
 			self.size = size
 
 
-def getLogger():
-	# set up logger
-	logging.config.fileConfig('cube_ds.cfg')
-	logger = logging.getLogger('cube_ds')
+def get_logger():
+	"""
+	Create a logging object for easy logging
+	:return: logging object
+	"""
+	# set up logger from config file
+	if os.path.isfile(CONFIG_FILE):
+		logging.config.fileConfig(CONFIG_FILE)
+		logger = logging.getLogger('cube_ds')
+	else:
+		# use defaults if no config file
+		format = '%(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s'
+		logging.basicConfig(format=format)
+		logger = logging.getLogger('cube_ds')
+		logger.warning(CONFIG_FILE+' not found. Using defaults for logging.')
 
 	logger.info('Logger started.')
 	return logger
@@ -407,7 +418,7 @@ class ParseError(Error):
 def main():
 	# global logger
 	global logger
-	logger = getLogger()
+	logger = get_logger()
 	config = configparser.ConfigParser()
 	config.read('cube_ds.cfg')
 	# get filename from user, auto, or hard coded
@@ -415,6 +426,8 @@ def main():
 	#rawFiles = ["D:\\bct_2018_229_08_32_19"]
 	#rawFiles = ["D:\\bct_2018_228_13_32_43"]
 	rawFiles = []
+
+	logger.debug(config)
 
 	for root, directories, filenames in os.walk(config['rundirs']['location']):
 		for filename in filenames:
