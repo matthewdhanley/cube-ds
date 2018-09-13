@@ -8,7 +8,7 @@ import re
 import os
 import configparser
 
-
+CONFIG_FILE = "cube_ds.cfg"
 decimation = 0.5  # hertz
 
 
@@ -57,7 +57,7 @@ class TelemetryFile():
 		self.packetLoc = packetFileLocation
 		# should be formatted packetname_apid1_apid2.csv
 		# i.e. fsw_09_3e.csv
-		m = re.search('([a-zA-Z]+)_([a-zA-Z\d]{2})_([a-zA-Z\d]{2})\.csv',filename)
+		m = re.search('([a-zA-Z]+)_([a-zA-Z\d]{2})_([a-zA-Z\d]{2})\.csv', filename)
 
 		# try to extract the fields
 		try:
@@ -119,11 +119,11 @@ class TelemetryFile():
 class RawFile():
 	def __init__(self, filename, packets):
 		self.filename = filename
+		logger.info('parsing file '+self.filename+'...')
 		self.rawData = np.fromfile(filename, dtype='>B')
 		# consider adding exception here for files that don't exist
 		self.fileSize = self.rawData.__sizeof__
 		self.packets = packets
-		logger.info('parsing file '+self.filename)
 		self.header = HeaderFormat()
 		self.syncSize = len(self.header.sync)
 		self.syncPossible = np.where(self.rawData == self.header.sync[0])[0]
@@ -378,10 +378,21 @@ class TlmPoint():
 			self.size = size
 
 
-def getLogger():
-	# set up logger
-	logging.config.fileConfig('cube_ds.cfg')
-	logger = logging.getLogger('cube_ds')
+def get_logger():
+	"""
+	Create a logging object for easy logging
+	:return: logging object
+	"""
+	# set up logger from config file
+	if os.path.isfile(CONFIG_FILE):
+		logging.config.fileConfig(CONFIG_FILE)
+		logger = logging.getLogger('cube_ds')
+	else:
+		# use defaults if no config file
+		format = '%(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s'
+		logging.basicConfig(format=format)
+		logger = logging.getLogger('cube_ds')
+		logger.warning(CONFIG_FILE+' not found. Using defaults for logging.')
 
 	logger.info('Logger started.')
 	return logger
@@ -407,7 +418,7 @@ class ParseError(Error):
 def main():
 	# global logger
 	global logger
-	logger = getLogger()
+	logger = get_logger()
 	config = configparser.ConfigParser()
 	config.read('cube_ds.cfg')
 	# get filename from user, auto, or hard coded
@@ -416,13 +427,27 @@ def main():
 	#rawFiles = ["D:\\bct_2018_228_13_32_43"]
 	rawFiles = []
 
+	logger.debug(config)
+
 	for root, directories, filenames in os.walk(config['rundirs']['location']):
 		for filename in filenames:
 			m = re.search('bct_\d{4}.*',filename)
 			if m:
 				rawFiles.append(os.path.join(root,filename))
 
-	tlmFiles = ["D:\\fsw_08_3e.csv"]
+
+	definitionLocaiton = config['tlm_defs']['location']
+	if not os.path.exists(definitionLocaiton):
+		logger.fatal("Telemetry Definition Directory does not exits. Check config file.")
+		exit(0)
+
+	tlmFiles = []
+	for root, directories, filenames in os.walk(config['rundirs']['location']):
+		for filename in filenames:
+			m = re.search('[A-Za-z]+_[0-9a-zA-Z]{2}_[0-9a-zA-Z]{2}\.csv', filename)
+			if m:
+				tlmFiles.append(os.path.join(root, filename))
+
 	packetFileLocation = config['telemetry']['location']
 	if not os.path.exists(packetFileLocation):
 		os.makedirs(packetFileLocation)

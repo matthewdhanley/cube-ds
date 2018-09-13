@@ -5,13 +5,18 @@ import datetime as dt
 import sys, os
 import re
 import logging, logging.config
+from cube_ds import get_logger
 
 
 # GLOBALS
 TAI_EPOCH = dt.datetime(2000,1,1,11,59,27)
 YEARMIN = 2017
 YEARMAX = 2020
-PACKETS_DIR = "PUT DIR HERE"
+
+# CHANGE THIS TO WHERE PARENT DIRECTORY OF THE JSON FILES
+PACKETS_DIR = "Y:\\Phase_Development\\CSIM FD\\Telemetry\\json\\xb1"
+
+# CONFIG FILE NOT REQUIRED, DON'T WORRY ABOUT THIS TOO MUCH
 CONFIG_FILE = "cube_ds.cfg"
 
 def convert_tlm_time(time_array):
@@ -322,26 +327,6 @@ def get_time_data(st,et,files):
 			returnData.append(data[i])
 
 	return returnTime, returnData
-
-
-def get_logger():
-	"""
-	Create a logging object for easy logging
-	:return: logging object
-	"""
-	# set up logger from config file
-	if os.path.isfile(CONFIG_FILE):
-		logging.config.fileConfig(CONFIG_FILE)
-		logger = logging.get_logger('cube_ds')
-	else:
-		# use defaults if no config file
-		format = '%(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s'
-		logging.basicConfig(format=format)
-		logger = logging.get_logger('cube_ds')
-		logger.warning(CONFIG_FILE+' not found. Using defaults for logging.')
-
-	logger.info('Logger started.')
-	return logger
 
 
 def plot_data(tlm,t,d):
