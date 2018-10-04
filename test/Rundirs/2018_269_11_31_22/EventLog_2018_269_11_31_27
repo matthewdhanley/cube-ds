@@ -1,0 +1,99 @@
+2018/269-11:31:27: Configuring for RADIO
+2018/269-11:31:27: <CFG> Dictionary cmdOpcodes previously defined
+2018/269-11:31:27: <CFG> Dictionary evtGroup previously defined
+2018/269-11:31:27: <CFG> Dictionary Events previously defined
+2018/269-11:31:27: <CFG> File Config\gumballs.xml does not exist
+2018/269-11:31:27: <HW> Waiting for connections at 0.0.0.0:1234
+2018/269-11:31:27: <HW> Waiting for connections at 0.0.0.0:1235
+2018/269-11:31:27: <HW> Waiting for connections at 0.0.0.0:1236
+2018/269-11:31:27: <HW> Waiting for connections at 0.0.0.0:40000
+2018/269-11:31:27: <HW> Waiting for connections at 0.0.0.0:41000
+2018/269-11:31:27: <CFG> File Config\gumballs.xml does not exist
+2018/269-11:31:27: <INT> Run Directory: C:\Git\csim\hydra\Rundirs\2018_269_11_31_22\
+2018/269-11:31:27: <INT> Writing note to file
+2018/269-11:31:27: <SCR> Starting script in engine 0
+2018/269-11:31:27: <SCR> Starting script init.prc
+2018/269-11:31:27: <INT> STARTUP SCRIPT
+2018/269-11:31:27: <HW> Starting new file: EventLog_2018_269_11_31_27
+2018/269-11:31:27: <INT> Loading RADIO Configuration
+2018/269-11:31:28: <INT> LOADING DC 
+2018/269-11:31:28: <DC> Loading layout file default.dc
+2018/269-11:31:28: <PAG> Gumball bat_voltage not found
+2018/269-11:31:28: <INT> STARTUP SCRIPT COMPLETE
+2018/269-11:31:28: <SCR> Done with script init.prc
+2018/269-11:31:37: <INT> START READER sbandReader
+2018/269-11:31:37: <RDR> Starting reader sbandReader
+2018/269-11:31:37: <HW> Connected to socket
+2018/269-11:31:55: <HW> Starting new file: vcid0_2018_269_11_31_55
+2018/269-11:31:55: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-11:31:55: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-11:31:55: 2018/269-11:31:55: bct_time_valid = NO
+
+2018/269-11:31:55: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-11:31:55: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-11:31:55: 2018/269-11:31:55: bct_recommend_sun_point = YES
+
+2018/269-11:31:55: 2018/269-11:31:55: bct_num_attitude_stars < 12.000000
+
+2018/269-11:31:55: 2018/269-11:31:55: bct_gps_valid = NO
+
+2018/269-11:31:55: <HW> Starting new file: bct_2018_269_11_31_55
+2018/269-11:31:55: <NOT> Got socket close event
+2018/269-11:31:55: <NOT> Got socket close event
+2018/269-11:32:15: <DEC> VCDU seq number 54 not expected
+2018/269-11:32:20: <DEC> sbandVCDUDecoder partial packet too large (3156) for subPkt (2048)
+2018/269-11:32:20: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-11:32:40: 2018/269-11:32:40: bct_num_attitude_stars is now green
+
+2018/269-11:32:40: 2018/269-11:32:40: bct_num_attitude_stars < 12.000000
+
+2018/269-11:32:40: 2018/269-11:32:40: bct_gps_valid = NO
+
+2018/269-11:32:45: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-11:32:50: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-11:32:50: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-11:33:05: <DEC> VCDU seq number 62 not expected
+2018/269-11:33:10: 2018/269-11:33:10: bct_num_attitude_stars > 100.000000
+
+2018/269-11:33:10: 2018/269-11:33:10: bct_num_attitude_stars < 12.000000
+
+2018/269-11:33:25: <DEC> VCDU seq number 65 not expected
+2018/269-11:33:35: <DEC> VCDU seq number 67 not expected
+2018/269-11:34:05: 2018/269-11:34:05: bct_new_packet_count > 52.000000
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_hr_exec_time_ms > 200.000000
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_battery_voltage > 13.500000
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_num_attitude_stars is now green
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_drag_est > 110.000000
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_num_attitude_stars > 100.000000
+
+2018/269-11:34:05: 2018/269-11:34:05: bct_hr_exec_time_ms is now green
+
+2018/269-11:34:10: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-11:34:15: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-11:34:15: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-11:34:15: 2018/269-11:34:15: bct_recommend_sun_point = YES
+
+2018/269-11:34:15: 2018/269-11:34:15: bct_drag_est is now green
+
+2018/269-11:34:15: 2018/269-11:34:15: bct_num_attitude_stars < 12.000000
+
+2018/269-11:34:15: 2018/269-11:34:15: bct_new_packet_count is now green
+
+2018/269-11:34:15: 2018/269-11:34:15: bct_battery_voltage is now green
+
+2018/269-11:34:15: 2018/269-11:34:15: bct_gps_valid = NO
+
+2018/269-11:34:15: <NOT> Got socket close event
+2018/269-11:34:15: <NOT> Got socket close event
+2018/269-11:34:30: <DEC> VCDU seq number 75 not expected
+2018/269-11:34:50: <DEC> VCDU seq number 78 not expected
+2018/269-11:34:55: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-11:34:55: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-11:35:05: <HW> SDR_Radio_Sband Read socket error 2
+2018/269-11:35:05: <HW> Got socket close event: 10.247.13.234:16100
+2018/269-11:35:05: <HW> Got socket close event: 

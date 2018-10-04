@@ -1,0 +1,757 @@
+2018/269-12:15:51: Configuring for RADIO
+2018/269-12:15:51: <CFG> Dictionary cmdOpcodes previously defined
+2018/269-12:15:51: <CFG> Dictionary evtGroup previously defined
+2018/269-12:15:51: <CFG> Dictionary Events previously defined
+2018/269-12:15:51: <CFG> File Config\gumballs.xml does not exist
+2018/269-12:15:51: <HW> Waiting for connections at 0.0.0.0:1234
+2018/269-12:15:51: <HW> Waiting for connections at 0.0.0.0:1235
+2018/269-12:15:51: <HW> Waiting for connections at 0.0.0.0:1236
+2018/269-12:15:51: <HW> Waiting for connections at 0.0.0.0:40000
+2018/269-12:15:51: <HW> Waiting for connections at 0.0.0.0:41000
+2018/269-12:15:51: <CFG> File Config\gumballs.xml does not exist
+2018/269-12:15:51: <INT> Run Directory: C:\Git\csim\hydra\Rundirs\2018_269_12_15_46\
+2018/269-12:15:51: <INT> Writing note to file
+2018/269-12:15:51: <SCR> Starting script in engine 0
+2018/269-12:15:51: <SCR> Starting script init.prc
+2018/269-12:15:51: <INT> STARTUP SCRIPT
+2018/269-12:15:51: <HW> Starting new file: EventLog_2018_269_12_15_51
+2018/269-12:15:51: <INT> Loading RADIO Configuration
+2018/269-12:15:52: <INT> LOADING DC 
+2018/269-12:15:52: <DC> Loading layout file default.dc
+2018/269-12:15:52: <PAG> Gumball bat_voltage not found
+2018/269-12:15:52: <INT> STARTUP SCRIPT COMPLETE
+2018/269-12:15:52: <SCR> Done with script init.prc
+2018/269-12:16:02: <INT> START READER sbandReader
+2018/269-12:16:02: <RDR> Starting reader sbandReader
+2018/269-12:16:02: <HW> Connected to socket
+2018/269-12:16:27: <HW> Starting new file: vcid0_2018_269_12_16_27
+2018/269-12:16:27: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:16:27: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:16:27: 2018/269-12:16:27: bct_time_valid = NO
+
+2018/269-12:16:27: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:16:27: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:16:27: 2018/269-12:16:27: bct_recommend_sun_point = YES
+
+2018/269-12:16:27: 2018/269-12:16:27: bct_num_attitude_stars < 12.000000
+
+2018/269-12:16:27: 2018/269-12:16:27: bct_gps_valid = NO
+
+2018/269-12:16:27: <HW> Starting new file: bct_2018_269_12_16_27
+2018/269-12:16:27: <NOT> Got socket close event
+2018/269-12:16:47: 2018/269-12:16:47: bct_drag_est > 110.000000
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_num_attitude_stars > 100.000000
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_new_packet_count > 52.000000
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_battery_voltage > 13.500000
+
+2018/269-12:16:47: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:16:47: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:16:47: 2018/269-12:16:47: bct_time_valid = NO
+
+2018/269-12:16:47: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:16:47: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:16:47: 2018/269-12:16:47: bct_recommend_sun_point = YES
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_drag_est is now green
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_num_attitude_stars < 12.000000
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_new_packet_count is now green
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_battery_voltage is now green
+
+2018/269-12:16:47: 2018/269-12:16:47: bct_gps_valid = NO
+
+2018/269-12:16:47: <NOT> Got socket close event
+2018/269-12:16:47: <NOT> Got socket close event
+2018/269-12:17:27: <DEC> VCDU seq number 227 not expected
+2018/269-12:17:32: 2018/269-12:17:32: bct_drag_est > 110.000000
+
+2018/269-12:17:32: 2018/269-12:17:32: bct_num_attitude_stars > 100.000000
+
+2018/269-12:17:32: 2018/269-12:17:32: bct_new_packet_count > 52.000000
+
+2018/269-12:17:32: 2018/269-12:17:32: bct_battery_voltage < 9.850000
+
+2018/269-12:17:32: 2018/269-12:17:32: bct_num_attitude_stars < 12.000000
+
+2018/269-12:17:42: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:17:42: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:17:42: 2018/269-12:17:42: bct_recommend_sun_point = YES
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_drag_est is now green
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_new_packet_count is now green
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_battery_voltage is now green
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_num_attitude_stars > 100.000000
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_new_packet_count > 52.000000
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_battery_voltage > 13.500000
+
+2018/269-12:17:42: 2018/269-12:17:42: bct_num_attitude_stars is now green
+
+2018/269-12:17:42: <NOT> Got socket close event
+2018/269-12:17:42: <NOT> Got socket close event
+2018/269-12:17:47: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:17:47: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:17:52: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:18:02: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:18:02: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:18:10: <DEC> VCDU seq number 203 not expected
+2018/269-12:18:22: <DEC> VCDU seq number 235 not expected
+2018/269-12:18:22: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:18:22: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:18:22: 2018/269-12:18:22: bct_recommend_sun_point = YES
+
+2018/269-12:18:22: 2018/269-12:18:22: bct_num_attitude_stars > 100.000000
+
+2018/269-12:18:22: 2018/269-12:18:22: bct_num_attitude_stars is now green
+
+2018/269-12:18:22: <NOT> Got socket close event
+2018/269-12:18:22: <NOT> Got socket close event
+2018/269-12:18:27: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:18:27: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:18:32: 2018/269-12:18:32: bct_drag_est > 110.000000
+
+2018/269-12:18:32: 2018/269-12:18:32: bct_num_attitude_stars < 12.000000
+
+2018/269-12:18:32: 2018/269-12:18:32: bct_new_packet_count is now green
+
+2018/269-12:18:32: 2018/269-12:18:32: bct_battery_voltage is now green
+
+2018/269-12:18:32: 2018/269-12:18:32: bct_gps_valid = NO
+
+2018/269-12:18:37: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:18:47: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:18:47: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:18:47: 2018/269-12:18:47: bct_time_valid = NO
+
+2018/269-12:18:47: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:18:47: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:18:47: 2018/269-12:18:47: bct_recommend_sun_point = YES
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_drag_est is now green
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_new_packet_count > 52.000000
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_battery_voltage < 9.850000
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_num_attitude_stars > 100.000000
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_num_attitude_stars < 12.000000
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_new_packet_count is now green
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_battery_voltage is now green
+
+2018/269-12:18:47: 2018/269-12:18:47: bct_gps_valid = NO
+
+2018/269-12:18:47: <NOT> Got socket close event
+2018/269-12:18:47: <NOT> Got socket close event
+2018/269-12:18:57: <DEC> VCDU seq number 241 not expected
+2018/269-12:19:22: <DEC> VCDU seq number 245 not expected
+2018/269-12:19:32: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:19:52: <DEC> VCDU seq number 249 not expected
+2018/269-12:20:02: 2018/269-12:20:02: bct_num_attitude_stars > 100.000000
+
+2018/269-12:20:02: 2018/269-12:20:02: bct_new_packet_count > 52.000000
+
+2018/269-12:20:02: 2018/269-12:20:02: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:20:02: 2018/269-12:20:02: bct_battery_voltage > 13.500000
+
+2018/269-12:20:22: <DEC> VCDU seq number 254 not expected
+2018/269-12:20:27: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:20:37: <DEC> VCDU seq number 0 not expected
+2018/269-12:20:37: 2018/269-12:20:37: bct_drag_est > 110.000000
+
+2018/269-12:20:37: 2018/269-12:20:37: bct_hr_exec_time_ms is now green
+
+2018/269-12:20:57: <DEC> VCDU seq number 3 not expected
+2018/269-12:20:57: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:20:57: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:20:57: 2018/269-12:20:57: bct_recommend_sun_point = YES
+
+2018/269-12:20:57: 2018/269-12:20:57: bct_drag_est is now green
+
+2018/269-12:20:57: 2018/269-12:20:57: bct_num_attitude_stars < 12.000000
+
+2018/269-12:20:57: 2018/269-12:20:57: bct_new_packet_count is now green
+
+2018/269-12:20:57: 2018/269-12:20:57: bct_battery_voltage is now green
+
+2018/269-12:20:57: 2018/269-12:20:57: bct_gps_valid = NO
+
+2018/269-12:20:57: <NOT> Got socket close event
+2018/269-12:20:57: <NOT> Got socket close event
+2018/269-12:21:07: <DEC> VCDU seq number 5 not expected
+2018/269-12:21:12: 2018/269-12:21:12: bct_drag_est > 110.000000
+
+2018/269-12:21:12: 2018/269-12:21:12: bct_num_attitude_stars is now green
+
+2018/269-12:21:12: 2018/269-12:21:12: bct_new_packet_count > 52.000000
+
+2018/269-12:21:12: 2018/269-12:21:12: bct_battery_voltage > 13.500000
+
+2018/269-12:21:22: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:21:22: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:21:22: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:21:22: 2018/269-12:21:22: bct_time_valid = NO
+
+2018/269-12:21:22: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:21:22: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:21:22: 2018/269-12:21:22: bct_recommend_sun_point = YES
+
+2018/269-12:21:22: 2018/269-12:21:22: bct_drag_est is now green
+
+2018/269-12:21:22: 2018/269-12:21:22: bct_num_attitude_stars < 12.000000
+
+2018/269-12:21:22: 2018/269-12:21:22: bct_new_packet_count is now green
+
+2018/269-12:21:22: 2018/269-12:21:22: bct_battery_voltage is now green
+
+2018/269-12:21:22: 2018/269-12:21:22: bct_gps_valid = NO
+
+2018/269-12:21:22: <NOT> Got socket close event
+2018/269-12:21:22: <NOT> Got socket close event
+2018/269-12:21:47: <DEC> VCDU seq number 11 not expected
+2018/269-12:21:57: 2018/269-12:21:57: bct_drag_est > 110.000000
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_num_attitude_stars > 100.000000
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_new_packet_count > 52.000000
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_battery_voltage > 13.500000
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_num_attitude_stars < 12.000000
+
+2018/269-12:21:57: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:21:57: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:21:57: 2018/269-12:21:57: bct_recommend_sun_point = YES
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_drag_est is now green
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_new_packet_count is now green
+
+2018/269-12:21:57: 2018/269-12:21:57: bct_battery_voltage is now green
+
+2018/269-12:21:57: <NOT> Got socket close event
+2018/269-12:21:57: <NOT> Got socket close event
+2018/269-12:22:07: 2018/269-12:22:07: bct_gps_valid = NO
+
+2018/269-12:22:12: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:22:17: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:22:25: <DEC> VCDU seq number 193 not expected
+2018/269-12:22:47: <DEC> VCDU seq number 20 not expected
+2018/269-12:22:52: <DEC> sbandVCDUDecoder partial packet too large (3156) for subPkt (2048)
+2018/269-12:22:52: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:22:57: 2018/269-12:22:57: bct_drag_est > 110.000000
+
+2018/269-12:23:02: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:23:17: <DEC> VCDU seq number 25 not expected
+2018/269-12:23:22: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:23:22: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:23:22: 2018/269-12:23:22: bct_recommend_sun_point = YES
+
+2018/269-12:23:22: 2018/269-12:23:22: bct_drag_est is now green
+
+2018/269-12:23:22: 2018/269-12:23:22: bct_gps_valid = NO
+
+2018/269-12:23:22: <NOT> Got socket close event
+2018/269-12:23:22: <NOT> Got socket close event
+2018/269-12:23:47: <DEC> VCDU seq number 30 not expected
+2018/269-12:24:02: <DEC> VCDU seq number 32 not expected
+2018/269-12:24:03: <DEC> VCDU seq number 8 not expected
+2018/269-12:24:22: <DEC> VCDU seq number 35 not expected
+2018/269-12:24:37: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:24:47: <DEC> VCDU seq number 39 not expected
+2018/269-12:24:52: 2018/269-12:24:52: bct_new_packet_count > 52.000000
+
+2018/269-12:24:52: 2018/269-12:24:52: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_drag_est > 110.000000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_num_attitude_stars < 16.000000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_new_packet_count is now green
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_battery_voltage > 13.500000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_num_attitude_stars > 100.000000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_num_attitude_stars is now green
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_new_packet_count > 52.000000
+
+2018/269-12:25:02: 2018/269-12:25:02: bct_hr_exec_time_ms is now green
+
+2018/269-12:25:27: <DEC> VCDU seq number 45 not expected
+2018/269-12:25:32: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:25:32: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:25:32: 2018/269-12:25:32: bct_recommend_sun_point = YES
+
+2018/269-12:25:32: 2018/269-12:25:32: bct_drag_est is now green
+
+2018/269-12:25:32: 2018/269-12:25:32: bct_num_attitude_stars < 12.000000
+
+2018/269-12:25:32: 2018/269-12:25:32: bct_new_packet_count is now green
+
+2018/269-12:25:32: 2018/269-12:25:32: bct_battery_voltage is now green
+
+2018/269-12:25:32: 2018/269-12:25:32: bct_gps_valid = NO
+
+2018/269-12:25:32: <NOT> Got socket close event
+2018/269-12:25:32: <NOT> Got socket close event
+2018/269-12:25:37: 2018/269-12:25:37: bct_drag_est > 110.000000
+
+2018/269-12:25:37: 2018/269-12:25:37: bct_num_attitude_stars is now green
+
+2018/269-12:25:37: 2018/269-12:25:37: bct_new_packet_count > 52.000000
+
+2018/269-12:25:37: 2018/269-12:25:37: bct_battery_voltage > 13.500000
+
+2018/269-12:25:37: 2018/269-12:25:37: bct_num_attitude_stars < 12.000000
+
+2018/269-12:25:52: <DEC> VCDU seq number 49 not expected
+2018/269-12:26:07: <DEC> VCDU seq number 51 not expected
+2018/269-12:26:07: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:26:07: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:26:07: 2018/269-12:26:07: bct_time_valid = NO
+
+2018/269-12:26:07: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:26:07: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:26:07: 2018/269-12:26:07: bct_recommend_sun_point = YES
+
+2018/269-12:26:07: 2018/269-12:26:07: bct_drag_est is now green
+
+2018/269-12:26:07: 2018/269-12:26:07: bct_new_packet_count is now green
+
+2018/269-12:26:07: 2018/269-12:26:07: bct_battery_voltage is now green
+
+2018/269-12:26:07: <NOT> Got socket close event
+2018/269-12:26:07: <NOT> Got socket close event
+2018/269-12:26:12: 2018/269-12:26:12: bct_num_attitude_stars > 100.000000
+
+2018/269-12:26:12: 2018/269-12:26:12: bct_new_packet_count > 52.000000
+
+2018/269-12:26:12: 2018/269-12:26:12: bct_battery_voltage > 13.500000
+
+2018/269-12:26:17: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:26:17: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:26:37: <DEC> VCDU seq number 56 not expected
+2018/269-12:26:52: <DEC> VCDU seq number 58 not expected
+2018/269-12:26:52: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:26:52: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:26:52: 2018/269-12:26:52: bct_recommend_sun_point = YES
+
+2018/269-12:26:52: 2018/269-12:26:52: bct_num_attitude_stars < 12.000000
+
+2018/269-12:26:52: 2018/269-12:26:52: bct_new_packet_count is now green
+
+2018/269-12:26:52: 2018/269-12:26:52: bct_battery_voltage is now green
+
+2018/269-12:26:52: 2018/269-12:26:52: bct_gps_valid = NO
+
+2018/269-12:26:52: <NOT> Got socket close event
+2018/269-12:26:52: <NOT> Got socket close event
+2018/269-12:27:22: <DEC> VCDU seq number 62 not expected
+2018/269-12:27:32: 2018/269-12:27:32: bct_drag_est > 110.000000
+
+2018/269-12:27:57: <DEC> VCDU seq number 65 not expected
+2018/269-12:27:57: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:27:57: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:27:57: 2018/269-12:27:57: bct_recommend_sun_point = YES
+
+2018/269-12:27:57: 2018/269-12:27:57: bct_drag_est is now green
+
+2018/269-12:27:57: <NOT> Got socket close event
+2018/269-12:27:57: <NOT> Got socket close event
+2018/269-12:28:17: <DEC> VCDU seq number 67 not expected
+2018/269-12:28:42: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:28:42: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:28:42: 2018/269-12:28:42: bct_drag_est > 110.000000
+
+2018/269-12:28:42: 2018/269-12:28:42: bct_num_attitude_stars > 100.000000
+
+2018/269-12:28:42: 2018/269-12:28:42: bct_new_packet_count > 52.000000
+
+2018/269-12:28:42: 2018/269-12:28:42: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:28:42: 2018/269-12:28:42: bct_battery_voltage > 13.500000
+
+2018/269-12:28:42: 2018/269-12:28:42: bct_num_attitude_stars is now green
+
+2018/269-12:28:47: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:28:47: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:28:52: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:28:57: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:28:57: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:29:27: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:29:27: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:29:27: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:29:27: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:29:27: 2018/269-12:29:27: bct_time_valid = NO
+
+2018/269-12:29:27: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:29:27: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:29:27: 2018/269-12:29:27: bct_recommend_sun_point = YES
+
+2018/269-12:29:27: 2018/269-12:29:27: bct_drag_est is now green
+
+2018/269-12:29:27: 2018/269-12:29:27: bct_num_attitude_stars < 12.000000
+
+2018/269-12:29:27: 2018/269-12:29:27: bct_hr_exec_time_ms is now green
+
+2018/269-12:29:27: 2018/269-12:29:27: bct_num_attitude_stars is now green
+
+2018/269-12:29:27: <NOT> Got socket close event
+2018/269-12:29:27: <NOT> Got socket close event
+2018/269-12:29:47: <DEC> VCDU seq number 75 not expected
+2018/269-12:29:47: 2018/269-12:29:47: bct_num_attitude_stars < 12.000000
+
+2018/269-12:29:47: 2018/269-12:29:47: bct_new_packet_count is now green
+
+2018/269-12:29:47: 2018/269-12:29:47: bct_battery_voltage is now green
+
+2018/269-12:29:47: 2018/269-12:29:47: bct_gps_valid = NO
+
+2018/269-12:29:57: <DEC> VCDU seq number 77 not expected
+2018/269-12:30:07: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:30:17: 2018/269-12:30:17: bct_drag_est > 110.000000
+
+2018/269-12:30:22: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:30:22: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:30:32: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:30:32: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:30:32: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:30:32: 2018/269-12:30:32: bct_recommend_sun_point = YES
+
+2018/269-12:30:32: 2018/269-12:30:32: bct_drag_est is now green
+
+2018/269-12:30:32: 2018/269-12:30:32: bct_new_packet_count > 52.000000
+
+2018/269-12:30:32: 2018/269-12:30:32: bct_battery_voltage > 13.500000
+
+2018/269-12:30:32: 2018/269-12:30:32: bct_num_attitude_stars > 100.000000
+
+2018/269-12:30:32: <NOT> Got socket close event
+2018/269-12:30:32: <NOT> Got socket close event
+2018/269-12:30:37: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:30:37: <DEC> VCDU seq number 216 not expected
+2018/269-12:30:52: <DEC> VCDU seq number 85 not expected
+2018/269-12:30:52: 2018/269-12:30:52: bct_num_attitude_stars < 12.000000
+
+2018/269-12:30:52: 2018/269-12:30:52: bct_new_packet_count is now green
+
+2018/269-12:30:52: 2018/269-12:30:52: bct_battery_voltage is now green
+
+2018/269-12:30:52: 2018/269-12:30:52: bct_gps_valid = NO
+
+2018/269-12:30:57: 2018/269-12:30:57: bct_new_packet_count > 52.000000
+
+2018/269-12:30:57: 2018/269-12:30:57: bct_battery_voltage > 13.500000
+
+2018/269-12:30:57: 2018/269-12:30:57: bct_num_attitude_stars > 100.000000
+
+2018/269-12:31:02: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:31:07: 2018/269-12:31:07: bct_drag_est > 110.000000
+
+2018/269-12:31:07: 2018/269-12:31:07: bct_battery_voltage < 9.850000
+
+2018/269-12:31:07: 2018/269-12:31:07: bct_num_attitude_stars < 12.000000
+
+2018/269-12:31:07: 2018/269-12:31:07: bct_gps_valid = NO
+
+2018/269-12:31:17: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:31:17: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:31:17: 2018/269-12:31:17: bct_time_valid = NO
+
+2018/269-12:31:17: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:31:17: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:31:17: 2018/269-12:31:17: bct_recommend_sun_point = YES
+
+2018/269-12:31:17: 2018/269-12:31:17: bct_drag_est is now green
+
+2018/269-12:31:17: 2018/269-12:31:17: bct_new_packet_count is now green
+
+2018/269-12:31:17: 2018/269-12:31:17: bct_battery_voltage is now green
+
+2018/269-12:31:17: <NOT> Got socket close event
+2018/269-12:31:17: <NOT> Got socket close event
+2018/269-12:31:22: <DEC> sbandVCDUDecoder partial packet too large (3156) for subPkt (2048)
+2018/269-12:31:22: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:31:22: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:31:27: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:31:27: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:31:37: 2018/269-12:31:37: bct_drag_est > 110.000000
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_num_attitude_stars > 100.000000
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_new_packet_count > 52.000000
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_battery_voltage > 13.500000
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_num_attitude_stars is now green
+
+2018/269-12:31:37: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:31:37: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:31:37: 2018/269-12:31:37: bct_time_valid = NO
+
+2018/269-12:31:37: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:31:37: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:31:37: 2018/269-12:31:37: bct_recommend_sun_point = YES
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_drag_est is now green
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_num_attitude_stars < 12.000000
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_new_packet_count is now green
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_battery_voltage is now green
+
+2018/269-12:31:37: 2018/269-12:31:37: bct_gps_valid = NO
+
+2018/269-12:31:37: <NOT> Got socket close event
+2018/269-12:31:37: <NOT> Got socket close event
+2018/269-12:31:47: 2018/269-12:31:47: bct_drag_est > 110.000000
+
+2018/269-12:32:02: <DEC> VCDU seq number 96 not expected
+2018/269-12:32:07: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:32:07: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:32:07: 2018/269-12:32:07: bct_recommend_sun_point = YES
+
+2018/269-12:32:07: 2018/269-12:32:07: bct_drag_est is now green
+
+2018/269-12:32:07: 2018/269-12:32:07: bct_num_attitude_stars is now green
+
+2018/269-12:32:07: 2018/269-12:32:07: bct_new_packet_count < 49.000000
+
+2018/269-12:32:07: 2018/269-12:32:07: bct_battery_voltage > 13.500000
+
+2018/269-12:32:07: <NOT> Got socket close event
+2018/269-12:32:07: <NOT> Got socket close event
+2018/269-12:32:12: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:32:12: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:32:22: 2018/269-12:32:22: bct_num_attitude_stars < 12.000000
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_new_packet_count > 52.000000
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_battery_voltage is now green
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_num_attitude_stars > 100.000000
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_num_attitude_stars < 12.000000
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_new_packet_count is now green
+
+2018/269-12:32:22: 2018/269-12:32:22: bct_gps_valid = NO
+
+2018/269-12:32:42: <DEC> VCDU seq number 102 not expected
+2018/269-12:32:42: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:32:42: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:32:42: 2018/269-12:32:42: bct_time_valid = NO
+
+2018/269-12:32:42: 2018/269-12:32:42: bct_battery_voltage > 13.500000
+
+2018/269-12:32:42: 2018/269-12:32:42: bct_num_attitude_stars is now green
+
+2018/269-12:32:42: <NOT> Got socket close event
+2018/269-12:32:42: <NOT> Got socket close event
+2018/269-12:32:52: <DEC> VCDU seq number 104 not expected
+2018/269-12:32:57: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:33:07: 2018/269-12:33:07: bct_num_attitude_stars < 12.000000
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_battery_voltage is now green
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_gps_valid = NO
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_num_attitude_stars > 100.000000
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_new_packet_count > 52.000000
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_hr_exec_time_ms > 190.000000
+
+2018/269-12:33:07: 2018/269-12:33:07: bct_battery_voltage > 13.500000
+
+2018/269-12:33:12: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:33:12: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:33:17: 2018/269-12:33:17: bct_num_attitude_stars < 12.000000
+
+2018/269-12:33:17: 2018/269-12:33:17: bct_new_packet_count is now green
+
+2018/269-12:33:17: 2018/269-12:33:17: bct_hr_exec_time_ms is now green
+
+2018/269-12:33:17: 2018/269-12:33:17: bct_battery_voltage is now green
+
+2018/269-12:33:17: 2018/269-12:33:17: bct_gps_valid = NO
+
+2018/269-12:33:32: <DEC> VCDU seq number 110 not expected
+2018/269-12:33:52: <DEC> VCDU seq number 113 not expected
+2018/269-12:33:52: 2018/269-12:33:52: bct_drag_est > 110.000000
+
+2018/269-12:33:52: 2018/269-12:33:52: bct_num_attitude_stars is now green
+
+2018/269-12:33:52: 2018/269-12:33:52: bct_new_packet_count > 52.000000
+
+2018/269-12:33:52: 2018/269-12:33:52: bct_battery_voltage > 13.500000
+
+2018/269-12:34:02: <DEC> VCDU seq number 115 not expected
+2018/269-12:34:12: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:34:12: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:34:12: 2018/269-12:34:12: bct_time_valid = NO
+
+2018/269-12:34:12: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:34:12: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:34:12: 2018/269-12:34:12: bct_recommend_sun_point = YES
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_drag_est is now green
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_num_attitude_stars < 12.000000
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_num_attitude_stars is now green
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_num_attitude_stars > 100.000000
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_new_packet_count is now green
+
+2018/269-12:34:12: 2018/269-12:34:12: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:34:12: <NOT> Got socket close event
+2018/269-12:34:12: <NOT> Got socket close event
+2018/269-12:34:17: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:34:17: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:34:22: 2018/269-12:34:22: bct_hr_exec_time_ms is now green
+
+2018/269-12:34:22: 2018/269-12:34:22: bct_battery_voltage is now green
+
+2018/269-12:34:22: 2018/269-12:34:22: bct_num_attitude_stars < 12.000000
+
+2018/269-12:34:22: 2018/269-12:34:22: bct_gps_valid = NO
+
+2018/269-12:34:32: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:34:42: <DEC> VCDU seq number 121 not expected
+2018/269-12:35:07: <DEC> VCDU seq number 125 not expected
+2018/269-12:35:32: <DEC> VCDU seq number 129 not expected
+2018/269-12:35:42: 2018/269-12:35:42: bct_new_packet_count < 48.000000
+
+2018/269-12:35:42: 2018/269-12:35:42: bct_battery_voltage > 13.500000
+
+2018/269-12:35:47: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:35:47: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:35:52: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:35:52: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:36:07: <DEC> VCDU seq number 134 not expected
+2018/269-12:36:37: <DEC> VCDU seq number 139 not expected
+2018/269-12:36:47: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:36:47: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:36:47: 2018/269-12:36:47: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:36:47: 2018/269-12:36:47: bct_battery_voltage < 10.500000
+
+2018/269-12:36:47: 2018/269-12:36:47: bct_num_attitude_stars is now green
+
+2018/269-12:36:52: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:36:52: <DEC> Decoder bctTlmDecoder cont pkt: No start of packet found
+2018/269-12:36:57: 2018/269-12:36:57: bct_drag_est > 110.000000
+
+2018/269-12:36:57: 2018/269-12:36:57: bct_num_attitude_stars > 100.000000
+
+2018/269-12:36:57: 2018/269-12:36:57: bct_new_packet_count is now green
+
+2018/269-12:36:57: 2018/269-12:36:57: bct_hr_exec_time_ms is now green
+
+2018/269-12:36:57: 2018/269-12:36:57: bct_battery_voltage is now green
+
+2018/269-12:36:57: 2018/269-12:36:57: bct_num_attitude_stars < 12.000000
+
+2018/269-12:37:07: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:37:07: 2018/269-12:37:07: bct_num_attitude_stars > 100.000000
+
+2018/269-12:37:07: 2018/269-12:37:07: bct_new_packet_count > 52.000000
+
+2018/269-12:37:07: 2018/269-12:37:07: bct_hr_exec_time_ms > 200.000000
+
+2018/269-12:37:07: 2018/269-12:37:07: bct_battery_voltage > 13.500000
+
+2018/269-12:37:17: <DEC> VCDU seq number 145 not expected
+2018/269-12:37:22: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:37:22: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:37:22: 2018/269-12:37:22: bct_recommend_sun_point = YES
+
+2018/269-12:37:22: 2018/269-12:37:22: bct_drag_est is now green
+
+2018/269-12:37:22: 2018/269-12:37:22: bct_num_attitude_stars < 12.000000
+
+2018/269-12:37:22: 2018/269-12:37:22: bct_new_packet_count is now green
+
+2018/269-12:37:22: 2018/269-12:37:22: bct_hr_exec_time_ms is now green
+
+2018/269-12:37:22: 2018/269-12:37:22: bct_gps_valid = NO
+
+2018/269-12:37:22: <NOT> Got socket close event
+2018/269-12:37:22: <NOT> Got socket close event
+2018/269-12:37:37: <DEC> VCDU seq number 148 not expected
+2018/269-12:37:42: 2018/269-12:37:42: bct_drag_est > 110.000000
+
+2018/269-12:37:42: 2018/269-12:37:42: bct_num_attitude_stars > 100.000000
+
+2018/269-12:37:42: 2018/269-12:37:42: bct_battery_voltage is now green
+
+2018/269-12:37:42: 2018/269-12:37:42: bct_num_attitude_stars < 12.000000
+
+2018/269-12:38:02: <DEC> VCDU seq number 152 not expected
+2018/269-12:38:07: 2018/269-12:38:07: bct_drag_est is now green
+
+2018/269-12:38:07: 2018/269-12:38:07: bct_num_attitude_stars > 100.000000
+
+2018/269-12:38:07: 2018/269-12:38:07: bct_new_packet_count > 52.000000
+
+2018/269-12:38:07: 2018/269-12:38:07: bct_battery_voltage > 13.500000
+
+2018/269-12:38:07: 2018/269-12:38:07: bct_num_attitude_stars < 12.000000
+
+2018/269-12:38:22: <DEC> VCDU seq number 155 not expected
+2018/269-12:38:40: <DEC> VCDU seq number 194 not expected
+2018/269-12:38:47: <DEC> VCDU seq number 159 not expected
+2018/269-12:38:57: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:38:57: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_time_valid = NO
+2018/269-12:38:57: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_time_valid = NO
+2018/269-12:38:57: 2018/269-12:38:57: bct_time_valid = NO
+
+2018/269-12:38:57: 2018/269-12:38:57: bct_drag_est > 110.000000
+
+2018/269-12:38:57: 2018/269-12:38:57: bct_num_attitude_stars is now green
+
+2018/269-12:38:57: <NOT> Got socket close event
+2018/269-12:38:57: <NOT> Got socket close event
+2018/269-12:39:02: <DEC> Decoder bctTlmDecoder packet length does not match length field
+2018/269-12:39:02: <DEC> Decoder bctTlmDecoder last pkt: No start of packet found
+2018/269-12:39:07: 2018/269-12:39:07: bct_num_attitude_stars < 12.000000
+
+2018/269-12:39:07: 2018/269-12:39:07: bct_new_packet_count is now green
+
+2018/269-12:39:07: 2018/269-12:39:07: bct_battery_voltage is now green
+
+2018/269-12:39:47: <DEC> VCDU seq number 168 not expected
+2018/269-12:40:17: <DEC> VCDU seq number 171 not expected
+2018/269-12:40:17: <NOT> Sending email to 2312863037@msg.fi.google.com with message bct_recommend_sun_point = YES
+2018/269-12:40:17: <NOT> Sending email to maha2895@lasp.colorado.edu with message bct_recommend_sun_point = YES
+2018/269-12:40:17: 2018/269-12:40:17: bct_recommend_sun_point = YES
+
+2018/269-12:40:17: 2018/269-12:40:17: bct_drag_est is now green
+
+2018/269-12:40:17: 2018/269-12:40:17: bct_gps_valid = NO
+
+2018/269-12:40:17: <NOT> Got socket close event
+2018/269-12:40:17: <NOT> Got socket close event
+2018/269-12:40:27: <DEC> VCDU seq number 173 not expected
+2018/269-12:41:07: <DEC> VCDU seq number 176 not expected
+2018/269-12:41:37: <DEC> VCDU seq number 178 not expected
+2018/269-14:21:35: <HW> Got socket close event: 10.247.13.234:16100
+2018/269-14:21:35: <HW> SDR_Radio_Sband Read socket error 2
