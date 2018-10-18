@@ -1,5 +1,7 @@
+__author__ = "Matthew Hanley"
+__email__ = "mattdhanley@gmail.com"
+
 import numpy as np
-import json
 import os
 import logging
 import logging.config
