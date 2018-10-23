@@ -12,6 +12,7 @@ import configparser
 import pprint
 import datetime as dt
 import pickle
+from netCDF4 import Dataset
 
 # TODO - move to config
 TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
@@ -20,6 +21,7 @@ MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive
 CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
+NETCDF_FILE = 'netCDF_test.nc'
 
 TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\bct_2018_256_16_46_16"  # FOR TESTING
 # TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\2018_269_12_15_46\\bct_fsw_2018_272_15_05_45"
@@ -499,6 +501,79 @@ def extract_header_data(format_string, data, header_length, header_index_dict):
     return header_info_dict
 
 
+# ========================== NETCDF FUNCTIONS ===========================================
+def createFile(filename):
+    """
+    Creates netCDF File
+    :param filename: name of the file, default extension is .nc
+    :return: void
+    """
+    mainGroup = Dataset(filename, "w", format="NETCDF4")
+    time = mainGroup.createDimension("time", None)
+    times = mainGroup.createVariable("time", "f8", ("time"))
+    mainGroup.close()
+
+
+def addPoint(points, timeIndex, mainGroup):
+    """
+    Adds each telemetry point to the file
+    :param points: dictionary of points
+    :param timeIndex: time index of point
+    :param mainGroup:
+    :return:
+    """
+    times = mainGroup.variables['time']
+    length = len(mainGroup.dimensions['time'])
+
+    for key in points:
+        # Checks if telem point name has been added
+        if key in mainGroup.variables.keys():
+            # If it has, retrieve it.
+            datapt = mainGroup.variables[key]
+        else:
+            # If not, create it.
+            if isinstance(points[key], str):
+                datapt = mainGroup.createVariable(key, str, ("time"))
+            else:
+                datapt = mainGroup.createVariable(key, 'f8', ("time"))
+        # Assign time and data values
+        datapt[length] = points[key]
+        times[length] = timeIndex
+
+
+def addData(data, filename):
+    """
+
+    :param data:
+    :param filename: netCDF filename
+    :return: void
+    """
+    # check that file exists
+    if not os.path.isfile(filename):
+        createFile(filename)
+
+    # convert data format
+    data = {int(key): data[key] for key in data}
+    # pprint.pprint(data)
+
+    # Sort data chronologically
+    sortedData = sorted(data.items())
+
+    # Get dataset
+    mainGroup = Dataset(filename, "a", format="NETCDF4")
+
+    numPackets = len(sortedData)
+
+    for i in range(0, len(sortedData)):
+        timeIndex = sortedData[i][0]
+        addPoint(sortedData[i][1], timeIndex, mainGroup)
+        logger.info("Added "+str(i)+" Packets of "+str(numPackets)+" total.")
+    mainGroup.close()
+
+
+# def direct_addData(,filename)
+
+
 def write_to_pickle(data, filename):
     """
     writes data to a pickle file with given filename
@@ -515,12 +590,19 @@ if __name__ == "__main__":
     global logger
     logger = get_logger()
 
-    logger.debug("reading in json file")
+    logger.debug("reading in CSV file")
     # returned a list of dicts
 
     csv_info = get_csv_info(CSV_FILE)
     tlm_data = get_tlm_data(TEST_FILE)
+
+    logger.info("Extracting Packets")
     packets = extract_CCSDS_packets(csv_info, tlm_data)
+
+    logger.info("Extracting data from the packets")
     data = extract_tlm_from_packets(csv_info, packets)
-    pprint.pprint(data)
+
+    logger.info("Updating netCDF File")
+    addData(data, NETCDF_FILE)
+    logger.info("Done")
 
