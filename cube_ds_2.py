@@ -67,11 +67,12 @@ def get_tlm_points(pointsFile):
     return points_dict_list
 
 
-def extract_tlm_from_packets(csv_info, packets):
+def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
     """
     This function will extract telemetry values from the given packets list using information from the csv file
     :param csv_info: List of dictionaries as returned by function get_csv_info
     :param packets: list of packet dictionaries as returned by extract_CCSDS_packets
+    :param mainGroup: netCDF main group, if set it will write points to this group.
     :return: dictionary of telemetry points and values with the top level key being a time and the value being
     a dictionary of telemetry points mapped to values
     """
@@ -179,6 +180,10 @@ def extract_tlm_from_packets(csv_info, packets):
 
             # index into the struct and save the value for the tlm point
             data_struct[packet_key][point['name']] = tlm_value
+            if mainGroup != '':
+                pprint.pprint(point['name'])
+                direct_add_point(packet_key, point['name'], tlm_value, mainGroup)
+
     return data_struct
 
 
@@ -526,6 +531,7 @@ def addPoint(points, timeIndex, mainGroup):
     length = len(mainGroup.dimensions['time'])
 
     for key in points:
+        print(key)
         # Checks if telem point name has been added
         if key in mainGroup.variables.keys():
             # If it has, retrieve it.
@@ -567,11 +573,33 @@ def addData(data, filename):
     for i in range(0, len(sortedData)):
         timeIndex = sortedData[i][0]
         addPoint(sortedData[i][1], timeIndex, mainGroup)
-        logger.info("Added "+str(i)+" Packets of "+str(numPackets)+" total.")
+        logger.info("Added "+str(i+1)+" Packets of "+str(numPackets)+" total.")
     mainGroup.close()
 
 
-# def direct_addData(,filename)
+def get_main_group(filename):
+    if not os.path.isfile(filename):
+        logger.warning("Could not find netCDF file "+filename+", creating it.")
+        createFile(filename)
+    mainGroup = Dataset(filename, "a", format="NETCDF4")
+    return mainGroup
+
+
+def direct_add_point(timeIndex, variable, value, mainGroup):
+    times = mainGroup.variables['time']
+    length = len(mainGroup.dimensions['time'])
+    if variable in mainGroup.variables.keys():
+        # If it has, retrieve it.
+        datapt = mainGroup.variables[variable]
+    else:
+        # If not, create it.
+        if isinstance(value, str):
+            datapt = mainGroup.createVariable(variable, str, ("time"))
+        else:
+            datapt = mainGroup.createVariable(variable, 'f8', ("time"))
+    # Assign time and data values
+    datapt[length] = value
+    times[length] = timeIndex
 
 
 def write_to_pickle(data, filename):
@@ -589,20 +617,52 @@ if __name__ == "__main__":
     # set up logger.
     global logger
     logger = get_logger()
+    config = configparser.ConfigParser()
 
+    config.read('cube_ds_2.cfg')
+    processLog = config['process_log']['location']
     logger.debug("reading in CSV file")
+
     # returned a list of dicts
 
     csv_info = get_csv_info(CSV_FILE)
-    tlm_data = get_tlm_data(TEST_FILE)
 
-    logger.info("Extracting Packets")
-    packets = extract_CCSDS_packets(csv_info, tlm_data)
+    rawFiles = []
+    for root, directories, filenames in os.walk(config['rundirs']['location']):
+        for filename in filenames:
+            m = re.search('bct_\d{4}.*', filename)
+            if m:
+                rawFiles.append(os.path.join(root, filename))
 
-    logger.info("Extracting data from the packets")
-    data = extract_tlm_from_packets(csv_info, packets)
+    for file in rawFiles:
+        # don't process file twice.
+        fileReadLog = open(processLog, mode='r')
+        foundFlag = 0
+        for line in fileReadLog:
+            if line.rstrip() == file:
+                foundFlag = 1
+        fileReadLog.close()
+        if foundFlag:
+            continue
 
-    logger.info("Updating netCDF File")
-    addData(data, NETCDF_FILE)
+        tlm_data = get_tlm_data(TEST_FILE)
+
+        logger.info("Extracting Packets")
+        packets = extract_CCSDS_packets(csv_info, tlm_data)
+
+        mainGroup = get_main_group(NETCDF_FILE)
+
+        logger.info("Extracting data from the packets")
+        data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
+
+        logger.info("Clearing variables for next file.")
+        del(data)
+        del(tlm_data)
+        del(mainGroup)
+        del(packets)
+        fileLog = open(processLog, mode='a')
+        # fileLog.write(rawFile+'\n')
+        fileLog.close()
+
     logger.info("Done")
 
