@@ -21,7 +21,7 @@ MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive
 CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
-NETCDF_FILE = 'netCDF_test.nc'
+NETCDF_FILE = 'Y:\\Phase_Development\\CSIM FD\\Telemetry\\processing\\netCDF\\netCDF_UHF.nc'
 
 TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\bct_2018_256_16_46_16"  # FOR TESTING
 # TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\2018_269_12_15_46\\bct_fsw_2018_272_15_05_45"
@@ -180,8 +180,9 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
 
             # index into the struct and save the value for the tlm point
             data_struct[packet_key][point['name']] = tlm_value
+
+            # if mainGroup is supplied to the function call, add point to netcdf file
             if mainGroup != '':
-                pprint.pprint(point['name'])
                 direct_add_point(packet_key, point['name'], tlm_value, mainGroup)
 
     return data_struct
@@ -645,7 +646,7 @@ if __name__ == "__main__":
         if foundFlag:
             continue
 
-        tlm_data = get_tlm_data(TEST_FILE)
+        tlm_data = get_tlm_data(file)
 
         logger.info("Extracting Packets")
         packets = extract_CCSDS_packets(csv_info, tlm_data)
@@ -661,7 +662,7 @@ if __name__ == "__main__":
         del(mainGroup)
         del(packets)
         fileLog = open(processLog, mode='a')
-        # fileLog.write(rawFile+'\n')
+        fileLog.write(file+'\n')
         fileLog.close()
 
     logger.info("Done")
