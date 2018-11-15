@@ -9,6 +9,7 @@
 *.nc
 [Dd]ata/
 [Rr]undirs/
+Rundirs/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -261,6 +262,7 @@ paket-files/
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
+<<<<<<< HEAD
 *.pyc*.exe
 *.toc
 *.pkg
@@ -268,3 +270,6 @@ __pycache__/
 build/
 dist/
 *.zip
+=======
+*.pyc
+>>>>>>> 465b6b081ac15b77ed6fb628f64f8a3e65d01ba5

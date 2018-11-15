@@ -3,8 +3,7 @@ __email__ = "mattdhanley@gmail.com"
 
 import numpy as np
 import os
-import logging
-import logging.config
+import pylogger
 import struct
 import csv
 import re
@@ -12,19 +11,23 @@ import configparser
 import pprint
 import datetime as dt
 import pickle
+import json
 from netCDF4 import Dataset
+import pylogger
 
 # TODO - move to config
 TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
-CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
+CONFIG_FILE = "cube_ds_2_test.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
-NETCDF_FILE = 'netCDF_test.nc'
+NETCDF_FILE = 'D:\\home\\mhanl\\git\\cube-ds\\test\\netCDF\\netCDF_TEST.nc'
 
 TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\bct_2018_256_16_46_16"  # FOR TESTING
 # TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\2018_269_12_15_46\\bct_fsw_2018_272_15_05_45"
+
+logger = pylogger.get_logger()
 
 
 def get_tlm_points(pointsFile):
@@ -53,14 +56,18 @@ def get_tlm_points(pointsFile):
                 stateArray = [x.strip() for x in row['state'].split(' ')]
 
                 # init empty dictionary
-                row['state'] = {}
+                state_dict = {}
 
                 # loop through the pairs and stor them in the dictionary with the integer as the key and the string as
                 # the value
                 for keyStrPair in stateArray:
                     # extract the "key/str" pair
                     stateVal, stateStr = keyStrPair.split('/')
-                    row['state'][stateVal] = stateStr
+                    state_dict[stateVal] = stateStr
+
+                row['state'] = json.dumps(state_dict)
+            else:
+                row['state'] = ''
 
             # append the new dictionary to the list
             points_dict_list.append(dict(row))
@@ -162,27 +169,12 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     print(e)
                     exit(1)
 
-            if point['state']:
-                try:
-                    # convert the dn to a string value for state
-                    tlm_value = point['state'][str(int(tlm_value))]
-                except KeyError:
-                    # if there is a key error, report the value that caused the error and warn the user
-                    logger.warning("Had a key error on "+point['name'])
-                    logger.debug(tlm_value)
-                    continue
-                except TypeError as e:
-                    # if there is a type error, something else is going on that is more critical
-                    logger.error(e)
-                    logger.fatal("TypeError when converting dn to state for "+point['name'])
-                    pprint.pprint(point)
-                    exit(1)
-
             # index into the struct and save the value for the tlm point
             data_struct[packet_key][point['name']] = tlm_value
+
+            # if mainGroup is supplied to the function call, add point to netcdf file
             if mainGroup != '':
-                pprint.pprint(point['name'])
-                direct_add_point(packet_key, point['name'], tlm_value, mainGroup)
+                direct_add_point(packet_key, point, tlm_value, mainGroup)
 
     return data_struct
 
@@ -205,11 +197,8 @@ def get_unpack_format(type, dsize, endian='big'):
     :param dsize: size of data in BITS!!!!
     :return:
     """
-    if dsize < 8:
+    if dsize <= 8:
         # bits
-        letter = 'b'
-    elif dsize == 8:
-        # char
         letter = 'b'
     elif dsize == 16:
         # short
@@ -246,7 +235,7 @@ def get_unpack_format(type, dsize, endian='big'):
     elif endian == 'little':
         letter = '<' + letter
     else:
-        logger.warning("DID NOT SPECIFY ENDIANNESS")
+        logger.warning("DID NOT SPECIFY ENDIANNESS CORRECTLY")
 
     return letter
 
@@ -292,26 +281,6 @@ def get_tlm_data(raw_file, endian="big"):
         logger.error("DID NOT specify correct endian")
         exit(1)
     return raw_data
-
-
-def get_logger():
-    """
-    Create a logging object for easy logging
-    :return: logging object
-    """
-    # set up logger from config file
-    if os.path.isfile(CONFIG_FILE):
-        logging.config.fileConfig(CONFIG_FILE)
-        logger = logging.getLogger('cube_ds')
-    else:
-        # use defaults if no config file
-        format = '%(levelname)s - %(asctime)s - %(filename)s - %(funcName)s - %(lineno)d - %(message)s'
-        logging.basicConfig(format=format)
-        logger = logging.getLogger('cube_ds')
-        logger.warning(CONFIG_FILE+' not found. Using defaults for logging.')
-
-    logger.info('Logger started.')
-    return logger
 
 
 def get_header_dict(headerfile):
@@ -464,7 +433,6 @@ def extract_CCSDS_packets(csv_info, data):
             packet_end = header_size + int(csv_dict['length'])
             packet_dict = create_packet_dict(csv_dict, header_size, format_string, data[ind:ind+packet_end], header_index_dict)
             packet_dict_list.append(packet_dict)
-        print(format_string)
     return packet_dict_list
 
 
@@ -519,65 +487,44 @@ def createFile(filename):
     mainGroup.close()
 
 
-def addPoint(points, timeIndex, mainGroup):
+def get_netcdf_dtype(size, state=''):
     """
-    Adds each telemetry point to the file
-    :param points: dictionary of points
-    :param timeIndex: time index of point
-    :param mainGroup:
+    Gets netCDF variable type. States will be stored as ints.
+    :param size: size in bits of variable
+    :param state: state string. state='' if no state present
     :return:
     """
-    times = mainGroup.variables['time']
-    length = len(mainGroup.dimensions['time'])
+    # Determine if it's a state or not. If it is, store it as an int.
+    if state != '':
+        type_str = 'i'
+    else:
+        type_str = 'f'
 
-    for key in points:
-        print(key)
-        # Checks if telem point name has been added
-        if key in mainGroup.variables.keys():
-            # If it has, retrieve it.
-            datapt = mainGroup.variables[key]
-        else:
-            # If not, create it.
-            if isinstance(points[key], str):
-                datapt = mainGroup.createVariable(key, str, ("time"))
-            else:
-                datapt = mainGroup.createVariable(key, 'f8', ("time"))
-        # Assign time and data values
-        datapt[length] = points[key]
-        times[length] = timeIndex
+    size = int(size) / 8
+    if size <= 1 and type_str == 'i':
+        size_str = '1'
+    elif size <= 2 and type_str == 'i':
+        size_str = '2'
+    elif size <= 4:
+        size_str = '4'
+    elif size <= 8:
+        size_str = '8'
+    else:
+        format_str = 'f8'
+        logger.warning('Using default f8 value for NetCDF because the size didn\'t match anything expected')
+        return format_str
 
-
-def addData(data, filename):
-    """
-
-    :param data:
-    :param filename: netCDF filename
-    :return: void
-    """
-    # check that file exists
-    if not os.path.isfile(filename):
-        createFile(filename)
-
-    # convert data format
-    data = {int(key): data[key] for key in data}
-    # pprint.pprint(data)
-
-    # Sort data chronologically
-    sortedData = sorted(data.items())
-
-    # Get dataset
-    mainGroup = Dataset(filename, "a", format="NETCDF4")
-
-    numPackets = len(sortedData)
-
-    for i in range(0, len(sortedData)):
-        timeIndex = sortedData[i][0]
-        addPoint(sortedData[i][1], timeIndex, mainGroup)
-        logger.info("Added "+str(i+1)+" Packets of "+str(numPackets)+" total.")
-    mainGroup.close()
+    format_str = type_str + size_str
+    return format_str
 
 
 def get_main_group(filename):
+    """
+    Retrieves NetCDF main group from given filename. If can't find the filename, makes the file.
+    :param filename: name of NetCDF File
+    :return: main group object
+    """
+    logger.info("Opening NetCDF file "+filename)
     if not os.path.isfile(filename):
         logger.warning("Could not find netCDF file "+filename+", creating it.")
         createFile(filename)
@@ -585,21 +532,27 @@ def get_main_group(filename):
     return mainGroup
 
 
-def direct_add_point(timeIndex, variable, value, mainGroup):
+def direct_add_point(timeIndex, point, value, mainGroup):
     times = mainGroup.variables['time']
     length = len(mainGroup.dimensions['time'])
-    if variable in mainGroup.variables.keys():
+    tlm_name = point['name']
+
+    if tlm_name in mainGroup.variables.keys():
         # If it has, retrieve it.
-        datapt = mainGroup.variables[variable]
+        datapt = mainGroup.variables[tlm_name]
     else:
         # If not, create it.
-        if isinstance(value, str):
-            datapt = mainGroup.createVariable(variable, str, ("time"))
-        else:
-            datapt = mainGroup.createVariable(variable, 'f8', ("time"))
+        dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
+        datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time"))
+        datapt.setncattr('unit', point['unit'])
+        datapt.setncattr('state', point['state'])
+        datapt.setncattr('description', point['description'])
     # Assign time and data values
-    datapt[length] = value
-    times[length] = timeIndex
+    try:
+        datapt[length] = value
+        times[length] = timeIndex
+    except OverflowError:
+        logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
 
 
 def write_to_pickle(data, filename):
@@ -613,56 +566,65 @@ def write_to_pickle(data, filename):
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
-if __name__ == "__main__":
-    # set up logger.
-    global logger
-    logger = get_logger()
-    config = configparser.ConfigParser()
-
-    config.read('cube_ds_2.cfg')
-    processLog = config['process_log']['location']
-    logger.debug("reading in CSV file")
-
-    # returned a list of dicts
-
-    csv_info = get_csv_info(CSV_FILE)
-
+def find_files(re_string, rootdir):
     rawFiles = []
-    for root, directories, filenames in os.walk(config['rundirs']['location']):
+    for root, directories, filenames in os.walk(rootdir):
         for filename in filenames:
-            m = re.search('bct_\d{4}.*', filename)
+            m = re.search(re_string, filename)
             if m:
                 rawFiles.append(os.path.join(root, filename))
 
+    if rawFiles == []:
+        logger.warning("Didn't find any raw files in "+rootdir)
+
+    return rawFiles
+
+
+if __name__ == "__main__":
+    # set up logger.
+    logger.info("========================= Started ==========================")
+    config = configparser.ConfigParser()
+
+    config.read(CONFIG_FILE)
+    processLog = config['process_log']['location']
+
+    logger.debug("reading in CSV file")
+    # returned a list of dicts
+    csv_info = get_csv_info(CSV_FILE)
+
+    # how the raw files are named
+    file_re_pattern = 'bct_\d{4}.*'
+
+    rawFiles = find_files(file_re_pattern, config['rundirs']['location'])
+
+    mainGroup = get_main_group(NETCDF_FILE)
+
     for file in rawFiles:
+        try:
+            fileReadLog = open(processLog, mode='r')
+        except PermissionError:
+            logger.fatal("Could not get permissions on " + processLog)
+            exit(1)
         # don't process file twice.
-        fileReadLog = open(processLog, mode='r')
         foundFlag = 0
         for line in fileReadLog:
             if line.rstrip() == file:
                 foundFlag = 1
-        fileReadLog.close()
         if foundFlag:
             continue
 
-        tlm_data = get_tlm_data(TEST_FILE)
+        tlm_data = get_tlm_data(file)
 
-        logger.info("Extracting Packets")
         packets = extract_CCSDS_packets(csv_info, tlm_data)
 
-        mainGroup = get_main_group(NETCDF_FILE)
-
-        logger.info("Extracting data from the packets")
         data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
-
-        logger.info("Clearing variables for next file.")
         del(data)
         del(tlm_data)
-        del(mainGroup)
         del(packets)
         fileLog = open(processLog, mode='a')
-        # fileLog.write(rawFile+'\n')
+        fileLog.write(file+'\n')
         fileLog.close()
+    fileReadLog.close()
 
     logger.info("Done")
 
