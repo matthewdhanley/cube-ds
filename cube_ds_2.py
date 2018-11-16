@@ -24,9 +24,7 @@ CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
 NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
-
-TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\bct_2018_256_16_46_16"  # FOR TESTING
-# TEST_FILE = "D:\\home\\mhanl\\git\\cube-ds\\test\\Rundirs\\2018_269_12_15_46\\bct_fsw_2018_272_15_05_45"
+# NETCDF_FILE = 'test/netCDF/csim.nc'
 
 logger = pylogger.get_logger()
 
@@ -626,6 +624,7 @@ if __name__ == "__main__":
         fileLog.write(file+'\n')
         fileLog.close()
     fileReadLog.close()
+    mainGroup.close()
 
     logger.info("Done")
 
