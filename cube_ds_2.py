@@ -13,18 +13,19 @@ import datetime as dt
 import pickle
 import json
 from netCDF4 import Dataset
+import netCDF4 as nc
 import pylogger
 
 # TODO - move to config
 TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
-CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
-# CONFIG_FILE = "cube_ds_2_test.cfg"  # defines config file for configparser
+# CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
+CONFIG_FILE = "cube_ds_2_test.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
-NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
-# NETCDF_FILE = 'test/netCDF/csim.nc'
+# NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
+NETCDF_FILE = 'test/netCDF/csim.nc'
 
 logger = pylogger.get_logger()
 
@@ -597,6 +598,7 @@ if __name__ == "__main__":
     rawFiles = find_files(file_re_pattern, config['rundirs']['location'])
 
     mainGroup = get_main_group(NETCDF_FILE)
+    mainGroup.set_fill_off()
 
     for file in rawFiles:
         try:
