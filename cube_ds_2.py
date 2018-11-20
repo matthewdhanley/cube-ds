@@ -21,11 +21,11 @@ TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time 
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
 # CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
-CONFIG_FILE = "cube_ds_2_test.cfg"  # defines config file for configparser
+CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
 CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
 CSV_ENCODING = 'utf-8-sig'
-# NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
-NETCDF_FILE = 'test/netCDF/csim.nc'
+NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
+# NETCDF_FILE = 'test/netCDF/csim.nc'
 
 logger = pylogger.get_logger()
 
@@ -683,8 +683,8 @@ if __name__ == "__main__":
 
         data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
         logger.debug("Extracted all the data, adding to NetCDF file . . .")
-        # netcdf_add_data(data, mainGroup)
-        netcdf_add_data_2(data, mainGroup)
+        netcdf_add_data(data, mainGroup)
+        # netcdf_add_data_2(data, mainGroup)
         del(data)
         del(tlm_data)
         del(packets)

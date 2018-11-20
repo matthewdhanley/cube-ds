@@ -1,1 +1,6 @@
-D:\home\mhanl\git\cube-ds\test\Rundirs\bct_2018_296_10_00_48
+test\Rundirs\bct_2018_296_10_00_48
+test\Rundirs\2018_319_08_14_02\bct_2018_319_08_18_16
+test\Rundirs\2018_320_12_11_40\bct_2018_320_12_17_27
+test\Rundirs\2018_320_12_25_45\bct_2018_320_12_28_17
+test\Rundirs\2018_320_12_52_30\bct_2018_320_12_55_18
+test\Rundirs\2018_320_12_57_08\bct_2018_320_12_57_38
