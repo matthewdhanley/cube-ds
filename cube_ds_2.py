@@ -172,9 +172,15 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
             # index into the struct and save the value for the tlm point
             data_struct[packet_key][point['name']] = tlm_value
 
-            # if mainGroup is supplied to the function call, add point to netcdf file
+            # # if mainGroup is supplied to the function call, add point to netcdf file
             if mainGroup != '':
-                direct_add_point(packet_key, point, tlm_value, mainGroup)
+                if point['name'] not in mainGroup.variables.keys():
+                    # If not, create it.
+                    dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
+                    datapt = mainGroup.createVariable(point['name'], dtype_string, ("time",))
+                    datapt.setncattr('unit', point['unit'])
+                    datapt.setncattr('state', point['state'])
+                    datapt.setncattr('description', point['description'])
 
     return data_struct
 
@@ -482,8 +488,14 @@ def createFile(filename):
     :return: void
     """
     mainGroup = Dataset(filename, "w", format="NETCDF4")
-    time = mainGroup.createDimension("time", None)
-    times = mainGroup.createVariable("time", "f8", ("time"))
+    time = mainGroup.createDimension("time", None)  # None sets the dimension size to unlimited.
+    times = mainGroup.createVariable("time", "f8", ("time",))
+    times.setncattr('unit', 'seconds since 2000/001 - 11:59:27')
+    """
+    TAI Epoch Source:
+    Seidelmann, P. K., Ed. (1992). Explanatory Supplement to the Astronomical Almanac. 
+        Sausalito, CA: University Science Books. Glossary, s.v. Terrestrial Dynamical Time.
+    """
     mainGroup.close()
 
 
@@ -534,7 +546,7 @@ def get_main_group(filename):
 
 def direct_add_point(timeIndex, point, value, mainGroup):
     times = mainGroup.variables['time']
-    length = len(mainGroup.dimensions['time'])
+    # length = len(mainGroup.dimensions['time'])
     tlm_name = point['name']
 
     if tlm_name in mainGroup.variables.keys():
@@ -543,16 +555,67 @@ def direct_add_point(timeIndex, point, value, mainGroup):
     else:
         # If not, create it.
         dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
-        datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time"))
+        datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time",))
         datapt.setncattr('unit', point['unit'])
         datapt.setncattr('state', point['state'])
         datapt.setncattr('description', point['description'])
     # Assign time and data values
+    # try:
+    #     datapt[length] = value
+    #     times[length] = timeIndex
+    # except OverflowError:
+    #     logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
+    #
+    # Assign time and data values
     try:
-        datapt[length] = value
-        times[length] = timeIndex
+        timeIndex = int(timeIndex)
+        datapt[timeIndex] = value
+        times[timeIndex] = timeIndex
     except OverflowError:
         logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
+
+
+def netcdf_add_data(tlm_data, mainGroup):
+    """
+    This version adds using the TAI time as the insert index
+    :param tlm_data:
+    :param mainGroup:
+    :return:
+    """
+    times = mainGroup.variables['time']
+
+    for timeIndex, packet in tlm_data.items():
+        for tlm_name, value in packet.items():
+            if tlm_name not in mainGroup.variables.keys():
+                logger.fatal("Something went wrong and could not find variable in NetCDF File...")
+                exit(1)
+
+            datapt = mainGroup.variables[tlm_name]
+            timeIndex = int(timeIndex)
+            datapt[timeIndex] = value
+            times[timeIndex] = timeIndex
+
+
+def netcdf_add_data_2(tlm_data, mainGroup):
+    """
+    This version adds using the TAI time as the insert index
+    :param tlm_data:
+    :param mainGroup:
+    :return:
+    """
+    times = mainGroup.variables['time']
+
+    for timeIndex, packet in tlm_data.items():
+        length = length = len(mainGroup.dimensions['time'])
+        for tlm_name, value in packet.items():
+            if tlm_name not in mainGroup.variables.keys():
+                logger.fatal("Something went wrong and could not find variable in NetCDF File...")
+                exit(1)
+
+            datapt = mainGroup.variables[tlm_name]
+            timeIndex = int(timeIndex)
+            datapt[length] = value
+            times[length] = timeIndex
 
 
 def write_to_pickle(data, filename):
@@ -619,6 +682,9 @@ if __name__ == "__main__":
         packets = extract_CCSDS_packets(csv_info, tlm_data)
 
         data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
+        logger.debug("Extracted all the data, adding to NetCDF file . . .")
+        # netcdf_add_data(data, mainGroup)
+        netcdf_add_data_2(data, mainGroup)
         del(data)
         del(tlm_data)
         del(packets)
