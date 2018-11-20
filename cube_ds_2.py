@@ -3,7 +3,7 @@ __email__ = "mattdhanley@gmail.com"
 
 import numpy as np
 import os
-import pylogger
+import argparse
 import struct
 import csv
 import re
@@ -13,7 +13,6 @@ import datetime as dt
 import pickle
 import json
 from netCDF4 import Dataset
-import netCDF4 as nc
 import pylogger
 
 # TODO - move to config
@@ -544,35 +543,27 @@ def get_main_group(filename):
     return mainGroup
 
 
-def direct_add_point(timeIndex, point, value, mainGroup):
-    times = mainGroup.variables['time']
-    # length = len(mainGroup.dimensions['time'])
-    tlm_name = point['name']
-
-    if tlm_name in mainGroup.variables.keys():
-        # If it has, retrieve it.
-        datapt = mainGroup.variables[tlm_name]
-    else:
-        # If not, create it.
-        dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
-        datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time",))
-        datapt.setncattr('unit', point['unit'])
-        datapt.setncattr('state', point['state'])
-        datapt.setncattr('description', point['description'])
-    # Assign time and data values
-    # try:
-    #     datapt[length] = value
-    #     times[length] = timeIndex
-    # except OverflowError:
-    #     logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
-    #
-    # Assign time and data values
-    try:
-        timeIndex = int(timeIndex)
-        datapt[timeIndex] = value
-        times[timeIndex] = timeIndex
-    except OverflowError:
-        logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
+# def direct_add_point(timeIndex, point, value, mainGroup):
+#     times = mainGroup.variables['time']
+#     # length = len(mainGroup.dimensions['time'])
+#     tlm_name = point['name']
+#
+#     if tlm_name in mainGroup.variables.keys():
+#         # If it has, retrieve it.
+#         datapt = mainGroup.variables[tlm_name]
+#     else:
+#         # If not, create it.
+#         dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
+#         datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time",))
+#         datapt.setncattr('unit', point['unit'])
+#         datapt.setncattr('state', point['state'])
+#         datapt.setncattr('description', point['description'])
+#     try:
+#         timeIndex = int(timeIndex)
+#         datapt[timeIndex] = value
+#         times[timeIndex] = timeIndex
+#     except OverflowError:
+#         logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
 
 
 def netcdf_add_data(tlm_data, mainGroup):
@@ -646,10 +637,19 @@ def find_files(re_string, rootdir):
 if __name__ == "__main__":
     # set up logger.
     logger.info("========================= Started ==========================")
-    config = configparser.ConfigParser()
 
+    # Parsing the config file.
+    config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    processLog = config['process_log']['location']
+
+    testing = int(config['testing']['testing'])  # check if testing mode is set in config file
+
+    # Parsing command line arguments
+    parser = argparse.ArgumentParser(description='Command Line Parser')
+    parser.add_argument('-t', '--test', action="store_true", help="If present, program will be run in test mode")
+    args = parser.parse_args()  # test bool will be stored in args.test
+    if args.test:
+        testing = 1
 
     logger.debug("reading in CSV file")
     # returned a list of dicts
@@ -658,24 +658,29 @@ if __name__ == "__main__":
     # how the raw files are named
     file_re_pattern = 'bct_\d{4}.*'
 
-    rawFiles = find_files(file_re_pattern, config['rundirs']['location'])
-
-    mainGroup = get_main_group(NETCDF_FILE)
-    mainGroup.set_fill_off()
-
-    for file in rawFiles:
+    if not testing:
+        rawFiles = find_files(file_re_pattern, config['rundirs']['location'])
+        mainGroup = get_main_group(config['netcdf']['location'])
+        processLog = config['process_log']['location']
         try:
             fileReadLog = open(processLog, mode='r')
         except PermissionError:
             logger.fatal("Could not get permissions on " + processLog)
             exit(1)
-        # don't process file twice.
-        foundFlag = 0
-        for line in fileReadLog:
-            if line.rstrip() == file:
-                foundFlag = 1
-        if foundFlag:
-            continue
+    else:
+        logger.info("RUNNING IN TESTING MODE.")
+        rawFiles = find_files(file_re_pattern, config['rundirs_test']['location'])
+        mainGroup = get_main_group(config['netcdf_test']['location'])
+
+    for file in rawFiles:
+        if not testing:
+            # don't process file twice.
+            foundFlag = 0
+            for line in fileReadLog:
+                if line.rstrip() == file:
+                    foundFlag = 1
+            if foundFlag:
+                continue
 
         tlm_data = get_tlm_data(file)
 
@@ -685,13 +690,22 @@ if __name__ == "__main__":
         logger.debug("Extracted all the data, adding to NetCDF file . . .")
         netcdf_add_data(data, mainGroup)
         # netcdf_add_data_2(data, mainGroup)
+
+        # Clean up some variables
         del(data)
         del(tlm_data)
         del(packets)
-        fileLog = open(processLog, mode='a')
-        fileLog.write(file+'\n')
-        fileLog.close()
-    fileReadLog.close()
+
+        if not testing:
+            # append file to processed file log
+            fileLog = open(processLog, mode='a')
+            fileLog.write(file+'\n')
+            fileLog.close()
+
+    if not testing:
+        logger.debug("Closed file read log")
+        fileReadLog.close()
+
     mainGroup.close()
 
     logger.info("Done")
