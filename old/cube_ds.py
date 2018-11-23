@@ -432,7 +432,7 @@ def get_logger():
     Create a logging object for easy logging
     :return: logging object
     """
-    # set up logger from config file
+    # set up LOGGER from config file
     if os.path.isfile(CONFIG_FILE):
         logging.config.fileConfig(CONFIG_FILE)
         logger = logging.getLogger('cube_ds')
@@ -465,7 +465,7 @@ class ParseError(Error):
 
 
 def main():
-    # global logger
+    # global LOGGER
     global logger
     logger = get_logger()
     config = configparser.ConfigParser()

@@ -382,7 +382,7 @@ def usage():
 
 def main():
 
-	# global logger
+	# global LOGGER
 	global logger
 	logger = get_logger()
 

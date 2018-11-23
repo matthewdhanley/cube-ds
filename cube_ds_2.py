@@ -15,21 +15,45 @@ import json
 from netCDF4 import Dataset
 import pylogger
 
-# TODO - move to config
+
+# GLOBALS ==================================================================================
 TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
-# CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
+
+
 CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
-CSV_FILE = "var/packet_defs.csv"  # Top level definition of packets
-CSV_ENCODING = 'utf-8-sig'
-NETCDF_FILE = 'C:\\data-processing\\NetCDF\\csim.nc'
-# NETCDF_FILE = 'test/netCDF/csim.nc'
+# Parsing the config file.
+CONFIG_INFO = configparser.ConfigParser()
+CONFIG_INFO.read(CONFIG_FILE)
 
-logger = pylogger.get_logger()
+# Setup for TEST mode
+TEST = int(CONFIG_INFO['TEST']['TEST'])  # check if TEST mode is set in config file
+
+LOGGER = pylogger.get_logger()
 
 
-def get_tlm_points(pointsFile):
+def get_csv_encoding():
+    """
+    Grabs the CSV encoding type form the config file, csv section, encoding variable.
+    :return: csv encoding type string
+    """
+
+    if TEST:
+        config_param = 'csv_test'
+    else:
+        config_param = 'csv'
+
+    try:
+        csv_encoding = CONFIG_INFO[config_param]['encoding']
+    except KeyError:
+        csv_encoding = 'utf-8'
+        LOGGER.debug('Using utf-8 encoding because couldn\'t find encoding type in config file')
+
+    return csv_encoding
+
+
+def get_tlm_points(pointsFile, csv_encoding='utf-8'):
     """
     This function will get all the points from the points file input to the function
     :param pointsFile: csv file with all the points.
@@ -38,7 +62,9 @@ def get_tlm_points(pointsFile):
     # make sure file exists
     assert os.path.exists(pointsFile)
 
-    with open(pointsFile, mode='r', encoding=CSV_ENCODING) as csv_f:
+    csv_encoding = get_csv_encoding()
+
+    with open(pointsFile, mode='r', encoding=csv_encoding) as csv_f:
         # create a dictionary from the top level csv file
         reader = csv.DictReader(csv_f)
 
@@ -93,7 +119,7 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
         # check to make sure that the time is within a valid range
         if not MIN_TIME < packet_dt < MAX_TIME:
             # log the warning and continue if out of range
-            logger.warning("Found packet with bogus time of "+packet_dt.strftime("%Y-%m-%d %H:%M:%S")+". Skipping it.")
+            LOGGER.warning("Found packet with bogus time of " + packet_dt.strftime("%Y-%m-%d %H:%M:%S") + ". Skipping it.")
             continue
 
         # make the packet key the seconds field of the packet. should be unique for each packet...maybe
@@ -114,7 +140,7 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
 
         # if the file wasn't found, send message to user and exit
         if points_file == '':
-            logger.error('error finding points definitions for packet '+packet['name'])
+            LOGGER.error('error finding points definitions for packet ' + packet['name'])
             exit(0)
 
         # extract the telemetry points from the file
@@ -156,7 +182,7 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
                 except struct.error:
                     # not extracting the right amount of data. Print some debug information and move on
-                    logger.warning("Packet ended unexpectedly.")
+                    LOGGER.warning("Packet ended unexpectedly.")
                     pprint.pprint(point)
                     pprint.pprint(tlmData)
                     print(unpack_data_format)
@@ -220,7 +246,7 @@ def get_unpack_format(type, dsize, endian='big'):
         type = 'int'
         dsize = 1
     else:
-        logger.fatal("parsing error for datatype size")
+        LOGGER.fatal("parsing error for datatype size")
         exit(0)
 
     if type == 'dn':
@@ -232,7 +258,7 @@ def get_unpack_format(type, dsize, endian='big'):
     elif type == 'float' or type == 'double':
         letter = 'd'
     else:
-        logger.fatal("parsing error for datatype \""+type+"\" with size \""+str(dsize)+"\"")
+        LOGGER.fatal("parsing error for datatype \"" + type + "\" with size \"" + str(dsize) + "\"")
         exit(1)
 
     if endian == 'big':
@@ -240,7 +266,7 @@ def get_unpack_format(type, dsize, endian='big'):
     elif endian == 'little':
         letter = '<' + letter
     else:
-        logger.warning("DID NOT SPECIFY ENDIANNESS CORRECTLY")
+        LOGGER.warning("DID NOT SPECIFY ENDIANNESS CORRECTLY")
 
     return letter
 
@@ -254,7 +280,9 @@ def get_csv_info(csvfilename):
     # make sure file exists
     assert os.path.exists(csvfilename)
 
-    with open(csvfilename, mode='r', encoding='utf-8-sig') as csv_f:
+    csv_encoding = get_csv_encoding()
+
+    with open(csvfilename, mode='r', encoding=csv_encoding) as csv_f:
         reader = csv.DictReader(csv_f)
         csv_dict_list = []
         for row in reader:
@@ -269,21 +297,21 @@ def get_tlm_data(raw_file, endian="big"):
     TODO - GET KISS DECODING
     :return: large endian numpy byte array
     """
-    logger.debug("Telemetry file -  "+raw_file)
+    LOGGER.debug("Telemetry file -  " + raw_file)
 
     # check that the file exists
     if not os.path.exists(raw_file):
-        logger.fatal("Telemetry Definition Directory does not exits. Check config file.")
+        LOGGER.fatal("Telemetry Definition Directory does not exits. Check config file.")
         exit(0)
 
     # read the data into a numpy array
-    logger.debug("reading data into numpy byte array")
+    LOGGER.debug("reading data into numpy byte array")
     if endian=="big":
         raw_data = np.fromfile(raw_file, dtype='>B')
     elif endian=="little":
         raw_data = np.fromfile(raw_file, dtype='<B')
     else:
-        logger.error("DID NOT specify correct endian")
+        LOGGER.error("DID NOT specify correct endian")
         exit(1)
     return raw_data
 
@@ -297,7 +325,9 @@ def get_header_dict(headerfile):
     # make sure file exists
     assert os.path.exists(headerfile)
 
-    with open(headerfile, mode='r', encoding=CSV_ENCODING) as csv_f:
+    csv_encoding = get_csv_encoding()
+
+    with open(headerfile, mode='r', encoding=csv_encoding) as csv_f:
         reader = csv.DictReader(csv_f)
         header_dict_list = []
         for row in reader:
@@ -321,7 +351,7 @@ def extract_CCSDS_packets(csv_info, data):
     for csv_dict in csv_info:
 
         header_file = csv_dict['headerFile']
-        # logger.debug("looking at "+header_file)
+        # LOGGER.debug("looking at "+header_file)
         header_dict_list = get_header_dict(header_file)
 
         # apid_dict = csv_info[top_key]
@@ -351,21 +381,21 @@ def extract_CCSDS_packets(csv_info, data):
             if first_iteration:
                 # check to make sure that the header starts at bit/byte 0
                 if int(header_dict_field['startBit']) != 0 or int(header_dict_field['startByte']) != 0:
-                    logger.fatal("Header does not start at zero.")
+                    LOGGER.fatal("Header does not start at zero.")
                     exit(0)
                 first_iteration = 0
 
             else:
                 # make sure that the fields in the header are not overlappinsg. This will cause problems
                 if int(header_dict_field['startByte']) == int(last_byte and header_dict_field['startBit']) == 0:
-                    logger.fatal("There is overlap in the header for "+ csv_dict['packetName'] +
+                    LOGGER.fatal("There is overlap in the header for " + csv_dict['packetName'] +
                                  ". This is not currently supported.")
                     exit(0)
 
                 # make sure there are no gaps
                 if last_byte * 8 + last_bit + last_size !=\
                         int(header_dict_field['startBit']) + int(header_dict_field['startByte']) * 8:
-                    logger.fatal("There is a gap in your header for " + csv_dict['packetName'] +
+                    LOGGER.fatal("There is a gap in your header for " + csv_dict['packetName'] +
                                  " at " + header_dict_field['field'] + ". Consider adding \"padding\"")
                     exit(0)
 
@@ -396,7 +426,7 @@ def extract_CCSDS_packets(csv_info, data):
             elif packet_size == 64:
                 current_letter = 'Q'
             else:
-                logger.fatal('Issue decoding header sizes into struct.unpack string')
+                LOGGER.fatal('Issue decoding header sizes into struct.unpack string')
                 exit(0)
 
             header_size += packet_size
@@ -417,7 +447,7 @@ def extract_CCSDS_packets(csv_info, data):
             last_byte = int(header_dict_field['startByte'])
 
         if len(known_dict_list) == 0:
-            logger.fatal("No expected values included in the json file for " + csv_dict['packetName'] + " packet!")
+            LOGGER.fatal("No expected values included in the json file for " + csv_dict['packetName'] + " packet!")
             continue  # skip the file for now
 
         # now the format string has been generated and the known dict has been generated
@@ -522,7 +552,7 @@ def get_netcdf_dtype(size, state=''):
         size_str = '8'
     else:
         format_str = 'f8'
-        logger.warning('Using default f8 value for NetCDF because the size didn\'t match anything expected')
+        LOGGER.warning('Using default f8 value for NetCDF because the size didn\'t match anything expected')
         return format_str
 
     format_str = type_str + size_str
@@ -535,9 +565,9 @@ def get_main_group(filename):
     :param filename: name of NetCDF File
     :return: main group object
     """
-    logger.info("Opening NetCDF file "+filename)
+    LOGGER.info("Opening NetCDF file " + filename)
     if not os.path.isfile(filename):
-        logger.warning("Could not find netCDF file "+filename+", creating it.")
+        LOGGER.warning("Could not find netCDF file " + filename + ", creating it.")
         createFile(filename)
     mainGroup = Dataset(filename, "a", format="NETCDF4")
     return mainGroup
@@ -563,7 +593,7 @@ def get_main_group(filename):
 #         datapt[timeIndex] = value
 #         times[timeIndex] = timeIndex
 #     except OverflowError:
-#         logger.warning('Overflow Error on '+point['name']+' with value '+str(value))
+#         LOGGER.warning('Overflow Error on '+point['name']+' with value '+str(value))
 
 
 def netcdf_add_data(tlm_data, mainGroup):
@@ -578,7 +608,7 @@ def netcdf_add_data(tlm_data, mainGroup):
     for timeIndex, packet in tlm_data.items():
         for tlm_name, value in packet.items():
             if tlm_name not in mainGroup.variables.keys():
-                logger.fatal("Something went wrong and could not find variable in NetCDF File...")
+                LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
                 exit(1)
 
             datapt = mainGroup.variables[tlm_name]
@@ -600,7 +630,7 @@ def netcdf_add_data_2(tlm_data, mainGroup):
         length = length = len(mainGroup.dimensions['time'])
         for tlm_name, value in packet.items():
             if tlm_name not in mainGroup.variables.keys():
-                logger.fatal("Something went wrong and could not find variable in NetCDF File...")
+                LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
                 exit(1)
 
             datapt = mainGroup.variables[tlm_name]
@@ -629,51 +659,48 @@ def find_files(re_string, rootdir):
                 rawFiles.append(os.path.join(root, filename))
 
     if rawFiles == []:
-        logger.warning("Didn't find any raw files in "+rootdir)
+        LOGGER.warning("Didn't find any raw files in " + rootdir)
 
     return rawFiles
 
 
 if __name__ == "__main__":
-    # set up logger.
-    logger.info("========================= Started ==========================")
-
-    # Parsing the config file.
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
-
-    testing = int(config['testing']['testing'])  # check if testing mode is set in config file
+    # set up LOGGER.
+    LOGGER.info("========================= Started ==========================")
 
     # Parsing command line arguments
     parser = argparse.ArgumentParser(description='Command Line Parser')
     parser.add_argument('-t', '--test', action="store_true", help="If present, program will be run in test mode")
     args = parser.parse_args()  # test bool will be stored in args.test
     if args.test:
-        testing = 1
+        TEST = 1
 
-    logger.debug("reading in CSV file")
+    LOGGER.debug("reading in CSV file")
+    csv_file = CONFIG_INFO['csv']['location']
+    LOGGER.debug('csv file: ' + csv_file)
+
     # returned a list of dicts
-    csv_info = get_csv_info(CSV_FILE)
+    csv_info = get_csv_info(csv_file)
 
     # how the raw files are named
     file_re_pattern = 'bct_\d{4}.*'
 
-    if not testing:
-        rawFiles = find_files(file_re_pattern, config['rundirs']['location'])
-        mainGroup = get_main_group(config['netcdf']['location'])
-        processLog = config['process_log']['location']
+    if not TEST:
+        rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs']['location'])
+        mainGroup = get_main_group(CONFIG_INFO['netcdf']['location'])
+        processLog = CONFIG_INFO['process_log']['location']
         try:
             fileReadLog = open(processLog, mode='r')
         except PermissionError:
-            logger.fatal("Could not get permissions on " + processLog)
+            LOGGER.fatal("Could not get permissions on " + processLog)
             exit(1)
     else:
-        logger.info("RUNNING IN TESTING MODE.")
-        rawFiles = find_files(file_re_pattern, config['rundirs_test']['location'])
-        mainGroup = get_main_group(config['netcdf_test']['location'])
+        LOGGER.info("RUNNING IN TESTING MODE.")
+        rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs_test']['location'])
+        mainGroup = get_main_group(CONFIG_INFO['netcdf_test']['location'])
 
     for file in rawFiles:
-        if not testing:
+        if not TEST:
             # don't process file twice.
             foundFlag = 0
             for line in fileReadLog:
@@ -687,7 +714,7 @@ if __name__ == "__main__":
         packets = extract_CCSDS_packets(csv_info, tlm_data)
 
         data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
-        logger.debug("Extracted all the data, adding to NetCDF file . . .")
+        LOGGER.debug("Extracted all the data, adding to NetCDF file . . .")
         netcdf_add_data(data, mainGroup)
         # netcdf_add_data_2(data, mainGroup)
 
@@ -696,17 +723,17 @@ if __name__ == "__main__":
         del(tlm_data)
         del(packets)
 
-        if not testing:
+        if not TEST:
             # append file to processed file log
             fileLog = open(processLog, mode='a')
             fileLog.write(file+'\n')
             fileLog.close()
 
-    if not testing:
-        logger.debug("Closed file read log")
+    if not TEST:
+        LOGGER.debug("Closed file read log")
         fileReadLog.close()
 
     mainGroup.close()
 
-    logger.info("Done")
+    LOGGER.info("Done")
 
