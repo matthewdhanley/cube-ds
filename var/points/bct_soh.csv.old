@@ -1,4 +1,4 @@
-name,startByte,startBit,dtype,size,conversion,unit,description,state
+﻿name,startByte,startBit,dtype,size,conversion,unit,description,state
 bct_wdt_2sec_cnt,0,0,dn,3,1,none,Watchdog 2 Second Counter,
 bct_reset_armed,0,3,dn,1,1,1/ARMED 0/NOT_ARMED,Processor reset armed status,1/ARMED 0/NOT_ARMED
 bct_wdt_stat,0,4,dn,1,1,0/NO_WDT 1/WDT,Watch Reset Event Status,0/NO_WDT 1/WDT
@@ -62,7 +62,6 @@ bct_moon_position_wrt_eci1,100,0,sn,32,0.00019999999,km,Moon Position ECI,
 bct_moon_position_wrt_eci2,104,0,sn,32,0.00019999999,km,Moon Position ECI,
 bct_moon_position_wrt_eci3,108,0,sn,32,0.00019999999,km,Moon Position ECI,
 bct_refs_valid,112,0,dn,8,1,1/YES 0/NO,Refs Valid,1/YES 0/NO
-bct_esm_valid,113,0,dn,8,1,1/YES 0/NO,Earth  Sun  Moon valid,1/YES 0/NO
 bct_run_low_rate_task,114,0,dn,8,1,1/YES 0/NO,RunLowRateTask,1/YES 0/NO
 bct_q_body_wrt_eci1,115,0,sn,32,4.9999999e-10,none,Attitude Quaternion,
 bct_q_body_wrt_eci2,119,0,sn,32,4.9999999e-10,none,Attitude Quaternion,
@@ -143,115 +142,66 @@ bct_hr_exec_time_ms2,251,0,dn,8,1,msec,High Rate Duration,
 bct_hr_exec_time_ms3,252,0,dn,8,1,msec,High Rate Duration,
 bct_hr_exec_time_ms4,253,0,dn,8,1,msec,High Rate Duration,
 bct_hr_exec_time_ms5,254,0,dn,8,1,msec,High Rate Duration,
-bct_payload_sec_since_last_tlm,255,0,dn,32,1,sec,Seconds since last TLM received (by SW),
-bct_payload_tlm_rx_count,259,0,dn,16,1,none,Payload Tlm Receive Counter (by SW),
-bct_payload_tlm_ack_count,261,0,dn,16,1,none,Payload Tlm ACK Counter,
-bct_payload_tlm_nak_count,263,0,dn,16,1,none,Payload Tlm NAK Counter,
-bct_voltage_12p0,265,0,dn,8,0.1,V,Voltage_12p0,
-bct_voltage_8p0,266,0,dn,8,0.1,V,Voltage_8p0,
-bct_voltage_5p0,267,0,dn,8,0.025,V,Voltage_5p0,
-bct_voltage_3p3,268,0,dn,8,0.015000001,V,Voltage_3p3,
-bct_det_temp,269,0,sn,8,0.80000001,degC,Tracker Detector temperature,
-bct_det2_temp,270,0,sn,8,0.80000001,degC,Tracker 2 Detector temperature,
-bct_box1_temp,271,0,sn,16,0.0049999999,degC,Box 1 Temp,
-bct_imu_temp,273,0,sn,16,0.0049999999,decC,Imu Temp,
-bct_motor1_temp,275,0,sn,16,0.0049999999,degC,Wheel 1 Temp,
-bct_motor2_temp,277,0,sn,16,0.0049999999,degC,Wheel 2 Temp,
-bct_motor3_temp,279,0,sn,16,0.0049999999,degC,Wheel 3 Temp,
-bct_bus_voltage,281,0,sn,16,0.001,V,Bus Voltage,
-bct_battery_voltage,283,0,dn,16,0.0020000001,V,Battery Voltage,
-bct_battery_current,285,0,sn,16,0.0020000001,A,Battery Current,
-bct_battery1_temp,287,0,sn,16,0.0049999999,degC,Battery 1 Temp,
-bct_battery2_temp,289,0,sn,16,0.0049999999,degC,Battery 2 Temp,
-bct_user_analog1,291,0,sn,32,0.00050000002,none,User Analogs,
-bct_user_analog2,295,0,sn,32,0.00050000002,none,User Analogs,
-bct_operating_mode,299,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL
-bct_star_id_step,300,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH
-bct_att_status,301,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH
-bct_det_timeout_count,302,0,dn,16,1,counts,Number of detector timeouts,
-bct_num_attitude_stars,304,0,dn,8,1,none,Num Stars Used in Att,
-bct_cycles_since_crc_data,305,0,dn,32,1,none,Cycles Since Correct CRC GPS Data,
-bct_gps_lock_count,309,0,dn,16,1,none,spare,
-bct_gps_valid,311,0,dn,8,1,1/YES 0/NO,GPS Valid,1/YES 0/NO
-bct_gps_enable,312,0,dn,8,1,1/YES 0/NO,GPS Enabled,1/YES 0/NO
-bct_latched_resp_fire_pack1,313,0,dn,8,1,bitpack,Latched Response Fired Bitpack,
-bct_latched_resp_fire_pack_bit8,313,0,dn,1,1,none,Latched Response Fired Bitpack bit 8,
-bct_latched_resp_fire_pack_bit7,313,1,dn,1,1,none,Latched Response Fired Bitpack bit 7,
-bct_latched_resp_fire_pack_bit6,313,2,dn,1,1,none,Latched Response Fired Bitpack bit 6,
-bct_latched_resp_fire_pack_bit5,313,3,dn,1,1,none,Latched Response Fired Bitpack bit 5,
-bct_latched_resp_fire_pack_bit4,313,4,dn,1,1,none,Latched Response Fired Bitpack bit 4,
-bct_latched_resp_fire_pack_bit3,313,5,dn,1,1,none,Latched Response Fired Bitpack bit 3,
-bct_latched_resp_fire_pack_bit2,313,6,dn,1,1,none,Latched Response Fired Bitpack bit 2,
-bct_latched_resp_fire_pack_bit1,313,7,dn,1,1,none,Latched Response Fired Bitpack bit 1,
-bct_latched_resp_fire_pack2,314,0,dn,8,1,bitpack,Latched Response Fired Bitpack,
-bct_latched_resp_fire_pack_bit16,314,0,dn,1,1,none,Latched Response Fired Bitpack bit 16,
-bct_latched_resp_fire_pack_bit15,314,1,dn,1,1,none,Latched Response Fired Bitpack bit 15,
-bct_latched_resp_fire_pack_bit14,314,2,dn,1,1,none,Latched Response Fired Bitpack bit 14,
-bct_latched_resp_fire_pack_bit13,314,3,dn,1,1,none,Latched Response Fired Bitpack bit 13,
-bct_latched_resp_fire_pack_bit12,314,4,dn,1,1,none,Latched Response Fired Bitpack bit 12,
-bct_latched_resp_fire_pack_bit11,314,5,dn,1,1,none,Latched Response Fired Bitpack bit 11,
-bct_latched_resp_fire_pack_bit10,314,6,dn,1,1,none,Latched Response Fired Bitpack bit 10,
-bct_latched_resp_fire_pack_bit9,314,7,dn,1,1,none,Latched Response Fired Bitpack bit 9,
-bct_sd_minute_cur,315,0,dn,32,1,none,SD Card Current Minute Number,
-bct_sd_percent_used_total,319,0,dn,8,1,percent,SD Card Used Space Percentage Total,
-bct_sd_percent_used_fsw,320,0,dn,8,1,percent,SD Card Used Space Percentage For Fsw Database,
-bct_sd_percent_used_soh,321,0,dn,8,1,percent,SD Card Used Space Percentage For Soh Database,
-bct_sd_percent_used_line,322,0,dn,8,1,percent,SD Card Used Space Percentage For Line Database,
-bct_sd_percent_used_tbl,323,0,dn,8,1,percent,SD Card Used Space Percentage For Tbl Database,
-bct_sd_percent_used_pay,324,0,dn,8,1,percent,SD Card Used Space Percentage For Pay Database,
-bct_sdr_tx_frames,325,0,dn,32,1,none,BCT-SDR tx frame counter,
-bct_sdr_rx_frames,329,0,dn,32,1,none,BCT_SDR rx valid frame counter,
-bct_sdr_tx,333,0,dn,8,1,0/NO 1/YES,BCT-SDR tx state,0/NO 1/YES
-bct_sdr_tx_power,334,0,sn,8,1,dBm,BCT-SDR tx power,
-bct_sdr_rx_lock,335,0,dn,8,1,0/NO 1/YES,BCT-SDR rx pll lock,0/NO 1/YES
-bct_sdr_rx_power,336,0,sn,8,1,dBm,BCT-SDR rx power level,
-bct_sdr_rx_freq_offset,337,0,sn,32,1,Hz,BCT-SDR rx frequency offset,
-bct_sdr_temp,341,0,sn,8,1,C,BCT-SDR temperature,
-bct_sdr_comm_error,342,0,dn,8,1,0/NO 1/YES,BCT-SDR temperature,0/NO 1/YES
-bct_sq_channel,343,0,sn,8,1,none,SpaceQuest Current Channel Selection,
-bct_sq_trap_count,344,0,dn,8,1,none,SpaceQuest Trap-Error Cycle Count,
-bct_sq_temp,345,0,dn,8,1,C,SpaceQuest Temperature,
-bct_aid_status1,346,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,
-bct_aid_status_bit8,346,0,dn,1,1,none,Tracker Aiding Status bit 8,
-bct_aid_status_bit7,346,1,dn,1,1,none,Tracker Aiding Status bit 7,
-bct_aid_status_bit6,346,2,dn,1,1,none,Tracker Aiding Status bit 6,
-bct_aid_status_bit5,346,3,dn,1,1,none,Tracker Aiding Status bit 5,
-bct_aid_status_bit4,346,4,dn,1,1,none,Tracker Aiding Status bit 4,
-bct_aid_status_bit3,346,5,dn,1,1,none,Tracker Aiding Status bit 3,
-bct_aid_status_bit2,346,6,dn,1,1,none,Tracker Aiding Status bit 2,
-bct_aid_status_bit1,346,7,dn,1,1,none,Tracker Aiding Status bit 1,
-bct_aid_status2,347,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,
-bct_aid_status_bit16,347,0,dn,1,1,none,Tracker Aiding Status bit 16,
-bct_aid_status_bit15,347,1,dn,1,1,none,Tracker Aiding Status bit 15,
-bct_aid_status_bit14,347,2,dn,1,1,none,Tracker Aiding Status bit 14,
-bct_aid_status_bit13,347,3,dn,1,1,none,Tracker Aiding Status bit 13,
-bct_aid_status_bit12,347,4,dn,1,1,none,Tracker Aiding Status bit 12,
-bct_aid_status_bit11,347,5,dn,1,1,none,Tracker Aiding Status bit 11,
-bct_aid_status_bit10,347,6,dn,1,1,none,Tracker Aiding Status bit 10,
-bct_aid_status_bit9,347,7,dn,1,1,none,Tracker Aiding Status bit 9,
-bct_star_id_status,348,0,dn,8,1,none,Tracker Performing StarId,
-bct_power_status,349,0,dn,32,1,none,Power Status,
-bct_io24_out_,350,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io23_out_,350,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io22_out_rel2_en,350,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io21_out_,350,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io20_out_pld_htr_vbus,350,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io19_out_pld_htr_vbus,350,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io18_out_rel1_en,350,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io17_in_boot_red,350,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io16_in_bat_chg_stat,351,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io15_out_det2,351,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io14_out_12v_mode,351,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io13_in_,351,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io12_out_12v_en,351,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io11_in_sep_mon,351,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io10_out_pld_rst_req,351,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io9_out_pld_vbus,351,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io8_out_pld_htr2,352,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io7_out_pld_htr1,352,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io6_out_pld_12v,352,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io5_out_pld_5v,352,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io4_out_pld_flash_cs,352,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io3_out_gps,352,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io2_out_sdr_12v,352,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
-bct_io1_out_rf_8v,352,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF
+bct_box1_temp,255,0,sn,16,0.0049999999,degC,Box 1 Temp,
+bct_bus_voltage,257,0,sn,16,0.001,V,Bus Voltage,
+bct_battery_voltage,259,0,dn,16,0.0020000001,V,Battery Voltage,
+bct_battery_current,261,0,sn,16,0.0020000001,A,Battery Current,
+bct_operating_mode,263,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL
+bct_star_id_step,264,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH
+bct_att_status,265,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH
+bct_det_timeout_count,266,0,dn,16,1,counts,Number of detector timeouts,
+bct_num_attitude_stars,268,0,dn,8,1,none,Num Stars Used in Att,
+bct_cycles_since_crc_data,269,0,dn,32,1,none,Cycles Since Correct CRC GPS Data,
+bct_gps_lock_count,273,0,dn,16,1,none,spare,
+bct_gps_valid,275,0,dn,8,1,1/YES 0/NO,GPS Valid,1/YES 0/NO
+bct_gps_enable,276,0,dn,8,1,1/YES 0/NO,GPS Enabled,1/YES 0/NO
+bct_latched_resp_fire_pack1,277,0,dn,8,1,bitpack,Latched Response Fired Bitpack,
+bct_latched_resp_fire_pack_bit8,277,0,dn,1,1,none,Latched Response Fired Bitpack bit 8,
+bct_latched_resp_fire_pack_bit7,277,1,dn,1,1,none,Latched Response Fired Bitpack bit 7,
+bct_latched_resp_fire_pack_bit6,277,2,dn,1,1,none,Latched Response Fired Bitpack bit 6,
+bct_latched_resp_fire_pack_bit5,277,3,dn,1,1,none,Latched Response Fired Bitpack bit 5,
+bct_latched_resp_fire_pack_bit4,277,4,dn,1,1,none,Latched Response Fired Bitpack bit 4,
+bct_latched_resp_fire_pack_bit3,277,5,dn,1,1,none,Latched Response Fired Bitpack bit 3,
+bct_latched_resp_fire_pack_bit2,277,6,dn,1,1,none,Latched Response Fired Bitpack bit 2,
+bct_latched_resp_fire_pack_bit1,277,7,dn,1,1,none,Latched Response Fired Bitpack bit 1,
+bct_latched_resp_fire_pack2,278,0,dn,8,1,bitpack,Latched Response Fired Bitpack,
+bct_latched_resp_fire_pack_bit16,278,0,dn,1,1,none,Latched Response Fired Bitpack bit 16,
+bct_latched_resp_fire_pack_bit15,278,1,dn,1,1,none,Latched Response Fired Bitpack bit 15,
+bct_latched_resp_fire_pack_bit14,278,2,dn,1,1,none,Latched Response Fired Bitpack bit 14,
+bct_latched_resp_fire_pack_bit13,278,3,dn,1,1,none,Latched Response Fired Bitpack bit 13,
+bct_latched_resp_fire_pack_bit12,278,4,dn,1,1,none,Latched Response Fired Bitpack bit 12,
+bct_latched_resp_fire_pack_bit11,278,5,dn,1,1,none,Latched Response Fired Bitpack bit 11,
+bct_latched_resp_fire_pack_bit10,278,6,dn,1,1,none,Latched Response Fired Bitpack bit 10,
+bct_latched_resp_fire_pack_bit9,278,7,dn,1,1,none,Latched Response Fired Bitpack bit 9,
+bct_sd_minute_cur,279,0,dn,32,1,none,SD Card Current Minute Number,
+bct_sdr_tx_frames,283,0,dn,32,1,none,BCT-SDR tx frame counter,
+bct_sdr_rx_frames,287,0,dn,32,1,none,BCT_SDR rx valid frame counter,
+bct_sdr_tx,291,0,dn,8,1,0/NO 1/YES,BCT-SDR tx state,0/NO 1/YES
+bct_sdr_tx_power,292,0,sn,8,1,dBm,BCT-SDR tx power,
+bct_sdr_rx_lock,293,0,dn,8,1,0/NO 1/YES,BCT-SDR rx pll lock,0/NO 1/YES
+bct_sdr_rx_power,294,0,sn,8,1,dBm,BCT-SDR rx power level,
+bct_sdr_rx_freq_offset,295,0,sn,32,1,Hz,BCT-SDR rx frequency offset,
+bct_sdr_temp,299,0,sn,8,1,C,BCT-SDR temperature,
+bct_sdr_comm_error,300,0,dn,8,1,0/NO 1/YES,BCT-SDR temperature,0/NO 1/YES
+bct_sq_channel,301,0,sn,8,1,none,SpaceQuest Current Channel Selection,
+bct_sq_trap_count,302,0,dn,8,1,none,SpaceQuest Trap-Error Cycle Count,
+bct_sq_temp,303,0,dn,8,1,C,SpaceQuest Temperature,
+bct_aid_status1,304,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,
+bct_aid_status_bit8,304,0,dn,1,1,none,Tracker Aiding Status bit 8,
+bct_aid_status_bit7,304,1,dn,1,1,none,Tracker Aiding Status bit 7,
+bct_aid_status_bit6,304,2,dn,1,1,none,Tracker Aiding Status bit 6,
+bct_aid_status_bit5,304,3,dn,1,1,none,Tracker Aiding Status bit 5,
+bct_aid_status_bit4,304,4,dn,1,1,none,Tracker Aiding Status bit 4,
+bct_aid_status_bit3,304,5,dn,1,1,none,Tracker Aiding Status bit 3,
+bct_aid_status_bit2,304,6,dn,1,1,none,Tracker Aiding Status bit 2,
+bct_aid_status_bit1,304,7,dn,1,1,none,Tracker Aiding Status bit 1,
+bct_aid_status2,305,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,
+bct_aid_status_bit16,305,0,dn,1,1,none,Tracker Aiding Status bit 16,
+bct_aid_status_bit15,305,1,dn,1,1,none,Tracker Aiding Status bit 15,
+bct_aid_status_bit14,305,2,dn,1,1,none,Tracker Aiding Status bit 14,
+bct_aid_status_bit13,305,3,dn,1,1,none,Tracker Aiding Status bit 13,
+bct_aid_status_bit12,305,4,dn,1,1,none,Tracker Aiding Status bit 12,
+bct_aid_status_bit11,305,5,dn,1,1,none,Tracker Aiding Status bit 11,
+bct_aid_status_bit10,305,6,dn,1,1,none,Tracker Aiding Status bit 10,
+bct_aid_status_bit9,305,7,dn,1,1,none,Tracker Aiding Status bit 9,
+bct_star_id_status,306,0,dn,8,1,none,Tracker Performing StarId,

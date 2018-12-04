@@ -8,7 +8,7 @@ import struct
 import csv
 import re
 import configparser
-import pprint
+from pprint import pprint
 import datetime as dt
 import pickle
 import json
@@ -17,12 +17,13 @@ import pylogger
 
 
 # GLOBALS ==================================================================================
+CCSDS_EPOCH = dt.datetime(1951, 1, 28, 13, 17, 23)  # Epoch time for incoming time stamps
 TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
 
 
-CONFIG_FILE = "cube_ds_2.cfg"  # defines config file for configparser
+CONFIG_FILE = "C:\\data-processing\\cube-ds\\cube_ds_2.cfg"  # defines config file for configparser
 # Parsing the config file.
 CONFIG_INFO = configparser.ConfigParser()
 CONFIG_INFO.read(CONFIG_FILE)
@@ -115,12 +116,19 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
     for packet in packets:
         # get datetime object for the time of the packet
         packet_dt = get_tlm_time_dt(packet['seconds'])
+        print(packet['seconds'])
 
         # check to make sure that the time is within a valid range
         if not MIN_TIME < packet_dt < MAX_TIME:
             # log the warning and continue if out of range
-            LOGGER.warning("Found packet with bogus time of " + packet_dt.strftime("%Y-%m-%d %H:%M:%S") + ". Skipping it.")
-            continue
+            LOGGER.warning("Found packet with bogus time of " + packet_dt.strftime("%Y-%m-%d %H:%M:%S") + ". Trying other epoch.")
+            packet_dt = get_tlm_time_dt(packet['seconds'], epoch=CCSDS_EPOCH)
+            if not MIN_TIME < packet_dt < MAX_TIME:
+                LOGGER.warning("CCSDS Epoch Did not work")
+                continue
+            LOGGER.info("CCSDS Epoch did work")
+            packet['seconds'] = int((packet_dt - TAI_EPOCH).total_seconds())
+            LOGGER.debug(str(packet['seconds']))
 
         # make the packet key the seconds field of the packet. should be unique for each packet...maybe
         packet_key = str(packet['seconds'])
@@ -183,8 +191,8 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                 except struct.error:
                     # not extracting the right amount of data. Print some debug information and move on
                     LOGGER.warning("Packet ended unexpectedly.")
-                    pprint.pprint(point)
-                    pprint.pprint(tlmData)
+                    pprint(point)
+                    pprint(tlmData)
                     print(unpack_data_format)
                     continue
                 except TypeError as e:
@@ -206,17 +214,16 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     datapt.setncattr('unit', point['unit'])
                     datapt.setncattr('state', point['state'])
                     datapt.setncattr('description', point['description'])
-
     return data_struct
 
 
-def get_tlm_time_dt(taiTime):
+def get_tlm_time_dt(taiTime, epoch=TAI_EPOCH):
     """
     Convert seconds since epoch to datetime object
     :param taiTime: seconds since TAI_EPOCH variable
     :return: datetime object
     """
-    tlm_dt = TAI_EPOCH + dt.timedelta(seconds=taiTime)
+    tlm_dt = epoch + dt.timedelta(seconds=taiTime)
     return tlm_dt
 
 
@@ -323,7 +330,10 @@ def get_header_dict(headerfile):
     :return: list of dictionaries of components of the header
     """
     # make sure file exists
-    assert os.path.exists(headerfile)
+    try:
+    	assert os.path.exists(headerfile)
+    except AssertionError:
+    	LOGGER.error("Can't find file "+headerfile)
 
     csv_encoding = get_csv_encoding()
 
@@ -613,30 +623,35 @@ def netcdf_add_data(tlm_data, mainGroup):
 
             datapt = mainGroup.variables[tlm_name]
             timeIndex = int(timeIndex)
-            datapt[timeIndex] = value
-            times[timeIndex] = timeIndex
+            try:    
+                datapt[timeIndex] = value
+                times[timeIndex] = timeIndex
+            except OverflowError:
+                LOGGER.warn("Overflow error on NetCDF Insert")
+        mainGroup.sync()
+        LOGGER.debug(timeIndex)
+        LOGGER.debug("Synced NetCDF to disk")
 
+# def netcdf_add_data_2(tlm_data, mainGroup):
+#     """
+#     This version adds using the TAI time as the insert index
+#     :param tlm_data:
+#     :param mainGroup:
+#     :return:
+#     """
+#     times = mainGroup.variables['time']
 
-def netcdf_add_data_2(tlm_data, mainGroup):
-    """
-    This version adds using the TAI time as the insert index
-    :param tlm_data:
-    :param mainGroup:
-    :return:
-    """
-    times = mainGroup.variables['time']
+#     for timeIndex, packet in tlm_data.items():
+#         length = length = len(mainGroup.dimensions['time'])
+#         for tlm_name, value in packet.items():
+#             if tlm_name not in mainGroup.variables.keys():
+#                 LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
+#                 exit(1)
 
-    for timeIndex, packet in tlm_data.items():
-        length = length = len(mainGroup.dimensions['time'])
-        for tlm_name, value in packet.items():
-            if tlm_name not in mainGroup.variables.keys():
-                LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
-                exit(1)
-
-            datapt = mainGroup.variables[tlm_name]
-            timeIndex = int(timeIndex)
-            datapt[length] = value
-            times[length] = timeIndex
+#             datapt = mainGroup.variables[tlm_name]
+#             timeIndex = int(timeIndex)
+#             datapt[length] = value
+#             times[length] = timeIndex
 
 
 def write_to_pickle(data, filename):
@@ -687,7 +702,7 @@ if __name__ == "__main__":
 
     if not TEST:
         rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs']['location'])
-        mainGroup = get_main_group(CONFIG_INFO['netcdf']['location'])
+        mainGroup_location = CONFIG_INFO['netcdf']['location']
         processLog = CONFIG_INFO['process_log']['location']
         try:
             fileReadLog = open(processLog, mode='r')
@@ -697,7 +712,7 @@ if __name__ == "__main__":
     else:
         LOGGER.info("RUNNING IN TESTING MODE.")
         rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs_test']['location'])
-        mainGroup = get_main_group(CONFIG_INFO['netcdf_test']['location'])
+        mainGroup_location = CONFIG_INFO['netcdf_test']['location']
 
     for file in rawFiles:
         if not TEST:
@@ -713,9 +728,11 @@ if __name__ == "__main__":
 
         packets = extract_CCSDS_packets(csv_info, tlm_data)
 
+        mainGroup = get_main_group(mainGroup_location)
         data = extract_tlm_from_packets(csv_info, packets, mainGroup=mainGroup)
         LOGGER.debug("Extracted all the data, adding to NetCDF file . . .")
         netcdf_add_data(data, mainGroup)
+        mainGroup.close()
         # netcdf_add_data_2(data, mainGroup)
 
         # Clean up some variables
@@ -732,8 +749,6 @@ if __name__ == "__main__":
     if not TEST:
         LOGGER.debug("Closed file read log")
         fileReadLog.close()
-
-    mainGroup.close()
 
     LOGGER.info("Done")
 
