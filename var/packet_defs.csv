@@ -1,3 +1,4 @@
-﻿packetName,apid,length,headerFile,pointsFile,statesFile
-bct_fsw,62,1600,var/headers/ccsds_bct_fsw.csv,var/points/bct_fsw_trimmed.csv,
-bct_soh,63,400,var/headers/ccsds_bct_soh.csv,var/points/bct_soh.csv,
+packetName,apid,length,headerFile,pointsFile,statesFile
+bct_fsw,62,1600,var/headers/ccsds_bct_fsw.csv,var/points/bct_fsw.csv
+bct_soh,63,400,var/headers/ccsds_bct_soh.csv,var/points/bct_soh.csv
+bct_fsw_pbk,62,1600,var/headers/ccsds_bct_fsw_pbk.csv,var/points/bct_fsw.csv

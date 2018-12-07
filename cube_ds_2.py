@@ -14,13 +14,15 @@ import pickle
 import json
 from netCDF4 import Dataset
 import pylogger
-
+from math import floor
 
 # GLOBALS ==================================================================================
-CCSDS_EPOCH = dt.datetime(1951, 1, 28, 13, 17, 23)  # Epoch time for incoming time stamps
-TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
+# CCSDS_EPOCH = dt.datetime(1951, 1, 28, 13, 17, 23)  # Epoch time for incoming time stamps
+CCSDS_EPOCH = dt.datetime(1947, 5, 23, 11, 5, 39)  # Epoch time for incoming time stamps
+TAI_EPOCH = dt.datetime(2000, 1, 1, 0, 0, 0)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
+NETCDF_EPOCH = dt.datetime(2018, 1, 1)  # Epoch for netCDF file.
 
 
 CONFIG_FILE = "C:\\data-processing\\cube-ds\\cube_ds_2.cfg"  # defines config file for configparser
@@ -125,7 +127,7 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
             packet_dt = get_tlm_time_dt(packet['seconds'], epoch=CCSDS_EPOCH)
             if not MIN_TIME < packet_dt < MAX_TIME:
                 LOGGER.warning("CCSDS Epoch Did not work")
-                continue
+                # continue
             LOGGER.info("CCSDS Epoch did work")
             packet['seconds'] = int((packet_dt - TAI_EPOCH).total_seconds())
             LOGGER.debug(str(packet['seconds']))
@@ -205,6 +207,10 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
             # index into the struct and save the value for the tlm point
             data_struct[packet_key][point['name']] = tlm_value
 
+            if point['name'] == 'bct_tai_seconds':
+                new_key = int(tlm_value)
+                LOGGER.debug("new key: "+str(new_key))
+
             # # if mainGroup is supplied to the function call, add point to netcdf file
             if mainGroup != '':
                 if point['name'] not in mainGroup.variables.keys():
@@ -214,6 +220,12 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     datapt.setncattr('unit', point['unit'])
                     datapt.setncattr('state', point['state'])
                     datapt.setncattr('description', point['description'])
+        data_struct[new_key] = data_struct[packet_key]
+        del data_struct[packet_key]
+    # with open('tlm.json', 'w') as fp:
+    #     j = json.dumps(data_struct, indent=4)
+    #     fp.write(j)
+    # fp.close()
     return data_struct
 
 
@@ -392,7 +404,7 @@ def extract_CCSDS_packets(csv_info, data):
                 # check to make sure that the header starts at bit/byte 0
                 if int(header_dict_field['startBit']) != 0 or int(header_dict_field['startByte']) != 0:
                     LOGGER.fatal("Header does not start at zero.")
-                    exit(0)
+                    exit(-1)
                 first_iteration = 0
 
             else:
@@ -400,14 +412,14 @@ def extract_CCSDS_packets(csv_info, data):
                 if int(header_dict_field['startByte']) == int(last_byte and header_dict_field['startBit']) == 0:
                     LOGGER.fatal("There is overlap in the header for " + csv_dict['packetName'] +
                                  ". This is not currently supported.")
-                    exit(0)
+                    exit(-1)
 
                 # make sure there are no gaps
                 if last_byte * 8 + last_bit + last_size !=\
                         int(header_dict_field['startBit']) + int(header_dict_field['startByte']) * 8:
                     LOGGER.fatal("There is a gap in your header for " + csv_dict['packetName'] +
                                  " at " + header_dict_field['field'] + ". Consider adding \"padding\"")
-                    exit(0)
+                    exit(-1)
 
             # this if statement is checking if we are at a new byte or not.
             # if there are bits involved, we need to know so we can do special masking.
@@ -425,8 +437,8 @@ def extract_CCSDS_packets(csv_info, data):
                     current_letter = 'B'
                 else:
                     current_letter = ''
-                # todo - write function to unmask bits
                 pass
+                # todo - write function to unmask bits
             elif packet_size == 8:
                 current_letter = 'B'
             elif packet_size == 16:
@@ -441,7 +453,11 @@ def extract_CCSDS_packets(csv_info, data):
 
             header_size += packet_size
             format_string += current_letter
-            header_index_dict[header_dict_field['field']] = index_counter
+            try:
+                header_index_dict[header_dict_field['field']] = index_counter
+            except KeyError:
+                LOGGER.fatal(pprint(header_dict_field))
+                exit(-1)
             if current_letter:
                 index_counter += 1
 
@@ -466,6 +482,7 @@ def extract_CCSDS_packets(csv_info, data):
 
         # find the initial possible syncs
         sync_possible = np.where(data == known_dict_list[0]['value'])[0]
+        
         sync_possible = sync_possible - known_dict_list[0]['startByte']
 
         for known_dict in known_dict_list[1:-1]:
@@ -478,6 +495,13 @@ def extract_CCSDS_packets(csv_info, data):
             packet_end = header_size + int(csv_dict['length'])
             packet_dict = create_packet_dict(csv_dict, header_size, format_string, data[ind:ind+packet_end], header_index_dict)
             packet_dict_list.append(packet_dict)
+
+            if TEST:
+                with open('test/'+str(ind)+'.dat', mode='wb') as f:
+                    pprint(packet_dict)
+                    f.write(data[ind:ind+packet_end])
+                    f.close()
+
     return packet_dict_list
 
 
@@ -698,7 +722,8 @@ if __name__ == "__main__":
     csv_info = get_csv_info(csv_file)
 
     # how the raw files are named
-    file_re_pattern = 'bct_\d{4}.*'
+    # file_re_pattern = '^bct_\d{4}.*'
+    file_re_pattern = '.*playback.*341_08.*'
 
     if not TEST:
         rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs']['location'])
@@ -715,6 +740,7 @@ if __name__ == "__main__":
         mainGroup_location = CONFIG_INFO['netcdf_test']['location']
 
     for file in rawFiles:
+        LOGGER.info("Processing "+file)
         if not TEST:
             # don't process file twice.
             foundFlag = 0
