@@ -328,7 +328,7 @@ def get_time_data(st,et,files):
 	return returnTime, returnData
 
 
-def plot_data(tlm,t,d):
+def plot_data(tlm, t, d):
 	"""
 	Plots data and time
 	:param tlm: telemetry mnemonic for the title

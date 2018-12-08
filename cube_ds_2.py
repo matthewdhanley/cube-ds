@@ -7,17 +7,16 @@ import argparse
 import struct
 import csv
 import re
-import configparser
 import pprint
 import datetime as dt
 import pickle
 import json
 from netCDF4 import Dataset
 import pylogger
-
+import configparser
 
 # GLOBALS ==================================================================================
-TAI_EPOCH = dt.datetime(2000, 1, 1, 11, 59, 27)  # Epoch time for incoming time stamps
+TAI_EPOCH = dt.datetime(1999, 12, 31, 23, 59, 23)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
 MIN_TIME = dt.datetime(2018, 1, 1, 12, 0, 0)  # minimum allowable time for naive filtering
 
@@ -99,6 +98,90 @@ def get_tlm_points(pointsFile, csv_encoding='utf-8'):
     return points_dict_list
 
 
+def extract_tlm_from_sorted_packets(packets):
+    for key in packets:
+        csv_info = packets[key]['csv_info']
+        points_file = csv_info['pointsFile']
+
+        # if the file wasn't found, send message to user and exit
+        if points_file == '':
+            LOGGER.error('error finding points definitions for packet ' + csv_info['packetName'])
+            exit(0)
+
+        # extract the telemetry points from the file
+        tlm_points = get_tlm_points(points_file)
+        out_data = []
+        for data in packets[key]['raw_packets']:
+            out_data.append(extract_data(data, tlm_points))
+        return out_data
+
+
+def extract_data(data, tlm_points):
+    extracted_data = {}
+    for point in tlm_points:
+        # get start bit and start byte for data extraction
+        startByte = int(point['startByte'])
+        startBit = int(point['startBit'])
+
+        # size is needed for selecting the right amount of data
+        tlm_length = int(point['size'])
+
+        # need a check to see if the length is less than one byte
+        # python can only grab one byte at a time
+        if tlm_length < 8:
+            tlm_length = 8
+
+        # conver the conversion to a float
+        conversion = float(point['conversion'])
+
+        # get the datatype
+        dtype = point['dtype']
+
+        # grab the header length from the packet todo - fix
+        # header_length = int(packet['headerSize'])
+        header_length = 12
+
+        # get the relavent data from the packet
+        tlmData = data[header_length + startByte:header_length + startByte + tlm_length // 8]
+
+        # generate a format string for struct.unpack
+        unpack_data_format = get_unpack_format(dtype, tlm_length)
+
+        # try to unpack the data (if it's not a char, chars are having issues?)
+        # ALSO CONVERT TO THE EU
+        if point['dtype'] != 'char':
+            try:
+                tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
+            except struct.error:
+                # not extracting the right amount of data. Print some debug information and move on
+                LOGGER.warning("Packet ended unexpectedly.")
+                # pprint.pprint(point)
+                # pprint.pprint(tlmData)
+                # print(unpack_data_format)
+                continue
+            except TypeError as e:
+                # had an issue with types. Print debug info and exit. This is a more serious issue.
+                print(point)
+                print(tlm_value)
+                print(e)
+                exit(-1)
+
+        # index into the struct and save the value for the tlm point
+        extracted_data[point['name']] = tlm_value
+
+        # # # if mainGroup is supplied to the function call, add point to netcdf file
+        # if mainGroup != '':
+        #     if point['name'] not in mainGroup.variables.keys():
+        #         # If not, create it.
+        #         dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
+        #         datapt = mainGroup.createVariable(point['name'], dtype_string, ("time",))
+        #         datapt.setncattr('unit', point['unit'])
+        #         datapt.setncattr('state', point['state'])
+        #         datapt.setncattr('description', point['description'])
+    pprint.pprint(extracted_data)
+    return extracted_data
+
+
 def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
     """
     This function will extract telemetry values from the given packets list using information from the csv file
@@ -176,7 +259,6 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
 
             # try to unpack the data (if it's not a char, chars are having issues?)
             # ALSO CONVERT TO THE EU
-            # todo - why aren't we decoding chars?
             if point['dtype'] != 'char':
                 try:
                     tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
@@ -206,6 +288,8 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     datapt.setncattr('unit', point['unit'])
                     datapt.setncattr('state', point['state'])
                     datapt.setncattr('description', point['description'])
+
+            new_key = data_struct[packet_key]['bct_tai_seconds']
 
     return data_struct
 
@@ -294,7 +378,6 @@ def get_tlm_data(raw_file, endian="big"):
     """
     reads in raw data
     :param raw_file: binary data file. currently need continuous CCSDS packets in file.
-    TODO - GET KISS DECODING
     :return: large endian numpy byte array
     """
     LOGGER.debug("Telemetry file -  " + raw_file)
@@ -302,7 +385,7 @@ def get_tlm_data(raw_file, endian="big"):
     # check that the file exists
     if not os.path.exists(raw_file):
         LOGGER.fatal("Telemetry Definition Directory does not exits. Check config file.")
-        exit(0)
+        exit(-1)
 
     # read the data into a numpy array
     LOGGER.debug("reading data into numpy byte array")
@@ -311,8 +394,8 @@ def get_tlm_data(raw_file, endian="big"):
     elif endian=="little":
         raw_data = np.fromfile(raw_file, dtype='<B')
     else:
-        LOGGER.error("DID NOT specify correct endian")
-        exit(1)
+        LOGGER.fatal("DID NOT specify correct endian")
+        exit(-1)
     return raw_data
 
 
@@ -335,8 +418,106 @@ def get_header_dict(headerfile):
     return header_dict_list
 
 
+def extract_ax25_packets(data):
+    header = np.array(bytearray.fromhex('84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0'))
+    header_len = len(header)
+    inds = []
+    ax25_packets = []
+
+    for x in range(0, len(data-header_len)):
+        if np.all(data[x:x+header_len] == header):
+            inds.append(x)
+
+    for x in range(0, len(inds)-1):
+        ax25_packets.append(data[inds[x]:inds[x+1]])
+
+    return(ax25_packets)
+
+
+def strip_ax25(ax25_packets, header_len):
+    for i in range(0, len(ax25_packets)):
+        ax25_packets[i] = ax25_packets[i][header_len:]
+    return ax25_packets
+
+
+def stitch_ccsds(packet_parts):
+    # APIDs  TODO - MOVE TO SOMEWHERE MORE CONFIGURABLE
+    playback_soh = [np.array([4, 63]), np.array([12, 63])]
+    # playback_fsw_apid = np.array([4, 62])
+    rt_soh= [np.array([8, 63]), np.array([0, 63])]
+    # fsw_apid = np.array([8, 62])
+    packet_types = [playback_soh, rt_soh]
+
+    full_packets = []
+    i = 0
+    while i in range(0, len(packet_parts)-1):
+        # if np.all(packet_parts[i][0:2] == apid):
+        first_flag = 0
+        break_flag = 0
+        current_packet = packet_parts[i]
+        current_ccsds = extract_CCSDS_header(current_packet)
+        for apid in packet_types:
+            if np.all(apid[0] == [current_ccsds['source'], current_ccsds['apid']]):
+                first_flag = 1
+                current_apid = apid
+        if not first_flag:
+            i += 1
+            continue
+        for apid in current_apid[1:]:
+            next_packet = packet_parts[i+1]
+            next_ccsds = extract_CCSDS_header(next_packet)
+            if next_ccsds['sequence'] - current_ccsds['sequence'] > 1:
+                # LOGGER.warning('Partial Packet.')
+                i += 1
+                break
+            if np.all(apid == [next_ccsds['source'], next_ccsds['apid']]):
+                current_packet = np.append(current_packet, next_packet[6:])
+                current_ccsds = next_ccsds
+                i += 1
+            else:
+                i+=1
+                break_flag = 1
+                break
+        if not break_flag:
+            full_packets.append(current_packet)
+
+    return full_packets
+
+
+def sort_packets(packets):
+    packets_sorted = {}
+    for packet in packets:
+        packet_id = str(packet[0]) + str(packet[1])
+        if packet_id in packets_sorted:
+            packets_sorted[packet_id]['raw_packets'].append(packet)
+        else:
+            packets_sorted[packet_id] = {}
+            packets_sorted[packet_id]['raw_packets'] = [packet]
+    return packets_sorted
+
+
+def extract_CCSDS_header(packet_data):
+    header = packet_data[0:12]
+    source = header[0]
+    apid = header[1]
+    groups = header[2]
+    sequence = header[3]
+    length = struct.unpack('>H', header[4:6])
+    seconds = struct.unpack('>I', header[5:9])
+    subseconds = header[10]
+    ccsds_header = {
+        'source': source,
+        'apid': apid,
+        'groups': groups,
+        'sequence': sequence,
+        'length': length,
+        'seconds': seconds,
+        'subseconds': subseconds}
+    return ccsds_header
+
+
 def extract_CCSDS_packets(csv_info, data):
-    '''
+    """
     This function will go through raw data and extract raw packets.
     ASSUMPTIONS:
     Data is not in a nice format, will need to find the beginning of frames.
@@ -344,7 +525,7 @@ def extract_CCSDS_packets(csv_info, data):
     :param data: Raw data to find the packets in
     :param apids: list of apids to look for
     :return: dictionary? of packets
-    '''
+    """
 
     # loop through apids and find potential frames
     packet_dict_list = []
