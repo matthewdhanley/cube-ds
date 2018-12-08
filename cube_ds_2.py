@@ -7,12 +7,7 @@ import argparse
 import struct
 import csv
 import re
-<<<<<<< HEAD
 import pprint
-=======
-import configparser
-from pprint import pprint
->>>>>>> 65aa982646894d91cee772c78362c3e492e46633
 import datetime as dt
 import pickle
 import json
@@ -119,7 +114,7 @@ def extract_tlm_from_sorted_packets(packets):
         out_data = []
         for data in packets[key]['raw_packets']:
             out_data.append(extract_data(data, tlm_points))
-        return out_data
+    return out_data
 
 
 def extract_data(data, tlm_points):
@@ -157,10 +152,12 @@ def extract_data(data, tlm_points):
         # ALSO CONVERT TO THE EU
         if point['dtype'] != 'char':
             try:
+                if point['name'] == 'bct_battery_voltage':
+                    print(struct.unpack(unpack_data_format, tlmData)[0])
                 tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
             except struct.error:
                 # not extracting the right amount of data. Print some debug information and move on
-                LOGGER.warning("Packet ended unexpectedly.")
+                # LOGGER.warning("Packet ended unexpectedly.")
                 # pprint.pprint(point)
                 # pprint.pprint(tlmData)
                 # print(unpack_data_format)
@@ -184,7 +181,7 @@ def extract_data(data, tlm_points):
         #         datapt.setncattr('unit', point['unit'])
         #         datapt.setncattr('state', point['state'])
         #         datapt.setncattr('description', point['description'])
-    pprint.pprint(extracted_data)
+    pprint.pprint(extracted_data['bct_battery_voltage'])
     return extracted_data
 
 
@@ -277,7 +274,7 @@ def extract_tlm_from_packets(csv_info, packets, mainGroup=''):
                     tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
                 except struct.error:
                     # not extracting the right amount of data. Print some debug information and move on
-                    LOGGER.warning("Packet ended unexpectedly.")
+                    # LOGGER.warning("Packet ended unexpectedly.")
                     pprint(point)
                     pprint(tlmData)
                     print(unpack_data_format)
@@ -402,6 +399,7 @@ def get_tlm_data(raw_file, endian="big"):
 
     # check that the file exists
     if not os.path.exists(raw_file):
+        LOGGER.debug(raw_file)
         LOGGER.fatal("Telemetry Definition Directory does not exits. Check config file.")
         exit(-1)
 
@@ -463,16 +461,15 @@ def strip_ax25(ax25_packets, header_len):
 
 def stitch_ccsds(packet_parts):
     # APIDs  TODO - MOVE TO SOMEWHERE MORE CONFIGURABLE
-    playback_soh = [np.array([4, 63]), np.array([12, 63])]
+    playback_soh = [np.array([12, 63]), np.array([4, 63])]
     # playback_fsw_apid = np.array([4, 62])
     rt_soh= [np.array([8, 63]), np.array([0, 63])]
     # fsw_apid = np.array([8, 62])
     packet_types = [playback_soh, rt_soh]
-
+    partial_header_length = 6
     full_packets = []
     i = 0
     while i in range(0, len(packet_parts)-1):
-        # if np.all(packet_parts[i][0:2] == apid):
         first_flag = 0
         break_flag = 0
         current_packet = packet_parts[i]
@@ -484,15 +481,17 @@ def stitch_ccsds(packet_parts):
         if not first_flag:
             i += 1
             continue
+
         for apid in current_apid[1:]:
             next_packet = packet_parts[i+1]
             next_ccsds = extract_CCSDS_header(next_packet)
             if next_ccsds['sequence'] - current_ccsds['sequence'] > 1:
                 # LOGGER.warning('Partial Packet.')
                 i += 1
+                break_flag = 1
                 break
             if np.all(apid == [next_ccsds['source'], next_ccsds['apid']]):
-                current_packet = np.append(current_packet, next_packet[6:])
+                current_packet = np.append(current_packet, next_packet[partial_header_length:])
                 current_ccsds = next_ccsds
                 i += 1
             else:

@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 ﻿packetName,source,apid,length,headerFile,pointsFile
 bct_fsw,8,62,1600,var/headers/ccsds_bct_fsw.csv,var/points/bct_fsw.csv
-bct_fsw,4,62,1600,var/headers/ccsds_bct_fsw_playback.csv,var/points/bct_fsw.csv
+bct_fsw,12,62,1600,var/headers/ccsds_bct_fsw_playback.csv,var/points/bct_fsw.csv
 bct_soh,8,63,400,var/headers/ccsds_bct_soh.csv,var/points/bct_soh.csv
-bct_soh,4,63,400,var/headers/ccsds_bct_soh_playback.csv,var/points/bct_soh.csv
-=======
-packetName,apid,length,headerFile,pointsFile,statesFile
-bct_fsw,62,1600,var/headers/ccsds_bct_fsw.csv,var/points/bct_fsw.csv
-bct_soh,63,400,var/headers/ccsds_bct_soh.csv,var/points/bct_soh.csv
-bct_fsw_pbk,62,1600,var/headers/ccsds_bct_fsw_pbk.csv,var/points/bct_fsw.csv
->>>>>>> 65aa982646894d91cee772c78362c3e492e46633
+bct_soh,12,63,400,var/headers/ccsds_bct_soh_playback.csv,var/points/bct_soh.csv

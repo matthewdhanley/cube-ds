@@ -1,5 +1,5 @@
 ﻿field,startByte,startBit,size,expected
-ccsdsInfo,0,0,8,4
+ccsdsInfo,0,0,8,12
 apid,1,0,8,63
 seqCount,2,0,16,
 length,4,0,16,
