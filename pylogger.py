@@ -2,7 +2,7 @@ import logging
 import logging.config
 import os
 
-CONFIG_FILE = 'LOGGER.cfg'
+CONFIG_FILE = 'C:\\data-processing\\cube-ds\\LOGGER.cfg'
 
 def get_logger():
     """
