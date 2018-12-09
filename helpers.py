@@ -1,5 +1,6 @@
 from config import *
 import pickle
+LOGGER = pylogger.get_logger()
 
 
 def get_tlm_time_dt(taiTime, epoch=TAI_EPOCH):
@@ -207,8 +208,6 @@ def write_to_pickle(data, filename):
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
-
-
 def find_files(re_string, rootdir):
     rawFiles = []
     for root, directories, filenames in os.walk(rootdir):
@@ -221,3 +220,8 @@ def find_files(re_string, rootdir):
         LOGGER.warning("Didn't find any raw files in " + rootdir)
 
     return rawFiles
+
+
+def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
+    utc = TAI_EPOCH + dt.timedelta(seconds=int(tai))
+    return utc.strftime(time_format)

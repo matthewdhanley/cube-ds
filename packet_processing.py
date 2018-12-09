@@ -1,5 +1,6 @@
 from config import *
 from helpers import *
+LOGGER = pylogger.get_logger('packet processing')
 
 
 def extract_key(extracted_tlm_data, key):
@@ -36,6 +37,8 @@ def extract_tlm_from_sorted_packets(packets):
         # extract the telemetry points from the file
         tlm_points = get_tlm_points(points_file)
         for data in packets[key]['raw_packets']:
+            if not len(data):
+                continue
             out_data.append(extract_data(data, tlm_points))
     if len(out_data) == 0:
         LOGGER.warning("Did not extract any data . . .")
@@ -72,20 +75,14 @@ def extract_data(data, tlm_points):
 
         # generate a format string for struct.unpack
         unpack_data_format = get_unpack_format(dtype, tlm_length)
-
         # try to unpack the data (if it's not a char, chars are having issues?)
         # ALSO CONVERT TO THE EU
         if point['dtype'] != 'char':
             try:
-                if point['name'] == 'bct_battery_voltage':
-                    print(struct.unpack(unpack_data_format, tlmData)[0])
                 tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
             except struct.error:
                 # not extracting the right amount of data. Print some debug information and move on
-                # LOGGER.warning("Packet ended unexpectedly.")
-                # pprint.pprint(point)
-                # pprint.pprint(tlmData)
-                # print(unpack_data_format)
+                LOGGER.warning("Packet ended unexpectedly.")
                 continue
             except TypeError as e:
                 # had an issue with types. Print debug info and exit. This is a more serious issue.
@@ -97,6 +94,7 @@ def extract_data(data, tlm_points):
         # index into the struct and save the value for the tlm point
         extracted_data[point['name']] = tlm_value
 
+
         # todo - move to netcdf.py
         # # # if mainGroup is supplied to the function call, add point to netcdf file
         # if mainGroup != '':
@@ -107,5 +105,17 @@ def extract_data(data, tlm_points):
         #         datapt.setncattr('unit', point['unit'])
         #         datapt.setncattr('state', point['state'])
         #         datapt.setncattr('description', point['description'])
-    pprint.pprint(extracted_data['bct_battery_voltage'])
+    # pprint.pprint(extracted_data['bct_battery_voltage'])
     return extracted_data
+
+
+def sort_packets(packets):
+    packets_sorted = {}
+    for packet in packets:
+        packet_id = str(packet[0]) + str(packet[1])
+        if packet_id in packets_sorted:
+            packets_sorted[packet_id]['raw_packets'].append(packet)
+        else:
+            packets_sorted[packet_id] = {}
+            packets_sorted[packet_id]['raw_packets'] = [packet]
+    return packets_sorted

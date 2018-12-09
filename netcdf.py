@@ -1,5 +1,21 @@
 from config import *
 from netCDF4 import Dataset
+from helpers import *
+
+LOGGER = pylogger.get_logger()
+
+
+def save_to_netcdf(data, file, index_key):
+    mainGroup = get_main_group(file)
+
+    csv_file = CONFIG_INFO['csv']['location']
+    csv_info = get_csv_info(csv_file)
+    for info in csv_info:
+        tlm_points = get_tlm_points(info['pointsFile'])
+        netcdf_setup(tlm_points, mainGroup)
+
+    netcdf_add_data(data, mainGroup, index_key)
+    mainGroup.close()
 
 
 def createFile(filename):
@@ -12,11 +28,6 @@ def createFile(filename):
     time = mainGroup.createDimension("time", None)  # None sets the dimension size to unlimited.
     times = mainGroup.createVariable("time", "f8", ("time",))
     times.setncattr('unit', 'seconds since 2018/001 - 00:00:00')
-    """
-    TAI Epoch Source:
-    Seidelmann, P. K., Ed. (1992). Explanatory Supplement to the Astronomical Almanac. 
-        Sausalito, CA: University Science Books. Glossary, s.v. Terrestrial Dynamical Time.
-    """
     mainGroup.close()
 
 
@@ -65,30 +76,7 @@ def get_main_group(filename):
     return mainGroup
 
 
-# def direct_add_point(timeIndex, point, value, mainGroup):
-#     times = mainGroup.variables['time']
-#     # length = len(mainGroup.dimensions['time'])
-#     tlm_name = point['name']
-#
-#     if tlm_name in mainGroup.variables.keys():
-#         # If it has, retrieve it.
-#         datapt = mainGroup.variables[tlm_name]
-#     else:
-#         # If not, create it.
-#         dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
-#         datapt = mainGroup.createVariable(tlm_name, dtype_string, ("time",))
-#         datapt.setncattr('unit', point['unit'])
-#         datapt.setncattr('state', point['state'])
-#         datapt.setncattr('description', point['description'])
-#     try:
-#         timeIndex = int(timeIndex)
-#         datapt[timeIndex] = value
-#         times[timeIndex] = timeIndex
-#     except OverflowError:
-#         LOGGER.warning('Overflow Error on '+point['name']+' with value '+str(value))
-
-
-def netcdf_add_data(tlm_data, mainGroup):
+def netcdf_add_data(tlm_data, mainGroup, index_key):
     """
     This version adds using the TAI time as the insert index
     :param tlm_data:
@@ -97,14 +85,13 @@ def netcdf_add_data(tlm_data, mainGroup):
     """
     times = mainGroup.variables['time']
 
-    for timeIndex, packet in tlm_data.items():
+    for packet in tlm_data:
+        timeIndex = int(packet[index_key])
         for tlm_name, value in packet.items():
             if tlm_name not in mainGroup.variables.keys():
                 LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
                 exit(1)
-
             datapt = mainGroup.variables[tlm_name]
-            timeIndex = int(timeIndex)
             try:
                 datapt[timeIndex] = value
                 times[timeIndex] = timeIndex
@@ -113,3 +100,14 @@ def netcdf_add_data(tlm_data, mainGroup):
         mainGroup.sync()
         LOGGER.debug(timeIndex)
         LOGGER.debug("Synced NetCDF to disk")
+
+
+def netcdf_setup(tlm_points, mainGroup):
+    for point in tlm_points:
+        if point['name'] not in mainGroup.variables.keys():
+            # If not, create it.
+            dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
+            datapt = mainGroup.createVariable(point['name'], dtype_string, ("time",))
+            datapt.setncattr('unit', point['unit'])
+            datapt.setncattr('state', point['state'])
+            datapt.setncattr('description', point['description'])

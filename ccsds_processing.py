@@ -1,8 +1,5 @@
-import numpy as np
-import struct
-import pylogger
-
-pylogger.get_logger()
+from config import *
+LOGGER = pylogger.get_logger()
 
 
 def extract_CCSDS_header(packet_data):
@@ -19,7 +16,7 @@ def extract_CCSDS_header(packet_data):
         'apid': apid,
         'groups': groups,
         'sequence': sequence,
-        'length': length,
+        'length': length[0],
         'seconds': seconds,
         'subseconds': subseconds}
     return ccsds_header
@@ -32,6 +29,7 @@ def stitch_ccsds(packet_parts):
     rt_soh= [np.array([8, 63]), np.array([0, 63])]
     # fsw_apid = np.array([8, 62])
     packet_types = [playback_soh, rt_soh]
+    start_header_length = 12
     partial_header_length = 6
     full_packets = []
     i = 0
@@ -47,17 +45,18 @@ def stitch_ccsds(packet_parts):
         if not first_flag:
             i += 1
             continue
-
+        current_packet = current_packet[0:current_ccsds['length']+start_header_length-5]
         for apid in current_apid[1:]:
             next_packet = packet_parts[i+1]
             next_ccsds = extract_CCSDS_header(next_packet)
-            if next_ccsds['sequence'] - current_ccsds['sequence'] > 1:
+            # print(str(next_ccsds['sequence']) + ' - ' + str(current_ccsds['sequence']))
+            if int(next_ccsds['sequence']) - int(current_ccsds['sequence']) > 1:
                 # LOGGER.warning('Partial Packet.')
                 i += 1
                 break_flag = 1
                 break
             if np.all(apid == [next_ccsds['source'], next_ccsds['apid']]):
-                current_packet = np.append(current_packet, next_packet[partial_header_length:])
+                current_packet = np.append(current_packet, next_packet[partial_header_length:next_ccsds['length']+partial_header_length])
                 current_ccsds = next_ccsds
                 i += 1
             else:
