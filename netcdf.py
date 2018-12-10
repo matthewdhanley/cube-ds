@@ -87,19 +87,33 @@ def netcdf_add_data(tlm_data, mainGroup, index_key):
 
     for packet in tlm_data:
         timeIndex = int(packet[index_key])
+        timeIndex = get_time_index(timeIndex)
+        print(timeIndex)
         for tlm_name, value in packet.items():
             if tlm_name not in mainGroup.variables.keys():
                 LOGGER.fatal("Something went wrong and could not find variable in NetCDF File...")
                 exit(1)
             datapt = mainGroup.variables[tlm_name]
+            if timeIndex < 0:
+                LOGGER.warn("Bad time index of "+str(timeIndex)+". Skipping it.")
+                break
             try:
                 datapt[timeIndex] = value
                 times[timeIndex] = timeIndex
             except OverflowError:
                 LOGGER.warn("Overflow error on NetCDF Insert")
-        mainGroup.sync()
+            except IndexError:
+                LOGGER.error("Index error.")
+                exit(1)
+        # mainGroup.sync()
         LOGGER.debug(timeIndex)
         LOGGER.debug("Synced NetCDF to disk")
+
+
+def get_time_index(index):
+    first_time = TAI_EPOCH + dt.timedelta(seconds=index)
+    out_index = (first_time - NETCDF_EPOCH).total_seconds()
+    return int(out_index)
 
 
 def netcdf_setup(tlm_points, mainGroup):
