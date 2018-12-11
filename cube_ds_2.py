@@ -10,6 +10,7 @@ from ax25_processing import *
 from ccsds_processing import *
 from pylogger import *
 from csv_out import *
+from postgresql import *
 
 LOGGER = get_logger(name='main')
 
@@ -98,6 +99,13 @@ if __name__ == "__main__":
     if int(CONFIG_INFO['SAVE']['NETCDF']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['NETCDF_FILE'])
         save_to_netcdf(tlm, CONFIG_INFO['SAVE']['NETCDF_FILE'], index_key='bct_tai_seconds')
+
+    if int(CONFIG_INFO['SAVE']['POSTGRESQL']):
+        LOGGER.info("Saving telemetry to database . . .")
+        add_to_db(tlm, 'bct_tai_seconds',
+                  CONFIG_INFO['DB']['DBNAME'],
+                  CONFIG_INFO['DB']['USER'],
+                  CONFIG_INFO['DB']['PASSWORD'])
 
     if not TEST:
         LOGGER.debug("Closed file read log")

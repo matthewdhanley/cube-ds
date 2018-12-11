@@ -1,9 +1,13 @@
 from config import *
 from helpers import *
-LOGGER = pylogger.get_logger('CSV_OUT')
+LOGGER = pylogger.get_logger('root')
+
 
 def tlm_to_csv(data, file_name, time_key=''):
     LOGGER.info("writing to file "+file_name)
+    if len(data) == 0:
+        LOGGER.error("No data found to write to CSV")
+        return(1)
     num_headers = len(data[0].values())
     if time_key:
         num_headers += 1
@@ -30,8 +34,8 @@ def tlm_to_csv(data, file_name, time_key=''):
             LOGGER.warning("Found a frame that is not full. Skipping writing it to CSV.")
         elif len(row) > num_headers:
             LOGGER.critical("More entries in the extracted telemetry than CSV errors")
-            return 0
+            return 1
         else:
             csv_f.writerow(row)
     handle.close()
-    return 1
+    return 0
