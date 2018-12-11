@@ -5,7 +5,7 @@ import os
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'LOGGER.cfg')
 
 
-def get_logger(name='logger'):
+def get_logger(name='root'):
     """
     Create a logging object for easy logging
     :return: logging object

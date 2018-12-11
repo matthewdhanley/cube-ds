@@ -1,6 +1,25 @@
 from config import *
 import pickle
-LOGGER = pylogger.get_logger()
+LOGGER = pylogger.get_logger(__name__)
+
+
+def extract_bits(data, bit, length=1):
+    bits = bitarray(data, endian='big')
+    if length > 1:
+        out = bits[bit:bit+length]
+        out = struct.unpack('>B', out.tobytes())[0]
+    else:
+        try:
+            out = bits[bit]
+        except IndexError:
+            out = 0
+    return int(out)
+
+
+def tlm_to_df(tlm, time_index):
+    df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
+    df[time_index] = df[time_index].map(lambda x: int(x))
+    return df
 
 
 def get_tlm_time_dt(taiTime, epoch=TAI_EPOCH):

@@ -10,8 +10,9 @@ from ax25_processing import *
 from ccsds_processing import *
 from pylogger import *
 from csv_out import *
+from postgresql import *
+from idl_out import *
 
-LOGGER = get_logger(name='main')
 
 if __name__ == "__main__":
     # set up LOGGER.
@@ -93,11 +94,23 @@ if __name__ == "__main__":
 
     if int(CONFIG_INFO['SAVE']['CSV']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['CSV_FILE'])
-        tlm_to_csv(tlm, CONFIG_INFO['SAVE']['CSV_FILE'], time_key='bct_tai_seconds')
+        tlm_to_csv(tlm, CONFIG_INFO['SAVE']['CSV_FILE'], time_key=CONFIG_INFO['SAVE']['KEY'])
 
     if int(CONFIG_INFO['SAVE']['NETCDF']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['NETCDF_FILE'])
-        save_to_netcdf(tlm, CONFIG_INFO['SAVE']['NETCDF_FILE'], index_key='bct_tai_seconds')
+        save_to_netcdf(tlm, CONFIG_INFO['SAVE']['NETCDF_FILE'], index_key=CONFIG_INFO['SAVE']['KEY'])
+
+    if int(CONFIG_INFO['SAVE']['POSTGRESQL']):
+        LOGGER.info("Saving telemetry to database . . .")
+        df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
+        add_df_to_db(df, CONFIG_INFO['SAVE']['KEY'],
+                  CONFIG_INFO['DB']['DBNAME'],
+                  CONFIG_INFO['DB']['USER'],
+                  CONFIG_INFO['DB']['PASSWORD'])
+
+    if int(CONFIG_INFO['SAVE']['IDL']):
+        df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
+        df_to_dict(df, CONFIG_INFO['SAVE']['KEY'])
 
     if not TEST:
         LOGGER.debug("Closed file read log")

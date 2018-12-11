@@ -1,5 +1,5 @@
 from config import *
-LOGGER = pylogger.get_logger()
+LOGGER = pylogger.get_logger(__name__)
 
 
 def extract_CCSDS_header(packet_data):

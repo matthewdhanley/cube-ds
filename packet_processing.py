@@ -1,6 +1,6 @@
 from config import *
 from helpers import *
-LOGGER = pylogger.get_logger('packet processing')
+LOGGER = pylogger.get_logger(__name__)
 
 
 def extract_key(extracted_tlm_data, key):
@@ -52,12 +52,15 @@ def extract_data(data, tlm_points):
         startByte = int(point['startByte'])
         startBit = int(point['startBit'])
 
+        extract_bits_length = 0
+
         # size is needed for selecting the right amount of data
         tlm_length = int(point['size'])
 
         # need a check to see if the length is less than one byte
         # python can only grab one byte at a time
         if tlm_length < 8:
+            extract_bits_length = tlm_length
             tlm_length = 8
 
         # conver the conversion to a float
@@ -90,6 +93,9 @@ def extract_data(data, tlm_points):
                 print(tlm_value)
                 print(e)
                 exit(-1)
+
+            if extract_bits_length > 0:
+                tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
 
         # index into the struct and save the value for the tlm point
         extracted_data[point['name']] = tlm_value

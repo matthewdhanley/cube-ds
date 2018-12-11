@@ -1,7 +1,7 @@
 import numpy as np
 import pylogger
 
-LOGGER = pylogger.get_logger()
+LOGGER = pylogger.get_logger(__name__)
 
 
 def extract_ax25_packets(data):
