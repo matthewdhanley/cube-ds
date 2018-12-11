@@ -1,10 +1,12 @@
 from config import *
 import psycopg2
+import psycopg2.extras
 
-LOGGER = pylogger.get_logger('root')
+# LOGGER = pylogger.get_logger(__name__)
 
 
 def connect_to_db(dbname, user, password):
+    LOGGER.info("Connecting to DB . . .")
     auth_string = "dbname="+dbname+" user="+user+" password="+password
     conn = psycopg2.connect(auth_string)
     return conn
@@ -40,6 +42,17 @@ def insert_into_db(conn, tlm_dict, index_key):
         sql = "INSERT INTO "+key+"(time, tlm_val) VALUES("+insert_location+","+str(value)+") ON CONFLICT (time) DO UPDATE SET tlm_val=excluded.tlm_val;"
         cur.execute(sql)
     conn.commit()
+
+
+def add_df_to_db(tlm_df, index_key, db, user, password):
+    conn = connect_to_db(db, user, password)
+    cur = conn.cursor()
+    for column in tlm_df:
+        data = tlm_df[[index_key, column]].values.tolist()
+        insert_query = 'INSERT INTO ' + column + ' (time, tlm_val) VALUES %s ON CONFLICT (time) DO NOTHING;'
+        psycopg2.extras.execute_values(
+            cur, insert_query, data, template=None, page_size=1000
+        )
 
 
 def add_to_db(tlm, index_key, db, user, password):

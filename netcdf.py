@@ -2,7 +2,7 @@ from config import *
 from netCDF4 import Dataset
 from helpers import *
 
-LOGGER = pylogger.get_logger()
+LOGGER = pylogger.get_logger(__name__)
 
 
 def save_to_netcdf(data, file, index_key):

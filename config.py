@@ -8,6 +8,8 @@ import numpy as np
 import csv
 import re
 import json
+import pandas as pd
+from bitarray import bitarray
 
 # GLOBALS ==================================================================================
 TAI_EPOCH = dt.datetime(1999, 12, 31, 23, 59, 23)  # Epoch time for incoming time stamps
@@ -22,4 +24,6 @@ CONFIG_INFO.read(CONFIG_FILE)
 
 # Setup for TEST mode
 TEST = int(CONFIG_INFO['TEST']['TEST'])  # check if TEST mode is set in config file
+
+LOGGER = pylogger.get_logger(__name__)
 

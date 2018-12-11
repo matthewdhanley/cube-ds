@@ -1,6 +1,6 @@
 from config import *
 from helpers import *
-LOGGER = pylogger.get_logger('root')
+LOGGER = pylogger.get_logger(__name__)
 
 
 def tlm_to_csv(data, file_name, time_key=''):
