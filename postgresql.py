@@ -45,7 +45,8 @@ def insert_into_db(conn, tlm_dict, index_key):
     insert_location = str(int(tlm_dict[index_key]))
     cur = conn.cursor()
     for key, value in tlm_dict.items():
-        sql = "INSERT INTO "+key+"(time, tlm_val) VALUES("+insert_location+","+str(value)+") ON CONFLICT (time) DO UPDATE SET tlm_val=excluded.tlm_val;"
+        sql = "INSERT INTO "+key+"(time, tlm_val) VALUES("\
+              +insert_location+","+str(value)+") ON CONFLICT (time) DO UPDATE SET tlm_val=excluded.tlm_val;"
         cur.execute(sql)
     conn.commit()
 

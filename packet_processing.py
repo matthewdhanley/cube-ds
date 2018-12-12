@@ -100,18 +100,6 @@ def extract_data(data, tlm_points):
         # index into the struct and save the value for the tlm point
         extracted_data[point['name']] = tlm_value
 
-
-        # todo - move to netcdf.py
-        # # # if mainGroup is supplied to the function call, add point to netcdf file
-        # if mainGroup != '':
-        #     if point['name'] not in mainGroup.variables.keys():
-        #         # If not, create it.
-        #         dtype_string = get_netcdf_dtype(point['size'], state=point['state'])
-        #         datapt = mainGroup.createVariable(point['name'], dtype_string, ("time",))
-        #         datapt.setncattr('unit', point['unit'])
-        #         datapt.setncattr('state', point['state'])
-        #         datapt.setncattr('description', point['description'])
-    # pprint.pprint(extracted_data['bct_battery_voltage'])
     return extracted_data
 
 

@@ -35,10 +35,10 @@ if __name__ == "__main__":
 
     # how the raw files are named
     # file_re_pattern = '^bct_\d{4}.*'
-    file_re_pattern = ['^raw.*','.*\.kss']
+    file_re_patterns = ['^raw.*', '.*\.kss']
 
     if not TEST:
-        rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs']['location'])
+        rawFiles = find_files(file_re_patterns, CONFIG_INFO['rundirs']['location'])
         processLog = CONFIG_INFO['process_log']['location']
         try:
             fileReadLog = open(processLog, mode='r')
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             exit(1)
     else:
         LOGGER.info("RUNNING IN TESTING MODE.")
-        rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs_test']['location'])
+        rawFiles = find_files(file_re_patterns, CONFIG_INFO['rundirs_test']['location'])
         LOGGER.info("Rundirs: "+CONFIG_INFO['rundirs_test']['location'])
         LOGGER.info("Found "+str(len(rawFiles))+" in the Rundirs folder.")
 
@@ -94,7 +94,9 @@ if __name__ == "__main__":
 
     if int(CONFIG_INFO['SAVE']['CSV']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['CSV_FILE'])
-        tlm_to_csv(tlm, CONFIG_INFO['SAVE']['CSV_FILE'], time_key=CONFIG_INFO['SAVE']['KEY'])
+        df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
+        tlm_df_to_csv(df, CONFIG_INFO['SAVE']['CSV_FILE'], CONFIG_INFO['SAVE']['KEY'],
+                      pass_summary=int(CONFIG_INFO['SAVE']['SUMMARY_CSV']))
 
     if int(CONFIG_INFO['SAVE']['NETCDF']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['NETCDF_FILE'])

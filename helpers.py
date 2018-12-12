@@ -22,6 +22,11 @@ def tlm_to_df(tlm, time_index):
     return df
 
 
+def add_utc_to_df(df, time_index):
+    df['UTC'] = df[time_index].map(lambda x: tai_to_utc(x))
+    return df
+
+
 def get_tlm_time_dt(taiTime, epoch=TAI_EPOCH):
     """
     Convert seconds since epoch to datetime object
@@ -227,14 +232,14 @@ def write_to_pickle(data, filename):
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
-def find_files(re_string, rootdir):
+def find_files(re_strings, rootdir):
     rawFiles = []
     for root, directories, filenames in os.walk(rootdir):
         for filename in filenames:
-            m = re.search(re_string, filename)
-            if m:
-                rawFiles.append(os.path.join(root, filename))
-
+            for re_string in re_strings:
+                m = re.search(re_string, filename)
+                if m:
+                    rawFiles.append(os.path.join(root, filename))
     if rawFiles == []:
         LOGGER.warning("Didn't find any raw files in " + rootdir)
 
