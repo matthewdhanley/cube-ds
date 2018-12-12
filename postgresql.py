@@ -5,9 +5,9 @@ import psycopg2.extras
 # LOGGER = pylogger.get_logger(__name__)
 
 
-def connect_to_db(dbname, user, password):
+def connect_to_db(dbname, user, password, port):
     LOGGER.info("Connecting to DB . . .")
-    auth_string = "dbname="+dbname+" user="+user+" password="+password
+    auth_string = "dbname="+dbname+" user="+user+" password="+password+" port="+port
     conn = psycopg2.connect(auth_string)
     return conn
 
@@ -50,8 +50,8 @@ def insert_into_db(conn, tlm_dict, index_key):
     conn.commit()
 
 
-def add_df_to_db(tlm_df, index_key, db, user, password):
-    conn = connect_to_db(db, user, password)
+def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
+    conn = connect_to_db(db, user, password, port)
     create_tlm_tables(conn)
     cur = conn.cursor()
     for column in tlm_df:
