@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # how the raw files are named
     # file_re_pattern = '^bct_\d{4}.*'
-    file_re_pattern = '^raw.*'
+    file_re_pattern = ['^raw.*','.*\.kss']
 
     if not TEST:
         rawFiles = find_files(file_re_pattern, CONFIG_INFO['rundirs']['location'])
