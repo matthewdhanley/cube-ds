@@ -12,6 +12,7 @@ from pylogger import *
 from csv_out import *
 from postgresql import *
 from idl_out import *
+from sband_processing import *
 
 
 if __name__ == "__main__":
@@ -54,21 +55,34 @@ if __name__ == "__main__":
     tlm = []
 
     for file in rawFiles:
-        LOGGER.info("Processing "+file)
         if not TEST:
             # don't process file twice.
             foundFlag = 0
             for line in fileReadLog:
+                LOGGER.debug(line+' == '+file+' ?????')
                 if line.rstrip() == file:
                     foundFlag = 1
             if foundFlag:
                 continue
+            LOGGER.info("Processing "+file)
 
         header_length = 16  # size of ax25 header
         data = get_tlm_data(file)
-        packets = extract_ax25_packets(data)
-        packets = strip_ax25(packets, header_length)
-        packets = strip_kiss(packets)
+
+        if re.search('.kss', file):
+            # KISS file CASE
+            packets = extract_ax25_packets(data)
+            packets = strip_ax25(packets, header_length)
+            packets = strip_kiss(packets)
+        elif re.search('.*sband.*', file):
+            # SBAND CASE
+            packets = extract_sband_vcdus(data)
+            packets = extract_ccsds_packets(packets)
+        else:
+            # otherwise already been stripped of kiss and stuff
+            packets = extract_ax25_packets(data)
+            packets = strip_ax25(packets, header_length)
+
         packets = stitch_ccsds(packets)
         packets = sort_packets(packets)
 

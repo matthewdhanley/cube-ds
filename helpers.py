@@ -3,6 +3,13 @@ import pickle
 LOGGER = pylogger.get_logger(__name__)
 
 
+def extract_bits_from_bytes(data, start_bit, num_bits):
+    b = bitarray(endian='big')
+    b.frombytes(data)
+    out = b[start_bit:start_bit+num_bits]
+    return out
+
+
 def extract_bits(data, bit, length=1):
     bits = bitarray(data, endian='big')
     if length > 1:
