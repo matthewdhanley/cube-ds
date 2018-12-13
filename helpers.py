@@ -3,6 +3,13 @@ import pickle
 LOGGER = pylogger.get_logger(__name__)
 
 
+def extract_bits_from_bytes(data, start_bit, num_bits):
+    b = bitarray(endian='big')
+    b.frombytes(data)
+    out = b[start_bit:start_bit+num_bits]
+    return out
+
+
 def extract_bits(data, bit, length=1):
     bits = bitarray(data, endian='big')
     if length > 1:
@@ -18,7 +25,12 @@ def extract_bits(data, bit, length=1):
 
 def tlm_to_df(tlm, time_index):
     df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
-    df[time_index] = df[time_index].map(lambda x: int(x))
+    try:
+        df = df.dropna()
+        df[time_index] = df[time_index].map(lambda x: int(x))
+    except ValueError:
+        print("VALUE ERROR")
+        return pd.DataFrame()
     return df
 
 
@@ -247,5 +259,8 @@ def find_files(re_strings, rootdir):
 
 
 def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
-    utc = TAI_EPOCH + dt.timedelta(seconds=int(tai))
+    try:
+        utc = TAI_EPOCH + dt.timedelta(seconds=int(tai))
+    except OverflowError:
+        utc = TAI_EPOCH
     return utc.strftime(time_format)

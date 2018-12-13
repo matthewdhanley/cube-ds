@@ -12,6 +12,7 @@ from pylogger import *
 from csv_out import *
 from postgresql import *
 from idl_out import *
+from sband_processing import *
 
 
 if __name__ == "__main__":
@@ -35,13 +36,16 @@ if __name__ == "__main__":
 
     # how the raw files are named
     # file_re_pattern = '^bct_\d{4}.*'
-    file_re_patterns = ['^raw.*', '.*\.kss']
+    file_re_patterns = ['^raw.*', '.*\.kss','^sband.*']
 
     if not TEST:
         rawFiles = find_files(file_re_patterns, CONFIG_INFO['rundirs']['location'])
         processLog = CONFIG_INFO['process_log']['location']
         try:
             fileReadLog = open(processLog, mode='r')
+            logFiles = []
+            for file in fileReadLog:
+                logFiles.append(file.rstrip())
         except PermissionError:
             LOGGER.fatal("Could not get permissions on " + processLog)
             exit(1)
@@ -57,21 +61,34 @@ if __name__ == "__main__":
         if not TEST:
             # don't process file twice.
             foundFlag = 0
-            for line in fileReadLog:
-                if line.rstrip() == file:
+            for line in logFiles:
+                # LOGGER.debug(line+' == '+file+' ?????')
+                if file.rstrip() == line.rstrip():
                     foundFlag = 1
             if foundFlag:
                 continue
-        LOGGER.info("Processing "+file)
+            LOGGER.info("Processing "+file)
 
         header_length = 16  # size of ax25 header
         data = get_tlm_data(file)
-        packets = extract_ax25_packets(data)
-        packets = strip_ax25(packets, header_length)
-        packets = strip_kiss(packets)
-        packets = stitch_ccsds(packets)
-        packets = sort_packets(packets)
 
+        if re.search('.*.kss', file):
+            # KISS file CASE
+            packets = extract_ax25_packets(data)
+            packets = strip_ax25(packets, header_length)
+            packets = strip_kiss(packets)
+            packets = stitch_ccsds(packets)
+        elif re.search('.*sband.*', file):
+            # SBAND CASE
+            packets = extract_sband_vcdus(data)
+            packets = extract_ccsds_packets(packets)
+        else:
+            # otherwise already been stripped of kiss and stuff
+            packets = extract_ax25_packets(data)
+            packets = strip_ax25(packets, header_length)
+            packets = stitch_ccsds(packets)
+
+        packets = sort_packets(packets)
         for key in packets:
             for a in csv_info:
                 if key == a['source'] + a['apid']:
@@ -91,6 +108,10 @@ if __name__ == "__main__":
             fileLog = open(processLog, mode='a')
             fileLog.write(file+'\n')
             fileLog.close()
+
+    if len(tlm) < 1:
+        LOGGER.info("No new files to process.")
+        exit(0)
 
     if int(CONFIG_INFO['SAVE']['CSV']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['CSV_FILE'])

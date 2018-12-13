@@ -26,7 +26,11 @@ def extract_tlm_from_sorted_packets(packets):
     """
     out_data = []
     for key in packets:
-        csv_info = packets[key]['csv_info']
+        try:
+            csv_info = packets[key]['csv_info']
+        except KeyError:
+            LOGGER.info("No packet def found. Continuing")
+            continue
         points_file = csv_info['pointsFile']
 
         # if the file wasn't found, send message to user and exit
@@ -99,14 +103,16 @@ def extract_data(data, tlm_points):
 
         # index into the struct and save the value for the tlm point
         extracted_data[point['name']] = tlm_value
-
     return extracted_data
 
 
 def sort_packets(packets):
     packets_sorted = {}
     for packet in packets:
-        packet_id = str(packet[0]) + str(packet[1])
+        try:
+            packet_id = str(packet[0]) + str(packet[1])
+        except IndexError:
+            continue
         if packet_id in packets_sorted:
             packets_sorted[packet_id]['raw_packets'].append(packet)
         else:

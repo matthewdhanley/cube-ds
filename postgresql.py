@@ -58,9 +58,17 @@ def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
     for column in tlm_df:
         data = tlm_df[[index_key, column]].values.tolist()
         insert_query = 'INSERT INTO telemetry (t, tlm_val, mnemonic) VALUES %s ON CONFLICT DO NOTHING;'
-        psycopg2.extras.execute_values(
-            cur, insert_query, data, template="(%s, %s, '"+column+"')", page_size=1000
-        )
+        try:
+            psycopg2.extras.execute_values(
+                cur, insert_query, data, template="(%s, %s, '"+column+"')", page_size=1000
+            )
+            
+        except psycopg2.DataError:
+            LOGGER.info("Bad tlm point, can't insert into db")
+            continue
+        except psycopg2.InternalError:
+            LOGGER.info("Bad tlm point, can't insert into db")
+
     conn.commit()
     cur.close()
     cluster(conn)
