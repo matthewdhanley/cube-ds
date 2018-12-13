@@ -54,7 +54,6 @@ if __name__ == "__main__":
     tlm = []
 
     for file in rawFiles:
-        LOGGER.info("Processing "+file)
         if not TEST:
             # don't process file twice.
             foundFlag = 0
@@ -63,6 +62,7 @@ if __name__ == "__main__":
                     foundFlag = 1
             if foundFlag:
                 continue
+        LOGGER.info("Processing "+file)
 
         header_length = 16  # size of ax25 header
         data = get_tlm_data(file)
