@@ -12,7 +12,7 @@ def get_logger(name='root'):
     """
     # set up LOGGER from config file
     if os.path.isfile(CONFIG_FILE):
-        logging.config.fileConfig(CONFIG_FILE)
+        logging.config.fileConfig(CONFIG_FILE, disable_existing_loggers=False)
         logger = logging.getLogger(name)
     else:
         # use defaults if no config file

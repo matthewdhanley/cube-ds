@@ -23,7 +23,7 @@ def extract_CCSDS_header(packet_data):
 
 
 def stitch_ccsds(packet_parts):
-    # APIDs  TODO - MOVE TO SOMEWHERE MORE CONFIGURABLE
+    # APIDs  TODO - MOVE TO SOMEWHERE MORE CONFIGURABLE!!!!!!!!
     playback_soh = [np.array([12, 63]), np.array([4, 63])]
     # playback_fsw_apid = np.array([4, 62])
     rt_soh= [np.array([8, 63]), np.array([0, 63])]
@@ -45,13 +45,16 @@ def stitch_ccsds(packet_parts):
         if not first_flag:
             i += 1
             continue
+
+        # TODO FIGURE OUT WHY "-5"
         current_packet = current_packet[0:current_ccsds['length']+start_header_length-5]
+
         for apid in current_apid[1:]:
             next_packet = packet_parts[i+1]
             next_ccsds = extract_CCSDS_header(next_packet)
             # print(str(next_ccsds['sequence']) + ' - ' + str(current_ccsds['sequence']))
             if int(next_ccsds['sequence']) - int(current_ccsds['sequence']) > 1:
-                # LOGGER.warning('Partial Packet.')
+                LOGGER.warning('Partial Packet.')
                 i += 1
                 break_flag = 1
                 break
@@ -60,7 +63,7 @@ def stitch_ccsds(packet_parts):
                 current_ccsds = next_ccsds
                 i += 1
             else:
-                i+=1
+                i += 1
                 break_flag = 1
                 break
         if not break_flag:

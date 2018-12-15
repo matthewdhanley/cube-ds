@@ -24,6 +24,3 @@ CONFIG_INFO.read(CONFIG_FILE)
 
 # Setup for TEST mode
 TEST = int(CONFIG_INFO['TEST']['TEST'])  # check if TEST mode is set in config file
-
-LOGGER = pylogger.get_logger(__name__)
-

@@ -4,6 +4,13 @@ LOGGER = pylogger.get_logger(__name__)
 
 
 def extract_bits_from_bytes(data, start_bit, num_bits):
+    """
+    Extracts bits from a group of bytes
+    :param data: byte data
+    :param start_bit: starting bit to begin extraction
+    :param num_bits: number of bits to extract
+    :return: bitarray of requested bits
+    """
     b = bitarray(endian='big')
     b.frombytes(data)
     out = b[start_bit:start_bit+num_bits]
@@ -11,6 +18,13 @@ def extract_bits_from_bytes(data, start_bit, num_bits):
 
 
 def extract_bits(data, bit, length=1):
+    """
+    Extracts bits given data, start bit, and length
+    :param data: data to extract bits from
+    :param bit: starting position for extraction
+    :param length: number of bits to extract, default=1
+    :return: resulting integer of extracted bits
+    """
     bits = bitarray(data, endian='big')
     if length > 1:
         out = bits[bit:bit+length]
@@ -24,6 +38,12 @@ def extract_bits(data, bit, length=1):
 
 
 def tlm_to_df(tlm, time_index):
+    """
+    Converts telemetry dictionary to a dataframe
+    :param tlm: telemetry dictionary
+    :param time_index: desired time index
+    :return:
+    """
     df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
     try:
         df = df.dropna()
@@ -34,8 +54,15 @@ def tlm_to_df(tlm, time_index):
     return df
 
 
-def add_utc_to_df(df, time_index):
-    df['UTC'] = df[time_index].map(lambda x: tai_to_utc(x))
+def add_utc_to_df(df, time_index, conversion_function):
+    """
+    Adds a utc column to dataframe
+    :param df: dataframe that needs utc column
+    :param time_index: column to convert to utc
+    :param conversion_function: function to convert values in time_index function to utc
+    :return: updated dataframe
+    """
+    df['UTC'] = df[time_index].map(lambda x: conversion_function(x))
     return df
 
 
@@ -77,7 +104,7 @@ def get_unpack_format(in_dtype, dsize, endian='big'):
         dsize = 1
     else:
         LOGGER.fatal("parsing error for datatype size")
-        exit(0)
+        exit(1)
 
     if in_dtype == 'dn':
         letter = letter.upper()
@@ -100,18 +127,18 @@ def get_unpack_format(in_dtype, dsize, endian='big'):
     return letter
 
 
-def get_csv_info(csvfilename):
+def get_csv_info(csv_filename):
     """
     Reads in CSV info from top level file
-    :param csvfilename: csv file name
+    :param csv_filename: csv file name
     :return: dictionary of csv lines
     """
     # make sure file exists
-    assert os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), csvfilename))
+    assert os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), csv_filename))
 
     csv_encoding = get_csv_encoding()
 
-    with open(csvfilename, mode='r', encoding=csv_encoding) as csv_f:
+    with open(csv_filename, mode='r', encoding=csv_encoding) as csv_f:
         reader = csv.DictReader(csv_f)
         csv_dict_list = []
         for row in reader:
@@ -123,6 +150,7 @@ def get_tlm_data(raw_file, endian="big"):
     """
     reads in raw data
     :param raw_file: binary data file. currently need continuous CCSDS packets in file.
+    :param endian: either "big" or "little"
     :return: large endian numpy byte array
     """
     LOGGER.debug("Telemetry file -  " + raw_file)
@@ -135,13 +163,13 @@ def get_tlm_data(raw_file, endian="big"):
 
     # read the data into a numpy array
     LOGGER.debug("reading data into numpy byte array")
-    if endian=="big":
+    if endian == "big":
         raw_data = np.fromfile(raw_file, dtype='>B')
-    elif endian=="little":
+    elif endian == "little":
         raw_data = np.fromfile(raw_file, dtype='<B')
     else:
         LOGGER.fatal("DID NOT specify correct endian")
-        exit(-1)
+        exit(1)
     return raw_data
 
 
@@ -187,7 +215,7 @@ def get_csv_encoding():
     return csv_encoding
 
 
-def get_tlm_points(pointsFile, csv_encoding='utf-8'):
+def get_tlm_points(pointsFile):
     """
     This function will get all the points from the points file input to the function
     :param pointsFile: csv file with all the points.
@@ -245,20 +273,31 @@ def write_to_pickle(data, filename):
 
 
 def find_files(re_strings, rootdir):
-    rawFiles = []
+    """
+    Finds files given array of regex strings
+    :param re_strings: array of regex strings
+    :param rootdir: directory to search for file (recursively)
+    :return: list of matching files
+    """
+    raw_files = []
     for root, directories, filenames in os.walk(rootdir):
         for filename in filenames:
             for re_string in re_strings:
                 m = re.search(re_string, filename)
                 if m:
-                    rawFiles.append(os.path.join(root, filename))
-    if rawFiles == []:
+                    raw_files.append(os.path.join(root, filename))
+    if not raw_files:
         LOGGER.warning("Didn't find any raw files in " + rootdir)
-
-    return rawFiles
+    return raw_files
 
 
 def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
+    """
+    Converts TAI time to UTC time
+    :param tai: TAI time
+    :param time_format: Format of output UTC time
+    :return: UTC time string
+    """
     try:
         utc = TAI_EPOCH + dt.timedelta(seconds=int(tai))
     except OverflowError:

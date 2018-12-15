@@ -90,7 +90,7 @@ def extract_data(data, tlm_points):
             except struct.error:
                 # not extracting the right amount of data. Print some debug information and move on
                 LOGGER.warning("Packet ended unexpectedly.")
-                continue
+                return extracted_data
             except TypeError as e:
                 # had an issue with types. Print debug info and exit. This is a more serious issue.
                 print(point)

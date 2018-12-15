@@ -12,7 +12,9 @@ from pylogger import *
 from csv_out import *
 from postgresql import *
 from idl_out import *
-from sband_processing import *
+from vcdu_processing import *
+
+LOGGER = pylogger.get_logger(__name__)
 
 
 if __name__ == "__main__":
@@ -35,19 +37,18 @@ if __name__ == "__main__":
     csv_info = get_csv_info(csv_file)
 
     # how the raw files are named
-    # file_re_pattern = '^bct_\d{4}.*'
-    file_re_patterns = ['^raw.*', '.*\.kss','^sband.*']
+    file_re_patterns = ['^raw.*', '.*\.kss', '^sband.*']
 
     if not TEST:
         rawFiles = find_files(file_re_patterns, CONFIG_INFO['rundirs']['location'])
-        processLog = CONFIG_INFO['process_log']['location']
+        process_log = CONFIG_INFO['process_log']['location']
         try:
-            fileReadLog = open(processLog, mode='r')
+            file_read_log = open(process_log, mode='r')
             logFiles = []
-            for file in fileReadLog:
+            for file in file_read_log:
                 logFiles.append(file.rstrip())
         except PermissionError:
-            LOGGER.fatal("Could not get permissions on " + processLog)
+            LOGGER.fatal("Could not get permissions on " + process_log)
             exit(1)
     else:
         LOGGER.info("RUNNING IN TESTING MODE.")
@@ -72,7 +73,7 @@ if __name__ == "__main__":
         header_length = 16  # size of ax25 header
         data = get_tlm_data(file)
 
-        if re.search('.*.kss', file):
+        if re.search('.*\.kss', file):
             # KISS file CASE
             packets = extract_ax25_packets(data)
             packets = strip_ax25(packets, header_length)
@@ -105,9 +106,9 @@ if __name__ == "__main__":
 
         if not TEST:
             # append file to processed file log
-            fileLog = open(processLog, mode='a')
-            fileLog.write(file+'\n')
-            fileLog.close()
+            file_log = open(process_log, mode='a')
+            file_log.write(file + '\n')
+            file_log.close()
 
     if len(tlm) < 1:
         LOGGER.info("No new files to process.")
@@ -127,11 +128,11 @@ if __name__ == "__main__":
         LOGGER.info("Saving telemetry to database . . .")
         df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
         add_df_to_db(df, CONFIG_INFO['SAVE']['KEY'],
-                  CONFIG_INFO['DB']['DBNAME'],
-                  CONFIG_INFO['DB']['USER'],
-                  CONFIG_INFO['DB']['PASSWORD'],
-                  CONFIG_INFO['DB']['HOST'],
-                  CONFIG_INFO['DB']['PORT'])
+                     CONFIG_INFO['DB']['DBNAME'],
+                     CONFIG_INFO['DB']['USER'],
+                     CONFIG_INFO['DB']['PASSWORD'],
+                     CONFIG_INFO['DB']['HOST'],
+                     CONFIG_INFO['DB']['PORT'])
 
     if int(CONFIG_INFO['SAVE']['IDL']):
         df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
@@ -139,7 +140,7 @@ if __name__ == "__main__":
 
     if not TEST:
         LOGGER.debug("Closed file read log")
-        fileReadLog.close()
+        file_read_log.close()
 
     LOGGER.info("Data Processing Complete!")
 
