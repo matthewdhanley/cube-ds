@@ -2,6 +2,7 @@ import datetime as dt
 import pylogger
 import configparser
 import os
+import sys
 import struct
 import pprint
 import numpy as np
@@ -10,6 +11,7 @@ import re
 import json
 import pandas as pd
 from bitarray import bitarray
+from sys import exit
 
 # GLOBALS ==================================================================================
 TAI_EPOCH = dt.datetime(1999, 12, 31, 23, 59, 23)  # Epoch time for incoming time stamps
@@ -24,3 +26,4 @@ CONFIG_INFO.read(CONFIG_FILE)
 
 # Setup for TEST mode
 TEST = int(CONFIG_INFO['TEST']['TEST'])  # check if TEST mode is set in config file
+DEBUG = int(CONFIG_INFO['TEST']['DEBUG'])  # check if DEBUG mode is set in config file

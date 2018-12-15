@@ -37,6 +37,18 @@ def extract_bits(data, bit, length=1):
     return int(out)
 
 
+def bitstring_to_int(bitstr):
+    b_list = bitstr.tolist()
+    mystring = ''
+    for s in b_list:
+        if s:
+            mystring += '1'
+        else:
+            mystring += '0'
+    b = int(mystring, 2)
+    return b
+
+
 def tlm_to_df(tlm, time_index):
     """
     Converts telemetry dictionary to a dataframe
@@ -158,8 +170,8 @@ def get_tlm_data(raw_file, endian="big"):
     # check that the file exists
     if not os.path.exists(raw_file):
         LOGGER.debug(raw_file)
-        LOGGER.fatal("Telemetry Definition Directory does not exits. Check config file.")
-        exit(-1)
+        LOGGER.fatal("Cannot find specified file "+raw_file)
+        exit(1)
 
     # read the data into a numpy array
     LOGGER.debug("reading data into numpy byte array")
@@ -268,6 +280,7 @@ def write_to_pickle(data, filename):
     :param filename: i.e. mydata.pkl
     :return:
     """
+    LOGGER.info("Writing data to pickle file "+filename)
     with open('obj/'+filename, 'wb') as f:
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 

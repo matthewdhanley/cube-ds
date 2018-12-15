@@ -16,7 +16,6 @@ from vcdu_processing import *
 
 LOGGER = pylogger.get_logger(__name__)
 
-
 if __name__ == "__main__":
     # set up LOGGER.
     LOGGER.info("========================= Started ==========================")
@@ -25,10 +24,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Command Line Parser')
 
     parser.add_argument('-t', '--test', action="store_true", help="If present, program will be run in test mode")
+    parser.add_argument('-d', '--debug', action="store_true", help="If present, program will be run in debug mode")
+
+    LOGGER.info("Parsing for any command line arguements")
     args = parser.parse_args()  # test bool will be stored in args.test
 
     if args.test:
         TEST = 1
+
+    if args.debug:
+        DEBUG = 1
 
     LOGGER.debug("reading in CSV file")
     csv_file = CONFIG_INFO['csv']['location']
@@ -59,6 +64,7 @@ if __name__ == "__main__":
     tlm = []
 
     for file in rawFiles:
+        file_basename = os.path.split(file)[-1]
         if not TEST:
             # don't process file twice.
             foundFlag = 0
@@ -73,23 +79,49 @@ if __name__ == "__main__":
         header_length = 16  # size of ax25 header
         data = get_tlm_data(file)
 
-        if re.search('.*\.kss', file):
+        if re.search('.*\.kss', file_basename):
             # KISS file CASE
             packets = extract_ax25_packets(data)
             packets = strip_ax25(packets, header_length)
             packets = strip_kiss(packets)
             packets = stitch_ccsds(packets)
-        elif re.search('.*sband.*', file):
+
+        elif re.search('.*sband.*', file_basename):
             # SBAND CASE
             packets = extract_sband_vcdus(data)
+
+            if DEBUG:
+                write_to_pickle(packets, 'debug/vcdu_raw_packets_'+file_basename+'.pickle')
+
+            if CONFIG_INFO['SAVE']['VCDU_STATS']:
+                vcdu_stats(packets)
+
             packets = extract_ccsds_packets(packets)
+
+            if DEBUG:
+                write_to_pickle(packets, "debug/vcdu_ccsds_packets_"+file_basename+".pickle")
+
         else:
             # otherwise already been stripped of kiss and stuff
             packets = extract_ax25_packets(data)
+            if DEBUG:
+                write_to_pickle(packets, "debug/ax25_packets_" + file_basename + ".pickle")
+
             packets = strip_ax25(packets, header_length)
+
+            if DEBUG:
+                write_to_pickle(packets, "debug/ax25_stripped_packets_"+file_basename+".pickle")
+
             packets = stitch_ccsds(packets)
 
+            if DEBUG:
+                write_to_pickle(packets, "debug/ax25_ccsds_packets_"+file_basename+".pickle")
+
         packets = sort_packets(packets)
+
+        if DEBUG:
+            write_to_pickle(packets, "debug/sorted_packets_"+file_basename+".pickle")
+
         for key in packets:
             for a in csv_info:
                 if key == a['source'] + a['apid']:
@@ -114,11 +146,15 @@ if __name__ == "__main__":
         LOGGER.info("No new files to process.")
         exit(0)
 
-    if int(CONFIG_INFO['SAVE']['CSV']):
+    if int(CONFIG_INFO['SAVE']['CSV']) or int(CONFIG_INFO['SAVE']['SUMMARY_CSV']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['CSV_FILE'])
         df = tlm_to_df(tlm, CONFIG_INFO['SAVE']['KEY'])
-        tlm_df_to_csv(df, CONFIG_INFO['SAVE']['CSV_FILE'], CONFIG_INFO['SAVE']['KEY'],
-                      pass_summary=int(CONFIG_INFO['SAVE']['SUMMARY_CSV']))
+        if not int(CONFIG_INFO['SAVE']['CSV']):
+            tlm_df_to_csv(df, '', CONFIG_INFO['SAVE']['KEY'],
+                          pass_summary=int(CONFIG_INFO['SAVE']['SUMMARY_CSV']))
+        else:
+            tlm_df_to_csv(df, CONFIG_INFO['SAVE']['CSV_FILE'], CONFIG_INFO['SAVE']['KEY'],
+                          pass_summary=int(CONFIG_INFO['SAVE']['SUMMARY_CSV']))
 
     if int(CONFIG_INFO['SAVE']['NETCDF']):
         LOGGER.info("Saving telemetry to "+CONFIG_INFO['SAVE']['NETCDF_FILE'])

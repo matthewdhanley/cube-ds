@@ -101,6 +101,9 @@ def extract_data(data, tlm_points):
             if extract_bits_length > 0:
                 tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
 
+        else:
+            LOGGER.error("DTYPE IS CHAR, WHY YOU NOT DECDE?")
+
         # index into the struct and save the value for the tlm point
         extracted_data[point['name']] = tlm_value
     return extracted_data
