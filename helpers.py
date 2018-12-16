@@ -56,12 +56,17 @@ def tlm_to_df(tlm, time_index):
     :param time_index: desired time index
     :return:
     """
-    df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
+    if tlm:
+        df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
+    else:
+        LOGGER.warning("No data found. Returning empty dataframe")
+        return pd.DataFrame()
     try:
         df = df.dropna()
         df[time_index] = df[time_index].map(lambda x: int(x))
-    except ValueError:
-        print("VALUE ERROR")
+    except ValueError as e:
+        LOGGER.debug(e)
+        LOGGER.warning("Returning empty dataframe")
         return pd.DataFrame()
     return df
 

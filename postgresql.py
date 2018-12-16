@@ -60,7 +60,7 @@ def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
     LOGGER.info("Adding data to db")
     for column in tlm_df:
         datadf = tlm_df[[index_key, column]]
-        data = datadf[(datadf[index_key] > 568085317) & (datadf[index_key] < 789010117)].values.tolist()
+        data = datadf[(datadf[index_key] > 568085317) & (datadf[index_key] < 789010117)].dropna().values.tolist()
         insert_query = 'INSERT INTO telemetry (t, tlm_val, mnemonic) VALUES %s ON CONFLICT DO NOTHING;'
         try:
             psycopg2.extras.execute_values(

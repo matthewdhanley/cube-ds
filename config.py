@@ -13,6 +13,7 @@ import pandas as pd
 from bitarray import bitarray
 from sys import exit
 
+
 # GLOBALS ==================================================================================
 TAI_EPOCH = dt.datetime(1999, 12, 31, 23, 59, 23)  # Epoch time for incoming time stamps
 MAX_TIME = dt.datetime(2020, 1, 1, 12, 0, 0)  # max allowable time for naive filtering
