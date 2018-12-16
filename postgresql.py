@@ -2,13 +2,15 @@ from config import *
 import psycopg2
 import psycopg2.extras
 
-# LOGGER = pylogger.get_logger(__name__)
+LOGGER = pylogger.get_logger(__name__)
 
 
-def connect_to_db(dbname, user, password, port):
+def connect_to_db(dbname, user, password, port, host):
     LOGGER.info("Connecting to DB . . .")
-    auth_string = "dbname="+dbname+" user="+user+" password="+password+" port="+port
+    auth_string = "dbname="+dbname+" user="+user+" password="+password+" port="+port+" host="+host
+    LOGGER.debug(auth_string)
     conn = psycopg2.connect(auth_string)
+    conn.autocommit = True
     return conn
 
 
@@ -52,22 +54,28 @@ def insert_into_db(conn, tlm_dict, index_key):
 
 
 def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
-    conn = connect_to_db(db, user, password, port)
+    conn = connect_to_db(db, user, password, port, host)
     create_tlm_tables(conn)
     cur = conn.cursor()
+    LOGGER.info("Adding data to db")
     for column in tlm_df:
-        data = tlm_df[[index_key, column]].values.tolist()
+        datadf = tlm_df[[index_key, column]]
+        data = datadf[(datadf[index_key] > 568085317) & (datadf[index_key] < 789010117)].values.tolist()
         insert_query = 'INSERT INTO telemetry (t, tlm_val, mnemonic) VALUES %s ON CONFLICT DO NOTHING;'
         try:
             psycopg2.extras.execute_values(
                 cur, insert_query, data, template="(%s, %s, '"+column+"')", page_size=1000
             )
             
-        except psycopg2.DataError:
+        except psycopg2.DataError as e:
             LOGGER.info("Bad tlm point, can't insert into db")
+            LOGGER.error(e)
+            LOGGER.debug(data)
             continue
-        except psycopg2.InternalError:
+        except psycopg2.InternalError as e:
             LOGGER.info("Bad tlm point, can't insert into db")
+            LOGGER.error(e)
+            LOGGER.debug(data)
 
     conn.commit()
     cur.close()
