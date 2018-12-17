@@ -12,6 +12,7 @@
 Rundirs/
 cube*.cfg
 *.csv
+[dD]ebug/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
