@@ -45,7 +45,7 @@ def extract_tlm_from_sorted_packets(packets):
                 continue
             out_data.append(extract_data(data, tlm_points))
     if len(out_data) == 0:
-        LOGGER.warning("Did not extract any data . . .")
+        LOGGER.warning("Did not extract any data from this file")
     return out_data
 
 
@@ -87,9 +87,10 @@ def extract_data(data, tlm_points):
         if point['dtype'] != 'char':
             try:
                 tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
-            except struct.error:
+            except struct.error as e:
                 # not extracting the right amount of data. Print some debug information and move on
-                LOGGER.warning("Packet ended unexpectedly.")
+                LOGGER.debug("Packet ended unexpectedly.")
+                LOGGER.debug(e)
                 return extracted_data
             except TypeError as e:
                 # had an issue with types. Print debug info and exit. This is a more serious issue.

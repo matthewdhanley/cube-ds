@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--test', action="store_true", help="If present, program will be run in test mode")
     parser.add_argument('-d', '--debug', action="store_true", help="If present, program will be run in debug mode")
 
-    LOGGER.info("Parsing for any command line arguements")
+    LOGGER.debug("Parsing for any command line arguements")
     args = parser.parse_args()  # test bool will be stored in args.test
 
     if args.test:
@@ -141,6 +141,11 @@ if __name__ == "__main__":
             save_telemetry(out_data)
         else:
             LOGGER.info("No data found, continuing")
+            if not TEST:
+                # append file to processed file log
+                file_log = open(process_log, mode='a')
+                file_log.write(file + '\n')
+                file_log.close()
             continue
 
         for d in out_data:
@@ -159,13 +164,6 @@ if __name__ == "__main__":
 
     if len(tlm) < 1:
         LOGGER.info("No new files to process.")
-        exit(0)
-
-    # save_telemetry(tlm)
-
-    if not TEST:
-        LOGGER.debug("Closed file read log")
-        file_read_log.close()
 
     LOGGER.info("Data Processing Complete!")
 
