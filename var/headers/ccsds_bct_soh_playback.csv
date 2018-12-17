@@ -1,0 +1,8 @@
+﻿field,startByte,startBit,size,expected
+ccsdsInfo,0,0,8,12
+apid,1,0,8,63
+seqCount,2,0,16,
+length,4,0,16,
+seconds,6,0,32,
+subSeconds,10,0,8,
+tlmPad,11,0,8,0
