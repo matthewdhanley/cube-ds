@@ -1,72 +1,177 @@
 from config import *
+from helpers import *
 LOGGER = pylogger.get_logger(__name__)
 
 
 def extract_CCSDS_header(packet_data):
     header = packet_data[0:12]
-    source = header[0]
-    apid = header[1]
-    groups = header[2]
-    sequence = header[3]
-    length = struct.unpack('>H', header[4:6])
-    seconds = struct.unpack('>I', header[5:9])
-    subseconds = header[10]
+    zeros = bitstring_to_int(extract_bits_from_bytes(bytes([header[0]]), 5, 3))
+    secondary_hdr = bitstring_to_int(extract_bits_from_bytes((bytes([header[0]])), 4, 1))
+    packet_type = bitstring_to_int(extract_bits_from_bytes(bytes([header[0]]), 3, 1))
+    ccsds_version = bitstring_to_int(extract_bits_from_bytes(bytes([header[0]]), 0, 3))
+    apid_lsb = struct.unpack('>B', header[1])[0]
+    grouping_flags = bitstring_to_int(extract_bits_from_bytes(bytes([header[2]]), 0, 2))
+    seq_count = bitstring_to_int(extract_bits_from_bytes(bytes(header[2:4]), 2, 13))
+    packet_length = struct.unpack('>H', header[4:6])[0]
+    if secondary_hdr:
+        header_length = 12
+        time_stamp = struct.unpack('>I', header[6:10])[0]
+        sub_seconds = struct.unpack('>B', header[10])[0]
+        reserved = struct.unpack('>B', header[11])[0]
+    else:
+        time_stamp = -1
+        sub_seconds = -1
+        reserved = -1
+        header_length = 6
+
     ccsds_header = {
-        'source': source,
-        'apid': apid,
-        'groups': groups,
-        'sequence': sequence,
-        'length': length[0],
-        'seconds': seconds,
-        'subseconds': subseconds}
+        'ccsds_version': ccsds_version,
+        # Should always be zero
+
+        'packet_type': packet_type,
+        'secondary_header': secondary_hdr,
+        'zeros': zeros,
+        # 'source': struct.unpack('>B', header[0]),
+        'apid': apid_lsb,
+        'grouping_flags': grouping_flags,
+        # a) ‘00’ (0) if the Space Packet contains a continuation segment of User Data;
+        # b) ‘01’ (1) if the Space Packet contains the first segment of User Data;
+        # c) ‘10’ (2) if the Space Packet contains the last segment of User Data;
+        # d) ‘11’ (3) if the Space Packet contains unsegmented User Data.
+
+        'sequence': seq_count,
+        'length': packet_length,
+        'seconds': time_stamp,
+        'subseconds': sub_seconds,
+        'reserved': reserved,
+        'header_length': header_length}
+
     return ccsds_header
 
 
-def stitch_ccsds(packet_parts):
-    # APIDs  TODO - MOVE TO SOMEWHERE MORE CONFIGURABLE!!!!!!!!
-    playback_soh = [np.array([12, 63]), np.array([4, 63])]
-    # playback_fsw_apid = np.array([4, 62])
-    rt_soh= [np.array([8, 63]), np.array([0, 63])]
-    # fsw_apid = np.array([8, 62])
-    packet_types = [playback_soh, rt_soh]
-    start_header_length = 12
-    partial_header_length = 6
+def stitch_ccsds_new(packet_parts):
     full_packets = []
     i = 0
-    while i in range(0, len(packet_parts)-1):
-        first_flag = 0
-        break_flag = 0
-        current_packet = packet_parts[i]
-        current_ccsds = extract_CCSDS_header(current_packet)
-        for apid in packet_types:
-            if np.all(apid[0] == [current_ccsds['source'], current_ccsds['apid']]):
-                first_flag = 1
-                current_apid = apid
-        if not first_flag:
-            i += 1
+    full_df = pd.DataFrame()
+    while i in range(0, len(packet_parts)):
+        ccsds_header = extract_CCSDS_header(packet_parts[i])
+        ccsds_header['index'] = i
+        tmp_df = pd.DataFrame([ccsds_header], columns=ccsds_header.keys())
+        full_df = full_df.append(tmp_df)
+        i += 1
+
+    try:
+        unique_seqs = full_df.sequence.unique()
+    except AttributeError as e:
+        LOGGER.info(e)
+        return full_packets
+
+    for seq in unique_seqs:
+        parts_df = full_df[full_df['sequence'] == seq]
+        packet_beginning_ind = parts_df[parts_df['grouping_flags'] == 1]
+        if packet_beginning_ind.empty:
+            LOGGER.debug("No start of packet found")
             continue
 
-        # TODO FIGURE OUT WHY "-5"
-        current_packet = current_packet[0:current_ccsds['length']+start_header_length-5]
+        packet_middle_inds = parts_df[parts_df['grouping_flags'] == 0]
 
-        for apid in current_apid[1:]:
-            next_packet = packet_parts[i+1]
-            next_ccsds = extract_CCSDS_header(next_packet)
-            # print(str(next_ccsds['sequence']) + ' - ' + str(current_ccsds['sequence']))
-            if int(next_ccsds['sequence']) - int(current_ccsds['sequence']) > 1:
-                LOGGER.warning('Partial Packet.')
-                i += 1
-                break_flag = 1
-                break
-            if np.all(apid == [next_ccsds['source'], next_ccsds['apid']]):
-                current_packet = np.append(current_packet, next_packet[partial_header_length:next_ccsds['length']+partial_header_length])
-                current_ccsds = next_ccsds
-                i += 1
-            else:
-                i += 1
-                break_flag = 1
-                break
-        if not break_flag:
-            full_packets.append(current_packet)
+        packet_end_ind = parts_df[parts_df['grouping_flags'] == 2]
+
+        start_ind = packet_beginning_ind['index'].values
+        if len(start_ind) > 1:
+            LOGGER.debug("Multiple frame starts at sequence number "+str(seq))
+            continue
+
+        start_ind = start_ind[0]
+
+        length = packet_beginning_ind['length'].values[0] + packet_beginning_ind['header_length'].values[0]-5
+        packet = packet_parts[start_ind][0:length]
+
+        if not packet_middle_inds.empty:
+            print("APPEND MIDDLE PACKETS")
+            exit(1)
+
+        if packet_end_ind.empty:
+            LOGGER.debug("No end of packet found for sequence number "+str(seq))
+            full_packets.append(packet)
+            continue
+
+        end_ind = packet_end_ind['index'].values
+        if len(end_ind) > 1:
+            LOGGER.debug("Multiple frame ends for sequnce number "+str(seq))
+            continue
+
+        end_ind = end_ind[0]
+        length = packet_end_ind['length'].values[0] + packet_end_ind['header_length'].values[0]+1
+        packet = np.append(packet, packet_parts[end_ind][packet_end_ind['header_length'].values[0]:length])
+
+        full_packets.append(packet)
 
     return full_packets
+
+
+def ccsds_stats(packets, basename):
+    """
+    Prints ccsds info to csv
+    :param packets: list of ccsds raw packets
+    :param basename: will append _ccsds_summary.csv to this
+    """
+    df = pd.DataFrame()
+    for packet in packets:
+        header = extract_CCSDS_header(packet)
+        tmp_df = pd.DataFrame([header], columns=header.keys())
+        df = df.append(tmp_df)
+
+    df.to_csv('ccsds_summaries/' + basename+'_ccsds_summary.csv', index='seconds')
+    LOGGER.info("Wrote ccsds headers to file.")
+
+
+def find_ccsds_packets(data):
+    # Fetch relevant apids from file
+    apids = np.array(get_apids())
+
+    inds = []
+    for x in range(1, len(data)):
+        for apid in apids:
+            if data[x] == apid:
+                inds.append(x-1)
+
+    packets = []
+    for ind in inds:
+        header_dict = extract_CCSDS_header(data[ind:ind+12])
+        if check_ccsds_valid(header_dict, sband=True):
+            packets.append(data[ind:ind+header_dict['length']+header_dict['header_length']])
+
+    return packets
+
+
+def check_ccsds_valid(header_dict, sband=False):
+    if header_dict['ccsds_version'] != 0:
+        return False
+    if header_dict['length'] < 100:
+        return False
+    if header_dict['length'] > 1800:
+        return False
+    if sband:
+        if header_dict['grouping_flags'] != 3:
+            return False
+    if header_dict['packet_type'] != 0:
+        return False
+    if header_dict['reserved'] != 0:
+        return False
+    if header_dict['subseconds'] > 4:
+        return False
+    if header_dict['subseconds'] < 0:
+        return False
+    if header_dict['secondary_header'] == 1:
+        if header_dict['seconds'] < 2000000000:
+            return False
+        if header_dict['seconds'] > 4000000000:
+            return False
+    return True
+
+
+
+
+
+

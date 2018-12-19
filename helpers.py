@@ -290,16 +290,25 @@ def write_to_pickle(data, filename):
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 
-def find_files(re_strings, rootdir):
+def find_files(re_strings, rootdir, exclude=''):
     """
     Finds files given array of regex strings
     :param re_strings: array of regex strings
     :param rootdir: directory to search for file (recursively)
+    :param exclude: array of regex strings to exclude
     :return: list of matching files
     """
     raw_files = []
     for root, directories, filenames in os.walk(rootdir):
         for filename in filenames:
+            if exclude:
+                found_flag = False
+                for re_string in exclude:
+                    m = re.search(re_string, filename)
+                    if m:
+                        found_flag = True
+                if found_flag:
+                    continue
             for re_string in re_strings:
                 m = re.search(re_string, filename)
                 if m:
@@ -321,3 +330,17 @@ def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
     except OverflowError:
         utc = TAI_EPOCH
     return utc.strftime(time_format)
+
+
+def get_apids():
+    """
+    Returns list of apids from file specified in cfg file
+    :return: list of apids
+    """
+    csv_file = CONFIG_INFO['csv']['location']
+    csv_info = get_csv_info(csv_file)
+    apids = []
+    for line in csv_info:
+        if int(line['apid']) not in apids:
+            apids.append(int(line['apid']))
+    return apids

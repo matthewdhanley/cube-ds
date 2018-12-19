@@ -88,6 +88,7 @@ def cluster(conn):
     cur.execute("""CLUSTER telemetry USING common;""")
     conn.commit()
     cur.close()
+    LOGGER.info("Clustered db")
 
 
 def add_to_db(tlm, index_key, db, user, password):

@@ -5,8 +5,8 @@ LOGGER = pylogger.get_logger(__name__)
 
 def tlm_df_to_csv(df, filename, index, pass_summary=0):
     if df.empty:
-        LOGGER.error("No data found to write to CSV")
-        return(1)
+        LOGGER.warning("No data found to write to CSV")
+        return 1
     if filename:
         LOGGER.info("Writing data to CSV file summaries/"+filename)
         df = add_utc_to_df(df, index, tai_to_utc)
