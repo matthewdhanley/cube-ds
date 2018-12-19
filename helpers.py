@@ -166,7 +166,7 @@ def get_csv_info(csv_filename):
 def get_tlm_data(raw_file, endian="big"):
     """
     reads in raw data
-    :param raw_file: binary data file. currently need continuous CCSDS packets in file.
+    :param raw_file: binary data file.
     :param endian: either "big" or "little"
     :return: large endian numpy byte array
     """
@@ -318,7 +318,7 @@ def find_files(re_strings, rootdir, exclude=''):
     return raw_files
 
 
-def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
+def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S", epoch=TAI_EPOCH):
     """
     Converts TAI time to UTC time
     :param tai: TAI time
@@ -326,10 +326,33 @@ def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S"):
     :return: UTC time string
     """
     try:
-        utc = TAI_EPOCH + dt.timedelta(seconds=int(tai))
+        utc = epoch + dt.timedelta(seconds=int(tai))
     except OverflowError:
-        utc = TAI_EPOCH
+        utc = epoch
     return utc.strftime(time_format)
+
+
+def utc_to_tai(utc, time_format='%m/%d/%Y-%H:%M:%S', epoch=TAI_EPOCH):
+    """
+    Converts UTC to TAI
+    :param utc: UTC time string
+    :param time_format: Format of input string
+    :param epoch: epoch of time
+    :return: Seconds since epoch of given utc time
+    """
+    in_date = dt.datetime.strptime(utc, time_format)
+    tai = (in_date - epoch).total_seconds()
+    return tai
+
+
+def now_tai(epoch=TAI_EPOCH):
+    """
+    Converts current time to tai
+    :param epoch: epoch of time
+    :return: tai from now since epoch
+    """
+    tai = (dt.datetime.now() - epoch).total_seconds()
+    return tai
 
 
 def get_apids():

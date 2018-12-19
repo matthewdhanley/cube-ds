@@ -5,11 +5,18 @@ import os
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'LOGGER.cfg')
 
 
+def summary(self, message, *args, **kws):
+    # Yes, logger takes its '*args' as 'args'.
+    self._log(19, message, args, **kws)
+
+
 def get_logger(name='root'):
     """
     Create a logging object for easy logging
     :return: logging object
     """
+    logging.addLevelName(19, "SUMMARY")
+    logging.Logger.summary = summary
     # set up LOGGER from config file
     if os.path.isfile(CONFIG_FILE):
         logging.config.fileConfig(CONFIG_FILE, disable_existing_loggers=False)

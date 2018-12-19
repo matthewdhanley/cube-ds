@@ -9,9 +9,14 @@ def connect_to_db(dbname, user, password, port, host):
     LOGGER.info("Connecting to DB . . .")
     auth_string = "dbname="+dbname+" user="+user+" password="+password+" port="+port+" host="+host
     LOGGER.debug(auth_string)
-    conn = psycopg2.connect(auth_string)
-    conn.autocommit = True
-    return conn
+    try:
+        conn = psycopg2.connect(auth_string)
+        conn.autocommit = True
+        return conn
+    except psycopg2.OperationalError as e:
+        LOGGER.fatal(e)
+        LOGGER.fatal("Cannot connect to database. Exiting.")
+        exit(1)
 
 
 def print_version(conn):
@@ -53,11 +58,12 @@ def insert_into_db(conn, tlm_dict, index_key):
     conn.commit()
 
 
-def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
+def add_df_to_db(tlm_df, index_key, db, user, password, host, port, stats=Statistics('none')):
     conn = connect_to_db(db, user, password, port, host)
     create_tlm_tables(conn)
     cur = conn.cursor()
     LOGGER.info("Adding data to db")
+    bad_inserts = 0
     for column in tlm_df:
         datadf = tlm_df[[index_key, column]]
         data = datadf[(datadf[index_key] > 568085317) & (datadf[index_key] < 789010117)].dropna().values.tolist()
@@ -71,11 +77,16 @@ def add_df_to_db(tlm_df, index_key, db, user, password, host, port):
             LOGGER.info("Bad tlm point, can't insert into db")
             LOGGER.error(e)
             LOGGER.debug(data)
+            bad_inserts += 1
             continue
         except psycopg2.InternalError as e:
             LOGGER.info("Bad tlm point, can't insert into db")
             LOGGER.error(e)
             LOGGER.debug(data)
+            bad_inserts += 1
+
+    if bad_inserts:
+        stats.add_stat("Had "+str(bad_inserts)+" errors when inserting points into database")
 
     conn.commit()
     cur.close()

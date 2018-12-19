@@ -12,7 +12,7 @@ import json
 import pandas as pd
 from bitarray import bitarray
 from sys import exit
-
+from statistics import *
 
 # GLOBALS ==================================================================================
 TAI_EPOCH = dt.datetime(1999, 12, 31, 23, 59, 23)  # Epoch time for incoming time stamps

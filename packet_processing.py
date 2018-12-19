@@ -18,13 +18,14 @@ def extract_key(extracted_tlm_data, key):
     return int(extracted_key)
 
 
-def extract_tlm_from_sorted_packets(packets):
+def extract_tlm_from_sorted_packets(packets, stats=Statistics('none')):
     """
     Extracts telemetry from packets that are sorted in a dictionary
     :param packets: Packet dictionary. The key is 'source+apid', i.e. '863' would be source 8, apid 63
     :return: gia
     """
     out_data = []
+    bad_packets = 0
     for key in packets:
         try:
             csv_info = packets[key]['csv_info']
@@ -43,9 +44,16 @@ def extract_tlm_from_sorted_packets(packets):
         for data in packets[key]['raw_packets']:
             if not len(data):
                 continue
-            out_data.append(extract_data(data, tlm_points))
+            tmp_data = extract_data(data, tlm_points)
+            if not tmp_data:
+                bad_packets += 1
+                continue
+            out_data.append(tmp_data)
+    if bad_packets and len(out_data):
+        stats.add_stat("Removed "+str(bad_packets)+" corrupted packets with out of range data.")
     if len(out_data) == 0:
         LOGGER.warning("Did not extract any data from this file")
+        stats.add_stat("No data extracted.")
     return out_data
 
 
@@ -103,9 +111,14 @@ def extract_data(data, tlm_points):
                 tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
 
         else:
-            LOGGER.error("DTYPE IS CHAR, WHY YOU NOT DECDE?")
+            LOGGER.error("DTYPE IS CHAR, WHY YOU NOT DECODE?")
 
         # index into the struct and save the value for the tlm point
+        if int(CONFIG_INFO['CLEANING']['CLEAN_DATA']):
+            if point['min'] and float(point['min']) > tlm_value:
+                return []
+            if point['max'] and float(point['max']) < tlm_value:
+                return []
         extracted_data[point['name']] = tlm_value
     return extracted_data
 
