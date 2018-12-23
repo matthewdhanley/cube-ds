@@ -1,5 +1,6 @@
 from config import *
 from slack import *
+import pylogger
 
 LOGGER = pylogger.get_logger(__name__)
 
@@ -37,3 +38,11 @@ class Statistics:
 
     def reset(self):
         self.stats = []
+
+    def write(self):
+        if int(CONFIG_INFO['INGEST_STATS']['TEXT_FILE']):
+            self.write_to_file()
+        if int(CONFIG_INFO['INGEST_STATS']['STD_OUT']):
+            self.print_stats()
+        if int(CONFIG_INFO['INGEST_STATS']['SLACK']):
+            self.post_to_slack()

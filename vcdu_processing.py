@@ -20,7 +20,7 @@ def extract_sband_vcdus(data):
     sband_packets = []
     while i + header_length < len(data):
         sband_packets.append(data[i:i+header_length])
-        i += 1024
+        i += 2048
     return sband_packets
 
 
@@ -135,7 +135,7 @@ def extract_vcdu_header(packet):
     return out_dict
 
 
-def vcdu_stats(packets, basename):
+def vcdu_stats(packets, basefile):
     columns = ["version", "sc_id", "vcid", "master_frame_count", "vc_frame_count", "secondary_hdr_flag",
                "sync_flag", "packet_order_flag", "segment_length_id", "packet_pointer", "trailer"]
     header_df = pd.DataFrame(columns=columns)
@@ -144,7 +144,7 @@ def vcdu_stats(packets, basename):
         tmpdf = pd.DataFrame([header], columns=columns)
         header_df = header_df.append(tmpdf)
 
-    header_df.to_csv('vcdu_summaries/'+basename+'_vcdu_summery.csv', index=False)
+    header_df.to_csv('vcdu_summaries/'+basefile+'_vcdu_summery.csv', index=False)
     LOGGER.info("Wrote vcdu headers to file.")
 
     return header_df
@@ -171,8 +171,11 @@ def extract_ccsds_packets(packets):
     for packet in packets:
         vcdu_header = extract_vcdu_header(packet)
         if vcdu_header['vc_frame_count'] - last_vc_frame_count % 255 != 0:
-            LOGGER.debug("Missing VCDU Frames "+str(last_vc_frame_count)+" to " +
-                        str(vcdu_header['vc_frame_count']))
+            LOGGER.debug("Missing VCDU Frame " + str(vcdu_header['vc_frame_count']))
+
+        else:
+            LOGGER.debug("Continuous vcdu frames!")
+
         last_vc_frame_count = vcdu_header['vc_frame_count']
         # todo - move to config
         if vcdu_header['version'] != 0 or \
@@ -196,10 +199,41 @@ def extract_ccsds_packets(packets):
             new_packet = packet[ccsds_start:ccsds_start + ccsds_header['length']+12]
             ccsds_packets.append(new_packet)
             ccsds_start += ccsds_header['length'] + 12
-            ccsds_header = extract_CCSDS_header(packet[ccsds_start:ccsds_start + 14])
+            try:
+                ccsds_header = extract_CCSDS_header(packet[ccsds_start:ccsds_start + 14])
+            except struct.error:
+                LOGGER.debug("not enough for another frame. bailing.")
+                return ccsds_packets
             if abs(ccsds_header['sequence'] - last_ccsds_frame_count % 255) > 1:
                 LOGGER.debug("Missing CCSDS Packets "+str(last_ccsds_frame_count)+" to " +
                             str(ccsds_header['sequence']))
             last_ccsds_frame_count = ccsds_header['sequence']
 
     return ccsds_packets
+
+
+def process_vcdu(data, stats=Statistics('none')):
+    # SBAND CASE
+    stats.add_stat("Interpreted as SBand File")
+    LOGGER.info("Extracting SBAND data from " + stats.basefile)
+
+    packets = extract_sband_vcdus(data)
+    stats.add_stat("Potentially " + str(len(packets)) + " VCDU Frames")
+
+    if DEBUG:
+        write_to_pickle(packets, 'debug/vcdu_raw_packets_' + stats.basefile + '.pickle')
+
+    if CONFIG_INFO['SAVE']['VCDU_STATS']:
+        vcdu_stats(packets, stats.basefile)
+
+    packets = extract_ccsds_packets(packets)
+    stats.add_stat("Found " + str(len(packets)) + " Potential CCSDS Packets")
+
+    if CONFIG_INFO['SAVE']['CCSDS_STATS']:
+        ccsds_stats(packets, stats.basefile)
+
+    if DEBUG:
+        write_to_pickle(packets, "debug/vcdu_ccsds_packets_" + stats.basefile + ".pickle")
+
+    return packets
+

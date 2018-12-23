@@ -1,4 +1,5 @@
 from config import *
+from helpers import *
 import psycopg2
 import psycopg2.extras
 
@@ -102,15 +103,74 @@ def cluster(conn):
     LOGGER.info("Clustered db")
 
 
-def add_to_db(tlm, index_key, db, user, password):
-    if len(tlm) == 0:
-        LOGGER.error("No data to add to db.")
-        exit(1)
-    first_pt = tlm[0]
-    conn = connect_to_db(db, user, password)
-    create_tlm_tables(conn, first_pt.keys())
-    for t in tlm:
-        insert_into_db(conn, t, index_key)
-    conn.close()
+def create_catalog_table(conn):
+    try:
+        cur = conn.cursor()
+        cmd = """CREATE TABLE IF NOT EXISTS telemetry_catalog( 
+        menmonic VARCHAR NOT NULL,
+        package VARCHAR,
+        conversion DOUBLE DEFAULT 1,
+        dsize INTEGER,
+        state VARCHAR,
+        description VARCHAR,
+        unit VARCHAR,
+        val_max DOUBLE,
+        val_min DOUBLE,
+        PRIMARY KEY (mnemonic));"""
+        cur.execute(cmd)
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        LOGGER.error(error)
+        return False
+
+    csv_info = get_csv_info()
+    for c in csv_info:
+        pointsFile = c['pointsFile']
+        tlm_dict = get_tlm_points(pointsFile)
+        for point in tlm_dict:
+            cmd = """INSERT INTO telemetry_catalog (
+                         mnemonic, 
+                         package, 
+                         conversion, 
+                         dsize, 
+                         state, 
+                         description, 
+                         unit, 
+                         val_max, 
+                         val_min) 
+                     VALUES (
+                         '"""+point['name']+"""',
+                         '"""+point['package']+"""',
+                         '"""+point['conversion']+"""',
+                         '"""+point['size']+"""',
+                         '"""+point['state']+"""',
+                         '"""+point['description']+"""',
+                         '"""+point['unit']+"""',
+                         '"""+point['max']+"""',
+                         '"""+point['min']+"""')
+                      ON CONFLICT DO NOTHING;"""
+
+            try:
+                cur.execute(cmd)
+
+            except psycopg2.DataError as e:
+                LOGGER.info("Bad catalog entry, can't insert into db")
+                LOGGER.error(e)
+                LOGGER.debug(point)
+                continue
+            except psycopg2.InternalError as e:
+                LOGGER.info("Bad catalog entry, can't insert into db")
+                LOGGER.error(e)
+                LOGGER.debug(point)
+                continue
+    try:
+        conn.commit()
+    except psycopg2.DataError as e:
+        LOGGER.info("Error committing catalog to db")
+        LOGGER.error(e)
+    except psycopg2.InternalError as e:
+        LOGGER.info("Error committing catalog to db")
+        LOGGER.error(e)
+
 
 

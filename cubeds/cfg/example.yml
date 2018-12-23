@@ -1,0 +1,193 @@
+---
+runtime:
+  mission: csim
+  test: True
+  debug: False
+  verbose: True
+
+
+save:
+  csv:
+    prod:
+      enabled: False
+      file: tlm.csv
+    test:
+      enabled: False
+      file: tlm.csv
+  netcdf:
+    prod:
+      enabled: False
+      file: C:\data-processing\NetCDF\csim.nc
+    test:
+      enabled: False
+      file: test\csim.nc
+  postgresql:
+    prod:
+      enabled: False
+      dbname: test_telemetry
+      user: postgres
+      password: password
+      port: 5432
+      host: localhost
+    test:
+      enabled: False
+      dbname: test_telemetry
+      user: postgres
+      password: password
+      port: 5432
+      host: localhost
+  vcdu_stats:
+    prod:
+      enabled: True
+    test:
+      enabled: True
+  ccsds_stats:
+    prod:
+      enabled: True
+    test:
+      enabled: True
+  individual_csv:
+    prod:
+      enabled: True
+    test:
+      enabled: True
+  key: bct_tai_seconds
+
+
+ingest_stats:
+  text_file:
+    prod:
+      enabled: True
+    test:
+      enabled: True
+  std_out:
+    prod:
+      enabled: True
+    test:
+      enabled: True
+  slack:
+    prod:
+      enabled: False
+      key: xoxb-462801636821-509499870758-gktiwnP6D3LbAEo7yGhUnzgq
+      channel: cube-ds-stats
+    test:
+      enabled: False
+      key: xoxb-509075681543-507291854528-iju8yNayFsrPCH4GQuSEYqtz
+      channel: general
+
+
+satnogs:
+  prod:
+    enabled: False
+  test:
+    enabled: False
+
+
+cleaning:
+  prod:
+    enabled: True
+    min_time: 12/10/2018-00:00:00
+  test:
+    enabled: True
+    min_time: 12/10/2018-00:00:00
+
+
+rundirs:
+  prod:
+    location: test\sband
+  test:
+    location: test\kss
+
+
+process_log:
+  prod:
+    location: test\processed_file_log.txt
+    enabled: True
+  test:
+    location: test\processed_file_log.txt
+    enabled: False
+
+
+telemetry:
+  prod:
+    packet_definitions: var\packet_defs.csv
+    encoding: utf-8-sig
+  test:
+    packet_definitions: var\packet_defs.csv
+    encoding: utf-8-sig
+
+decoders:
+  max_priority: 100
+  prod:
+    decoder_vcdu:
+      regex:
+        - .*sband.*
+      frame_size: 2048  # size of a vcdu frame
+      priority: 1
+
+    decoder_vcdu_to_ccsds:
+      regex:
+        - .*sband.*
+      header_length: 6
+      priority: 2
+
+    decoder_ax25:
+      regex:
+        - .*raw.*
+      priority: 3
+      frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
+      header_length: 16
+
+    decoder_kiss:
+      regex:
+        - .*\.kss
+      priority: 4
+
+    decoder_ccsds:
+      regex:
+        - .*
+      priority: 6
+
+    decoder_stitch_ccsds:
+      regex:
+      - .*\.kss
+      - .*raw.*
+      priority: 5
+
+  test:
+    decoder_vcdu:
+      regex:
+      - .*sband.*
+      frame_size: 2048  # size of a vcdu frame
+      priority: 1
+
+    decoder_vcdu_to_ccsds:
+      regex:
+      - .*sband.*
+      header_length: 6
+      priority: 2
+
+    decoder_ax25:
+      regex:
+      - .*raw.*
+      - .*\.kss
+      priority: 3
+      frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
+      header_length: 16
+
+    decoder_kiss:
+      regex:
+      - .*\.kss
+      priority: 4
+
+    decoder_ccsds:
+      regex:
+        - .*
+      priority: 6
+
+    decoder_stitch_ccsds:
+      regex:
+      - .*\.kss
+      - .*raw.*
+      priority: 5
+...

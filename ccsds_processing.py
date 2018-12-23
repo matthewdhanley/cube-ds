@@ -80,7 +80,7 @@ def stitch_ccsds_new(packet_parts):
         start_ind = packet_beginning_ind['index'].values
         if len(start_ind) > 1:
             LOGGER.debug("Multiple frame starts at sequence number "+str(seq))
-            continue
+            LOGGER.debug("using the first one.")
 
         start_ind = start_ind[0]
 
@@ -99,7 +99,7 @@ def stitch_ccsds_new(packet_parts):
         end_ind = packet_end_ind['index'].values
         if len(end_ind) > 1:
             LOGGER.debug("Multiple frame ends for sequnce number "+str(seq))
-            continue
+            LOGGER.debug("using the first one.")
 
         end_ind = end_ind[0]
         length = packet_end_ind['length'].values[0] + packet_end_ind['header_length'].values[0]+1
@@ -148,7 +148,7 @@ def find_ccsds_packets(data):
 def check_ccsds_valid(header_dict, sband=False):
     if header_dict['ccsds_version'] != 0:
         return False
-    if header_dict['length'] < 100:
+    if header_dict['length'] < 50:
         return False
     if header_dict['length'] > 1800:
         return False
@@ -164,9 +164,9 @@ def check_ccsds_valid(header_dict, sband=False):
     if header_dict['subseconds'] < 0:
         return False
     if header_dict['secondary_header'] == 1:
-        if header_dict['seconds'] < 2000000000:
+        if header_dict['seconds'] < 500000000:
             return False
-        if header_dict['seconds'] > 4000000000:
+        if header_dict['seconds'] > 9000000000:
             return False
     return True
 

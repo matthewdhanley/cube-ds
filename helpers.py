@@ -28,7 +28,10 @@ def extract_bits(data, bit, length=1):
     bits = bitarray(data, endian='big')
     if length > 1:
         out = bits[bit:bit+length]
-        out = struct.unpack('>B', out.tobytes())[0]
+        try:
+            out = struct.unpack('>B', out.tobytes())[0]
+        except struct.error:
+            out = 0
     else:
         try:
             out = bits[bit]
@@ -57,7 +60,7 @@ def tlm_to_df(tlm, time_index):
     :return:
     """
     if tlm:
-        df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
+        df = pd.DataFrame().from_dict(tlm).sort_values(by=time_index)
     else:
         LOGGER.warning("No data found. Returning empty dataframe")
         return pd.DataFrame()
@@ -144,14 +147,21 @@ def get_unpack_format(in_dtype, dsize, endian='big'):
     return letter
 
 
-def get_csv_info(csv_filename):
+def get_csv_info():
     """
     Reads in CSV info from top level file
     :param csv_filename: csv file name
     :return: dictionary of csv lines
     """
+    csv_filename = CONFIG_INFO['csv']['location']
+
     # make sure file exists
-    assert os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), csv_filename))
+    try:
+        assert os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), csv_filename))
+    except AssertionError as e:
+        LOGGER.fatal(e)
+        LOGGER.fatal("Cannot find packet definition file "+csv_filename)
+        exit(1)
 
     csv_encoding = get_csv_encoding()
 
@@ -188,28 +198,6 @@ def get_tlm_data(raw_file, endian="big"):
         LOGGER.fatal("DID NOT specify correct endian")
         exit(1)
     return raw_data
-
-
-def get_header_dict(headerfile):
-    """
-    Generates a header dictionary list from the header csv file
-    :param headerfile: CSV Header File
-    :return: list of dictionaries of components of the header
-    """
-    # make sure file exists
-    try:
-        assert os.path.exists(headerfile)
-    except AssertionError:
-        LOGGER.error("Can't find file "+headerfile)
-
-    csv_encoding = get_csv_encoding()
-
-    with open(headerfile, mode='r', encoding=csv_encoding) as csv_f:
-        reader = csv.DictReader(csv_f)
-        header_dict_list = []
-        for row in reader:
-            header_dict_list.append(dict(row))
-    return header_dict_list
 
 
 def get_csv_encoding():
@@ -360,10 +348,20 @@ def get_apids():
     Returns list of apids from file specified in cfg file
     :return: list of apids
     """
-    csv_file = CONFIG_INFO['csv']['location']
-    csv_info = get_csv_info(csv_file)
+    csv_info = get_csv_info()
     apids = []
     for line in csv_info:
         if int(line['apid']) not in apids:
             apids.append(int(line['apid']))
     return apids
+
+
+def assign_csv_info(packets):
+    # returned a list of dicts
+    csv_info = get_csv_info()
+    for key in packets:
+        for a in csv_info:
+            if key == a['apid']:
+                packets[key]['csv_info'] = a
+
+    return packets

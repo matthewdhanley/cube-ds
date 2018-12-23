@@ -1,5 +1,8 @@
 from config import *
 from helpers import *
+from ccsds_processing import *
+# from statistics import *
+
 LOGGER = pylogger.get_logger(__name__)
 
 
@@ -81,17 +84,26 @@ def extract_data(data, tlm_points):
         # get the datatype
         dtype = point['dtype']
 
-        # grab the header length from the packet todo - fix
-        # header_length = int(packet['headerSize'])
         header_length = 12
+        # TODO | Header length changes for payload packets. Need to extract little endian seconds as the key for below.
+        # TODO | This might be tricky . . .
+        # TODO | what if we just didn't remove the header and incorporated it into the tlm map? That might make the
+        # TODO | most sense. But then the issue arises that the initial apid extraction might not be as robust due
+        # TODO | to changing length header fields. Might want to consider decoder config csv files like hydra...
 
         # get the relavent data from the packet
         tlmData = data[header_length + startByte:header_length + startByte + tlm_length // 8]
 
+        if point['endian']:
+            endian = point['endian']
+        else:
+            endian = 'big'
+
         # generate a format string for struct.unpack
-        unpack_data_format = get_unpack_format(dtype, tlm_length)
+        unpack_data_format = get_unpack_format(dtype, tlm_length, endian=endian)
         # try to unpack the data (if it's not a char, chars are having issues?)
         # ALSO CONVERT TO THE EU
+
         if point['dtype'] != 'char':
             try:
                 tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
@@ -105,7 +117,7 @@ def extract_data(data, tlm_points):
                 print(point)
                 print(tlm_value)
                 print(e)
-                exit(-1)
+                exit(1)
 
             if extract_bits_length > 0:
                 tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
@@ -125,14 +137,25 @@ def extract_data(data, tlm_points):
 
 def sort_packets(packets):
     packets_sorted = {}
+    strip_length = 12
     for packet in packets:
+        header = extract_CCSDS_header(packet)
         try:
-            packet_id = str(packet[0]) + str(packet[1])
+            packet_id = str(header['apid'])
         except IndexError:
+            LOGGER.debug("Packet wayyyyy too short.")
             continue
+
+        if packet_id == '255':
+            packet = packet[strip_length:]
+            header = extract_CCSDS_header(packet)
+            packet_id = str(header['apid'])
+            LOGGER.info(struct.unpack('<I', packet[12:16]))
+
         if packet_id in packets_sorted:
             packets_sorted[packet_id]['raw_packets'].append(packet)
         else:
             packets_sorted[packet_id] = {}
             packets_sorted[packet_id]['raw_packets'] = [packet]
+
     return packets_sorted

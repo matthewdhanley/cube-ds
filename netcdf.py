@@ -8,8 +8,7 @@ LOGGER = pylogger.get_logger(__name__)
 def save_to_netcdf(data, file, index_key):
     mainGroup = get_main_group(file)
 
-    csv_file = CONFIG_INFO['csv']['location']
-    csv_info = get_csv_info(csv_file)
+    csv_info = get_csv_info()
     for info in csv_info:
         tlm_points = get_tlm_points(info['pointsFile'])
         netcdf_setup(tlm_points, mainGroup)

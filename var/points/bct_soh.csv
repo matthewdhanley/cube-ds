@@ -1,257 +1,257 @@
-name,startByte,startBit,dtype,size,conversion,unit,description,state,min,max
-bct_wdt_2sec_cnt,0,0,dn,3,1,none,Watchdog 2 Second Counter,,,
-bct_reset_armed,0,3,dn,1,1,1/ARMED 0/NOT_ARMED,Processor reset armed status,1/ARMED 0/NOT_ARMED,,
-bct_wdt_stat,0,4,dn,1,1,0/NO_WDT 1/WDT,Watch Reset Event Status,0/NO_WDT 1/WDT,,
-bct_wdt_en,0,5,dn,1,1,0/DISABLED 1/ENABLED,Watchdog Reset Enable Status,0/DISABLED 1/ENABLED,,
-bct_table_select,0,6,dn,1,1,0/FLASH 1/COMPILED,Table select,0/FLASH 1/COMPILED,,
-bct_boot_relay,0,7,dn,1,1,1/PRIMARY 0/REDUNDANT,Boot Relay Status,1/PRIMARY 0/REDUNDANT,,
-bct_l0_acpt_cnt,1,0,dn,8,1,none,Level 0 Accept Counter,,,
-bct_l0_rjct_cnt,2,0,dn,8,1,none,Level 0 Reject Counter,,,
-bct_hw_sec_cnt,3,0,dn,8,1,none,Hardware Second Counter,,,
-bct_time_tag,12,0,dn,32,1,USEC,Time Tag of Last Incoming Command,,,
-bct_pld_tlm_ack_cnt,20,0,dn,8,1,none,Number of accepted telemetry packets,,,
-bct_pld_cmd_cnt,21,0,dn,8,1,none,Number of commands sent,,,
-bct_pld_tlm_to_cnt,22,0,dn,8,1,none,Number of timeouts waiting for telemetry,,,
-bct_pld_tlm_nak_cnt,23,0,dn,8,1,none,Number of rejected telemetry packets,,,
-bct_spare_end,24,0,dn,32,1,none,spare end,,,
-bct_cmd_status,32,0,dn,8,1,0/OK 1/BAD_APID 2/BAD_OPCODE 3/BAD_DATA 4/NOW_READING 5/DONE_READING 6/IDLE 7/NO_CMD_DATA 8/CMD_SRVC_OVERRUN 9/CMD_APID_OVERRUN 10/INCORRECT_WHEEL_MODE 11/BAD_ELEMENT 12/TABLES_BUSY 13/FLASH_NOT_ARMED 14/THRUSTERS_DISABLED 15/ATT_ERR_TOO_HIGH 16/ASYNC_REFUSED 17/DRIVER_ERROR,Command Status,0/OK 1/BAD_APID 2/BAD_OPCODE 3/BAD_DATA 4/NOW_READING 5/DONE_READING 6/IDLE 7/NO_CMD_DATA 8/CMD_SRVC_OVERRUN 9/CMD_APID_OVERRUN 10/INCORRECT_WHEEL_MODE 11/BAD_ELEMENT 12/TABLES_BUSY 13/FLASH_NOT_ARMED 14/THRUSTERS_DISABLED 15/ATT_ERR_TOO_HIGH 16/ASYNC_REFUSED 17/DRIVER_ERROR,0,10
-bct_realtime_cmd_accept_count,33,0,dn,8,1,none,Realtime Command Accept Count,,,
-bct_realtime_cmd_reject_count,34,0,dn,8,1,none,Realtime Command Reject Count,,,
-bct_stored_cmd_accept_count,35,0,dn,8,1,none,Stored Command Accept Count,,,
-bct_stored_cmd_reject_count,36,0,dn,8,1,none,Stored Command Reject Count,,,
-bct_macros_executing_pack_bit8,37,0,dn,1,1,none,Macros Executing Bitpack bit 8,,,
-bct_macros_executing_pack1,37,0,dn,8,1,bitpack,Macros Executing Bitpack,,,
-bct_macros_executing_pack_bit7,37,1,dn,1,1,none,Macros Executing Bitpack bit 7,,,
-bct_macros_executing_pack_bit6,37,2,dn,1,1,none,Macros Executing Bitpack bit 6,,,
-bct_macros_executing_pack_bit5,37,3,dn,1,1,none,Macros Executing Bitpack bit 5,,,
-bct_macros_executing_pack_bit4,37,4,dn,1,1,none,Macros Executing Bitpack bit 4,,,
-bct_macros_executing_pack_bit3,37,5,dn,1,1,none,Macros Executing Bitpack bit 3,,,
-bct_macros_executing_pack_bit2,37,6,dn,1,1,none,Macros Executing Bitpack bit 2,,,
-bct_macros_executing_pack_bit1,37,7,dn,1,1,none,Macros Executing Bitpack bit 1,,,
-bct_macros_executing_pack2,38,0,dn,8,1,bitpack,Macros Executing Bitpack,,,
-bct_macros_executing_pack_bit16,38,0,dn,1,1,none,Macros Executing Bitpack bit 16,,,
-bct_macros_executing_pack_bit15,38,1,dn,1,1,none,Macros Executing Bitpack bit 15,,,
-bct_macros_executing_pack_bit14,38,2,dn,1,1,none,Macros Executing Bitpack bit 14,,,
-bct_macros_executing_pack_bit13,38,3,dn,1,1,none,Macros Executing Bitpack bit 13,,,
-bct_macros_executing_pack_bit12,38,4,dn,1,1,none,Macros Executing Bitpack bit 12,,,
-bct_macros_executing_pack_bit11,38,5,dn,1,1,none,Macros Executing Bitpack bit 11,,,
-bct_macros_executing_pack_bit10,38,6,dn,1,1,none,Macros Executing Bitpack bit 10,,,
-bct_macros_executing_pack_bit9,38,7,dn,1,1,none,Macros Executing Bitpack bit 9,,,
-bct_scrub_status_overall,39,0,sn,8,1,0/OK -1/FAIL,Scrub Status Overall,,,
-bct_scrub_count,40,0,dn,8,1,none,Number of times flash scrubbing has run,,,
-bct_image_booted,41,0,dn,8,1,0/PRIMARY 1/REDUNDANT,Which image was booted,0/PRIMARY 1/REDUNDANT,0,1
-bct_image_auto_failover,42,0,dn,8,1,0/OK 1/FAIL,Automatic image failover occurred,0/OK 1/FAIL,0,1
-bct_tai_seconds,43,0,double,64,1,sec,TAI Seconds,,,
-bct_time_valid,51,0,dn,8,1,1/YES 0/NO,Time Valid,1/YES 0/NO,,
-bct_position_wrt_eci1,52,0,sn,32,2.00E-05,km,Orbit Position ECI,,,
-bct_position_wrt_eci2,56,0,sn,32,2.00E-05,km,Orbit Position ECI,,,
-bct_position_wrt_eci3,60,0,sn,32,2.00E-05,km,Orbit Position ECI,,,
-bct_velocity_wrt_eci1,64,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,
-bct_velocity_wrt_eci2,68,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,
-bct_velocity_wrt_eci3,72,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,
-bct_nadir_vector_body1,76,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,
-bct_nadir_vector_body2,78,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,
-bct_nadir_vector_body3,80,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,
-bct_sun_vector_body1,82,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,
-bct_sun_vector_body2,84,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,
-bct_sun_vector_body3,86,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,
-bct_sun_position_wrt_eci1,88,0,sn,32,0.071428575,km,Sun Position ECI,,,
-bct_sun_position_wrt_eci2,92,0,sn,32,0.071428575,km,Sun Position ECI,,,
-bct_sun_position_wrt_eci3,96,0,sn,32,0.071428575,km,Sun Position ECI,,,
-bct_moon_position_wrt_eci1,100,0,sn,32,0.0002,km,Moon Position ECI,,,
-bct_moon_position_wrt_eci2,104,0,sn,32,0.0002,km,Moon Position ECI,,,
-bct_moon_position_wrt_eci3,108,0,sn,32,0.0002,km,Moon Position ECI,,,
-bct_refs_valid,112,0,dn,8,1,1/YES 0/NO,Refs Valid,1/YES 0/NO,0,1
-bct_esm_valid,113,0,dn,8,1,1/YES 0/NO,Earth  Sun  Moon valid,1/YES 0/NO,0,1
-bct_run_low_rate_task,114,0,dn,8,1,1/YES 0/NO,RunLowRateTask,1/YES 0/NO,0,1
-bct_q_body_wrt_eci1,115,0,sn,32,5.00E-10,none,Attitude Quaternion,,,
-bct_q_body_wrt_eci2,119,0,sn,32,5.00E-10,none,Attitude Quaternion,,,
-bct_q_body_wrt_eci3,123,0,sn,32,5.00E-10,none,Attitude Quaternion,,,
-bct_q_body_wrt_eci4,127,0,sn,32,5.00E-10,none,Attitude Quaternion,,,
-bct_body_rate1,131,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,
-bct_body_rate1_dps,131,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,
-bct_body_rate1_rpm,131,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,
-bct_body_rate2,135,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,
-bct_body_rate2_dps,135,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,
-bct_body_rate2_rpm,135,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,
-bct_body_rate3,139,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,
-bct_body_rate3_dps,139,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,
-bct_body_rate3_rpm,139,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,
-bct_bad_att_timer,143,0,dn,32,1,cycles,BadAttTimer,,,
-bct_bad_rate_timer,147,0,dn,32,1,cycles,BadRateTimer,,,
-bct_reinit_count,151,0,dn,32,1,none,Attitude Filter Reinit Count,,,
-bct_attitude_valid,155,0,dn,8,1,1/YES 0/NO,Attitude Valid,1/YES 0/NO,0,1
-bct_meas_att_valid,156,0,dn,8,1,1/YES 0/NO,Measured Attitude Valid,1/YES 0/NO,0,1
-bct_meas_rate_valid,157,0,dn,8,1,1/YES 0/NO,Measured Rate Valid,1/YES 0/NO,0,1
-bct_tracker_used,158,0,dn,8,1,none,Tracker Used,,,
-bct_hr_cycle_safe_mode,159,0,dn,32,1,cycles,HR Run Count at Time of Safe Mode,,,
-bct_rotisserie_rate,163,0,sn,16,4.00E-05,rad/sec,Desired Sun Rot Rate,,,
-bct_rotisserie_rate_dps,163,0,sn,16,0.002291831,deg/s,Desired Sun Rot Rate (deg/s),,,
-bct_rotisserie_rate_rpm,163,0,sn,16,0.000381972,RPM,Desired Sun Rot Rate (RPM),,,
-bct_adcs_mode,165,0,dn,8,1,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,ADCS Mode,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,0,7
-bct_safe_mode_reason,166,0,dn,8,1,1/BOOT 2/COMMAND 4/ATTITUDE_INVALID 8/TIME_INVALID 12/ATTITUDE_TIME_INVALID 16/REFS_INVALID,Safe Mode Reason,1/BOOT 2/COMMAND 4/ATTITUDE_INVALID 8/TIME_INVALID 12/ATTITUDE_TIME_INVALID 16/REFS_INVALID,1,16
-bct_recommend_sun_point,167,0,dn,8,1,1/YES 0/NO,RecommendSunPoint,1/YES 0/NO,0,1
-bct_filtered_speed_rpm1,168,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,
-bct_filtered_speed_rpm2,170,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,
-bct_filtered_speed_rpm3,172,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,
-bct_operating_mode1,174,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2
-bct_operating_mode2,175,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2
-bct_operating_mode3,176,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2
-bct_tracker1_operating_mode,177,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,0,5
-bct_tracker1_star_id_step,178,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,0,10
-bct_tracker1_att_status,179,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,0,10
-bct_tracker1_det_timeout_count,180,0,dn,16,1,counts,Number of detector timeouts,,,
-bct_tracker1_num_attitude_stars,182,0,dn,8,1,none,Num Stars Used in Att,,,
-bct_position_error1,183,0,sn,32,2.00E-09,rad,Attitude Error,,,
-bct_position_error2,187,0,sn,32,2.00E-09,rad,Attitude Error,,,
-bct_position_error3,191,0,sn,32,2.00E-09,rad,Attitude Error,,,
-bct_eigen_error,195,0,dn,32,1.52E-09,rad,Eigen Error,,,
-bct_time_into_search,199,0,dn,16,1,sec,Time Into Sun Search,,,
-bct_wait_timer,201,0,dn,16,1,sec,Sun Search Wait Timer,,,
-bct_sun_point_angle_error,203,0,dn,16,0.003,deg,Sun Point Angle Error,,,
-bct_sun_point_state,205,0,dn,8,1,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,Sun Point State,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,0,7
-bct_momentum_vector_body1,206,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,
-bct_momentum_vector_body2,208,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,
-bct_momentum_vector_body3,210,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,
-bct_total_momentum_mag,212,0,dn,16,0.0005,Nms,System Momentum Magnitude,,,
-bct_duty_cycle1,214,0,sn,8,1,none,Torque Rod Duty Cycle,,,
-bct_duty_cycle2,215,0,sn,8,1,none,Torque Rod Duty Cycle,,,
-bct_duty_cycle3,216,0,sn,8,1,none,Torque Rod Duty Cycle,,,
-bct_torque_rod_mode1,217,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7
-bct_torque_rod_mode2,218,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7
-bct_torque_rod_mode3,219,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7
-bct_mag_source_used,220,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Mag Field Source,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7
-bct_momentum_vector_valid,221,0,dn,8,1,1/YES 0/NO,Momentum Vector Valid,1/YES 0/NO,,
-bct_sun_vector_body1,222,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,
-bct_sun_vector_body2,224,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,
-bct_sun_vector_body3,226,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,
-bct_sun_vector_status,228,0,dn,8,1,0/GOOD 1/COARSE 2/BAD,Meas Sun Body Vector Status,0/GOOD 1/COARSE 2/BAD,0,2
-bct_css_invalid_count,229,0,dn,16,1,none,CSS Invalid Measurement Count,,,
-bct_sun_sensor_used,231,0,dn,8,1,none,Sun Sensor Package Used,,,
-bct_mag_vector_body1,232,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,
-bct_mag_vector_body2,234,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,
-bct_mag_vector_body3,236,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,
-bct_mag_invalid_count,238,0,dn,16,1,counts,Cycles with invalid Measured Mag Data,,,
-bct_mag_vector_valid,240,0,dn,8,1,1/YES 0/NO,Meas Mag Field Valid,1/YES 0/NO,0,1
-bct_mag_sensor_used,241,0,dn,8,1,none,Mag Sensor Used,,,
-bct_imu_invalid_count,242,0,dn,16,1,none,IMU Invalid Count,,,
-bct_new_packet_count,244,0,dn,8,1,none,IMU Packet Count,,,
-bct_imu_vector_valid,245,0,dn,8,1,1/YES 0/NO,IMU Rate Valid,1/YES 0/NO,0,1
-bct_hr_run_count,246,0,dn,32,1,none,High Rate Run Count,,,
-bct_hr_exec_time_ms1,250,0,dn,8,1,msec,High Rate Duration,,,
-bct_hr_exec_time_ms2,251,0,dn,8,1,msec,High Rate Duration,,,
-bct_hr_exec_time_ms3,252,0,dn,8,1,msec,High Rate Duration,,,
-bct_hr_exec_time_ms4,253,0,dn,8,1,msec,High Rate Duration,,,
-bct_hr_exec_time_ms5,254,0,dn,8,1,msec,High Rate Duration,,,
-bct_payload_sec_since_last_tlm,255,0,dn,32,1,sec,Seconds since last TLM received (by SW),,,
-bct_payload_tlm_rx_count,259,0,dn,16,1,none,Payload Tlm Receive Counter (by SW),,,
-bct_payload_tlm_ack_count,261,0,dn,16,1,none,Payload Tlm ACK Counter,,,
-bct_payload_tlm_nak_count,263,0,dn,16,1,none,Payload Tlm NAK Counter,,,
-bct_voltage_12p0,265,0,dn,8,0.1,V,Voltage_12p0,,,
-bct_voltage_8p0,266,0,dn,8,0.1,V,Voltage_8p0,,,
-bct_voltage_5p0,267,0,dn,8,0.025,V,Voltage_5p0,,,
-bct_voltage_3p3,268,0,dn,8,0.015000001,V,Voltage_3p3,,,
-bct_det_temp,269,0,sn,8,0.80000001,degC,Tracker Detector temperature,,,
-bct_det2_temp,270,0,sn,8,0.80000001,degC,Tracker 2 Detector temperature,,,
-bct_box1_temp,271,0,sn,16,0.005,degC,Box 1 Temp,,,
-bct_imu_temp,273,0,sn,16,0.005,decC,Imu Temp,,,
-bct_motor1_temp,275,0,sn,16,0.005,degC,Wheel 1 Temp,,,
-bct_motor2_temp,277,0,sn,16,0.005,degC,Wheel 2 Temp,,,
-bct_motor3_temp,279,0,sn,16,0.005,degC,Wheel 3 Temp,,,
-bct_bus_voltage,281,0,sn,16,0.001,V,Bus Voltage,,,
-bct_battery_voltage,283,0,dn,16,0.002,V,Battery Voltage,,,
-bct_battery_current,285,0,sn,16,0.002,A,Battery Current,,,
-bct_battery1_temp,287,0,sn,16,0.005,degC,Battery 1 Temp,,,
-bct_battery2_temp,289,0,sn,16,0.005,degC,Battery 2 Temp,,,
-bct_user_analog1,291,0,sn,32,0.0005,none,User Analogs,,,
-bct_user_analog2,295,0,sn,32,0.0005,none,User Analogs,,,
-bct_tracker2_operating_mode,299,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,0,5
-bct_tracker2_star_id_step,300,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,0,10
-bct_tracker2_att_status,301,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,0,10
-bct_tracker2_det_timeout_count,302,0,dn,16,1,counts,Number of detector timeouts,,,
-bct_tracker2_num_attitude_stars,304,0,dn,8,1,none,Num Stars Used in Att,,,
-bct_cycles_since_crc_data,305,0,dn,32,1,none,Cycles Since Correct CRC GPS Data,,,
-bct_gps_lock_count,309,0,dn,16,1,none,spare,,,
-bct_gps_valid,311,0,dn,8,1,1/YES 0/NO,GPS Valid,1/YES 0/NO,,
-bct_gps_enable,312,0,dn,8,1,1/YES 0/NO,GPS Enabled,1/YES 0/NO,,
-bct_latched_resp_fire_pack1,313,0,dn,8,1,bitpack,Latched Response Fired Bitpack,,,
-bct_latched_resp_fire_pack_bit8,313,0,dn,1,1,none,Latched Response Fired Bitpack bit 8,,,
-bct_latched_resp_fire_pack_bit7,313,1,dn,1,1,none,Latched Response Fired Bitpack bit 7,,,
-bct_latched_resp_fire_pack_bit6,313,2,dn,1,1,none,Latched Response Fired Bitpack bit 6,,,
-bct_latched_resp_fire_pack_bit5,313,3,dn,1,1,none,Latched Response Fired Bitpack bit 5,,,
-bct_latched_resp_fire_pack_bit4,313,4,dn,1,1,none,Latched Response Fired Bitpack bit 4,,,
-bct_latched_resp_fire_pack_bit3,313,5,dn,1,1,none,Latched Response Fired Bitpack bit 3,,,
-bct_latched_resp_fire_pack_bit2,313,6,dn,1,1,none,Latched Response Fired Bitpack bit 2,,,
-bct_latched_resp_fire_pack_bit1,313,7,dn,1,1,none,Latched Response Fired Bitpack bit 1,,,
-bct_latched_resp_fire_pack2,314,0,dn,8,1,bitpack,Latched Response Fired Bitpack,,,
-bct_latched_resp_fire_pack_bit16,314,0,dn,1,1,none,Latched Response Fired Bitpack bit 16,,,
-bct_latched_resp_fire_pack_bit15,314,1,dn,1,1,none,Latched Response Fired Bitpack bit 15,,,
-bct_latched_resp_fire_pack_bit14,314,2,dn,1,1,none,Latched Response Fired Bitpack bit 14,,,
-bct_latched_resp_fire_pack_bit13,314,3,dn,1,1,none,Latched Response Fired Bitpack bit 13,,,
-bct_latched_resp_fire_pack_bit12,314,4,dn,1,1,none,Latched Response Fired Bitpack bit 12,,,
-bct_latched_resp_fire_pack_bit11,314,5,dn,1,1,none,Latched Response Fired Bitpack bit 11,,,
-bct_latched_resp_fire_pack_bit10,314,6,dn,1,1,none,Latched Response Fired Bitpack bit 10,,,
-bct_latched_resp_fire_pack_bit9,314,7,dn,1,1,none,Latched Response Fired Bitpack bit 9,,,
-bct_sd_minute_cur,315,0,dn,32,1,none,SD Card Current Minute Number,,,
-bct_sd_percent_used_total,319,0,dn,8,1,percent,SD Card Used Space Percentage Total,,,
-bct_sd_percent_used_fsw,320,0,dn,8,1,percent,SD Card Used Space Percentage For Fsw Database,,,
-bct_sd_percent_used_soh,321,0,dn,8,1,percent,SD Card Used Space Percentage For Soh Database,,,
-bct_sd_percent_used_line,322,0,dn,8,1,percent,SD Card Used Space Percentage For Line Database,,,
-bct_sd_percent_used_tbl,323,0,dn,8,1,percent,SD Card Used Space Percentage For Tbl Database,,,
-bct_sd_percent_used_pay,324,0,dn,8,1,percent,SD Card Used Space Percentage For Pay Database,,,
-bct_sdr_tx_frames,325,0,dn,32,1,none,BCT-SDR tx frame counter,,,
-bct_sdr_rx_frames,329,0,dn,32,1,none,BCT_SDR rx valid frame counter,,,
-bct_sdr_tx,333,0,dn,8,1,0/NO 1/YES,BCT-SDR tx state,0/NO 1/YES,0,1
-bct_sdr_tx_power,334,0,sn,8,1,dBm,BCT-SDR tx power,,,
-bct_sdr_rx_lock,335,0,dn,8,1,0/NO 1/YES,BCT-SDR rx pll lock,0/NO 1/YES,0,1
-bct_sdr_rx_power,336,0,sn,8,1,dBm,BCT-SDR rx power level,,,
-bct_sdr_rx_freq_offset,337,0,sn,32,1,Hz,BCT-SDR rx frequency offset,,,
-bct_sdr_temp,341,0,sn,8,1,C,BCT-SDR temperature,,,
-bct_sdr_comm_error,342,0,dn,8,1,0/NO 1/YES,BCT-SDR temperature,0/NO 1/YES,0,1
-bct_sq_channel,343,0,sn,8,1,none,SpaceQuest Current Channel Selection,,,
-bct_sq_trap_count,344,0,dn,8,1,none,SpaceQuest Trap-Error Cycle Count,,,
-bct_sq_temp,345,0,dn,8,1,C,SpaceQuest Temperature,,,
-bct_aid_status1,346,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,,,
-bct_aid_status_bit8,346,0,dn,1,1,none,Tracker Aiding Status bit 8,,,
-bct_aid_status_bit7,346,1,dn,1,1,none,Tracker Aiding Status bit 7,,,
-bct_aid_status_bit6,346,2,dn,1,1,none,Tracker Aiding Status bit 6,,,
-bct_aid_status_bit5,346,3,dn,1,1,none,Tracker Aiding Status bit 5,,,
-bct_aid_status_bit4,346,4,dn,1,1,none,Tracker Aiding Status bit 4,,,
-bct_aid_status_bit3,346,5,dn,1,1,none,Tracker Aiding Status bit 3,,,
-bct_aid_status_bit2,346,6,dn,1,1,none,Tracker Aiding Status bit 2,,,
-bct_aid_status_bit1,346,7,dn,1,1,none,Tracker Aiding Status bit 1,,,
-bct_aid_status2,347,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,,,
-bct_aid_status_bit16,347,0,dn,1,1,none,Tracker Aiding Status bit 16,,,
-bct_aid_status_bit15,347,1,dn,1,1,none,Tracker Aiding Status bit 15,,,
-bct_aid_status_bit14,347,2,dn,1,1,none,Tracker Aiding Status bit 14,,,
-bct_aid_status_bit13,347,3,dn,1,1,none,Tracker Aiding Status bit 13,,,
-bct_aid_status_bit12,347,4,dn,1,1,none,Tracker Aiding Status bit 12,,,
-bct_aid_status_bit11,347,5,dn,1,1,none,Tracker Aiding Status bit 11,,,
-bct_aid_status_bit10,347,6,dn,1,1,none,Tracker Aiding Status bit 10,,,
-bct_aid_status_bit9,347,7,dn,1,1,none,Tracker Aiding Status bit 9,,,
-bct_star_id_status,348,0,dn,8,1,none,Tracker Performing StarId,,,
-bct_power_status,349,0,dn,32,1,none,Power Status,,,
-bct_io24_out_,350,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io23_out_,350,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io22_out_rel2_en,350,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io21_out_,350,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io20_out_pld_htr_vbus,350,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io19_out_pld_htr_vbus,350,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io18_out_rel1_en,350,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io17_in_boot_red,350,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io16_in_bat_chg_stat,351,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io15_out_det2,351,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io14_out_12v_mode,351,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io13_in_,351,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io12_out_12v_en,351,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io11_in_sep_mon,351,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io10_out_pld_rst_req,351,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io9_out_pld_vbus,351,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io8_out_pld_htr2,352,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io7_out_pld_htr1,352,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io6_out_pld_12v,352,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io5_out_pld_5v,352,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io4_out_pld_flash_cs,352,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io3_out_gps,352,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io2_out_sdr_12v,352,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
-bct_io1_out_rf_8v,352,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,
+name,startByte,startBit,dtype,size,conversion,unit,description,state,min,max,endian
+bct_wdt_2sec_cnt,0,0,dn,3,1,none,Watchdog 2 Second Counter,,,,big
+bct_reset_armed,0,3,dn,1,1,1/ARMED 0/NOT_ARMED,Processor reset armed status,1/ARMED 0/NOT_ARMED,,,big
+bct_wdt_stat,0,4,dn,1,1,0/NO_WDT 1/WDT,Watch Reset Event Status,0/NO_WDT 1/WDT,,,big
+bct_wdt_en,0,5,dn,1,1,0/DISABLED 1/ENABLED,Watchdog Reset Enable Status,0/DISABLED 1/ENABLED,,,big
+bct_table_select,0,6,dn,1,1,0/FLASH 1/COMPILED,Table select,0/FLASH 1/COMPILED,,,big
+bct_boot_relay,0,7,dn,1,1,1/PRIMARY 0/REDUNDANT,Boot Relay Status,1/PRIMARY 0/REDUNDANT,,,big
+bct_l0_acpt_cnt,1,0,dn,8,1,none,Level 0 Accept Counter,,,,big
+bct_l0_rjct_cnt,2,0,dn,8,1,none,Level 0 Reject Counter,,,,big
+bct_hw_sec_cnt,3,0,dn,8,1,none,Hardware Second Counter,,,,big
+bct_time_tag,12,0,dn,32,1,USEC,Time Tag of Last Incoming Command,,,,big
+bct_pld_tlm_ack_cnt,20,0,dn,8,1,none,Number of accepted telemetry packets,,,,big
+bct_pld_cmd_cnt,21,0,dn,8,1,none,Number of commands sent,,,,big
+bct_pld_tlm_to_cnt,22,0,dn,8,1,none,Number of timeouts waiting for telemetry,,,,big
+bct_pld_tlm_nak_cnt,23,0,dn,8,1,none,Number of rejected telemetry packets,,,,big
+bct_spare_end,24,0,dn,32,1,none,spare end,,,,big
+bct_cmd_status,32,0,dn,8,1,0/OK 1/BAD_APID 2/BAD_OPCODE 3/BAD_DATA 4/NOW_READING 5/DONE_READING 6/IDLE 7/NO_CMD_DATA 8/CMD_SRVC_OVERRUN 9/CMD_APID_OVERRUN 10/INCORRECT_WHEEL_MODE 11/BAD_ELEMENT 12/TABLES_BUSY 13/FLASH_NOT_ARMED 14/THRUSTERS_DISABLED 15/ATT_ERR_TOO_HIGH 16/ASYNC_REFUSED 17/DRIVER_ERROR,Command Status,0/OK 1/BAD_APID 2/BAD_OPCODE 3/BAD_DATA 4/NOW_READING 5/DONE_READING 6/IDLE 7/NO_CMD_DATA 8/CMD_SRVC_OVERRUN 9/CMD_APID_OVERRUN 10/INCORRECT_WHEEL_MODE 11/BAD_ELEMENT 12/TABLES_BUSY 13/FLASH_NOT_ARMED 14/THRUSTERS_DISABLED 15/ATT_ERR_TOO_HIGH 16/ASYNC_REFUSED 17/DRIVER_ERROR,0,10,big
+bct_realtime_cmd_accept_count,33,0,dn,8,1,none,Realtime Command Accept Count,,,,big
+bct_realtime_cmd_reject_count,34,0,dn,8,1,none,Realtime Command Reject Count,,,,big
+bct_stored_cmd_accept_count,35,0,dn,8,1,none,Stored Command Accept Count,,,,big
+bct_stored_cmd_reject_count,36,0,dn,8,1,none,Stored Command Reject Count,,,,big
+bct_macros_executing_pack_bit8,37,0,dn,1,1,none,Macros Executing Bitpack bit 8,,,,big
+bct_macros_executing_pack1,37,0,dn,8,1,bitpack,Macros Executing Bitpack,,,,big
+bct_macros_executing_pack_bit7,37,1,dn,1,1,none,Macros Executing Bitpack bit 7,,,,big
+bct_macros_executing_pack_bit6,37,2,dn,1,1,none,Macros Executing Bitpack bit 6,,,,big
+bct_macros_executing_pack_bit5,37,3,dn,1,1,none,Macros Executing Bitpack bit 5,,,,big
+bct_macros_executing_pack_bit4,37,4,dn,1,1,none,Macros Executing Bitpack bit 4,,,,big
+bct_macros_executing_pack_bit3,37,5,dn,1,1,none,Macros Executing Bitpack bit 3,,,,big
+bct_macros_executing_pack_bit2,37,6,dn,1,1,none,Macros Executing Bitpack bit 2,,,,big
+bct_macros_executing_pack_bit1,37,7,dn,1,1,none,Macros Executing Bitpack bit 1,,,,big
+bct_macros_executing_pack2,38,0,dn,8,1,bitpack,Macros Executing Bitpack,,,,big
+bct_macros_executing_pack_bit16,38,0,dn,1,1,none,Macros Executing Bitpack bit 16,,,,big
+bct_macros_executing_pack_bit15,38,1,dn,1,1,none,Macros Executing Bitpack bit 15,,,,big
+bct_macros_executing_pack_bit14,38,2,dn,1,1,none,Macros Executing Bitpack bit 14,,,,big
+bct_macros_executing_pack_bit13,38,3,dn,1,1,none,Macros Executing Bitpack bit 13,,,,big
+bct_macros_executing_pack_bit12,38,4,dn,1,1,none,Macros Executing Bitpack bit 12,,,,big
+bct_macros_executing_pack_bit11,38,5,dn,1,1,none,Macros Executing Bitpack bit 11,,,,big
+bct_macros_executing_pack_bit10,38,6,dn,1,1,none,Macros Executing Bitpack bit 10,,,,big
+bct_macros_executing_pack_bit9,38,7,dn,1,1,none,Macros Executing Bitpack bit 9,,,,big
+bct_scrub_status_overall,39,0,sn,8,1,0/OK -1/FAIL,Scrub Status Overall,,,,big
+bct_scrub_count,40,0,dn,8,1,none,Number of times flash scrubbing has run,,,,big
+bct_image_booted,41,0,dn,8,1,0/PRIMARY 1/REDUNDANT,Which image was booted,0/PRIMARY 1/REDUNDANT,0,1,big
+bct_image_auto_failover,42,0,dn,8,1,0/OK 1/FAIL,Automatic image failover occurred,0/OK 1/FAIL,0,1,big
+bct_tai_seconds,43,0,double,64,1,sec,TAI Seconds,,,,big
+bct_time_valid,51,0,dn,8,1,1/YES 0/NO,Time Valid,1/YES 0/NO,,,big
+bct_position_wrt_eci1,52,0,sn,32,2.00E-05,km,Orbit Position ECI,,,,big
+bct_position_wrt_eci2,56,0,sn,32,2.00E-05,km,Orbit Position ECI,,,,big
+bct_position_wrt_eci3,60,0,sn,32,2.00E-05,km,Orbit Position ECI,,,,big
+bct_velocity_wrt_eci1,64,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,,big
+bct_velocity_wrt_eci2,68,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,,big
+bct_velocity_wrt_eci3,72,0,sn,32,5.00E-09,km/s,Orbit Velocity ECI,,,,big
+bct_nadir_vector_body1,76,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,,big
+bct_nadir_vector_body2,78,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,,big
+bct_nadir_vector_body3,80,0,sn,16,4.00E-05,none,Nadir Vector in Body,,,,big
+bct_sun_vector_body1,82,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,,big
+bct_sun_vector_body2,84,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,,big
+bct_sun_vector_body3,86,0,sn,16,4.00E-05,none,Sun vector in spacecraft body frame,,,,big
+bct_sun_position_wrt_eci1,88,0,sn,32,0.071428575,km,Sun Position ECI,,,,big
+bct_sun_position_wrt_eci2,92,0,sn,32,0.071428575,km,Sun Position ECI,,,,big
+bct_sun_position_wrt_eci3,96,0,sn,32,0.071428575,km,Sun Position ECI,,,,big
+bct_moon_position_wrt_eci1,100,0,sn,32,0.0002,km,Moon Position ECI,,,,big
+bct_moon_position_wrt_eci2,104,0,sn,32,0.0002,km,Moon Position ECI,,,,big
+bct_moon_position_wrt_eci3,108,0,sn,32,0.0002,km,Moon Position ECI,,,,big
+bct_refs_valid,112,0,dn,8,1,1/YES 0/NO,Refs Valid,1/YES 0/NO,0,1,big
+bct_esm_valid,113,0,dn,8,1,1/YES 0/NO,Earth  Sun  Moon valid,1/YES 0/NO,0,1,big
+bct_run_low_rate_task,114,0,dn,8,1,1/YES 0/NO,RunLowRateTask,1/YES 0/NO,0,1,big
+bct_q_body_wrt_eci1,115,0,sn,32,5.00E-10,none,Attitude Quaternion,,,,big
+bct_q_body_wrt_eci2,119,0,sn,32,5.00E-10,none,Attitude Quaternion,,,,big
+bct_q_body_wrt_eci3,123,0,sn,32,5.00E-10,none,Attitude Quaternion,,,,big
+bct_q_body_wrt_eci4,127,0,sn,32,5.00E-10,none,Attitude Quaternion,,,,big
+bct_body_rate1,131,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,,big
+bct_body_rate1_dps,131,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,,big
+bct_body_rate1_rpm,131,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,,big
+bct_body_rate2,135,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,,big
+bct_body_rate2_dps,135,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,,big
+bct_body_rate2_rpm,135,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,,big
+bct_body_rate3,139,0,sn,32,5.00E-09,rad/sec,Body Frame Rate,,,,big
+bct_body_rate3_dps,139,0,sn,32,2.86E-07,deg/s,Body Frame Rate (deg/s),,,,big
+bct_body_rate3_rpm,139,0,sn,32,4.77E-08,RPM,Body Frame Rate (RPM),,,,big
+bct_bad_att_timer,143,0,dn,32,1,cycles,BadAttTimer,,,,big
+bct_bad_rate_timer,147,0,dn,32,1,cycles,BadRateTimer,,,,big
+bct_reinit_count,151,0,dn,32,1,none,Attitude Filter Reinit Count,,,,big
+bct_attitude_valid,155,0,dn,8,1,1/YES 0/NO,Attitude Valid,1/YES 0/NO,0,1,big
+bct_meas_att_valid,156,0,dn,8,1,1/YES 0/NO,Measured Attitude Valid,1/YES 0/NO,0,1,big
+bct_meas_rate_valid,157,0,dn,8,1,1/YES 0/NO,Measured Rate Valid,1/YES 0/NO,0,1,big
+bct_tracker_used,158,0,dn,8,1,none,Tracker Used,,,,big
+bct_hr_cycle_safe_mode,159,0,dn,32,1,cycles,HR Run Count at Time of Safe Mode,,,,big
+bct_rotisserie_rate,163,0,sn,16,4.00E-05,rad/sec,Desired Sun Rot Rate,,,,big
+bct_rotisserie_rate_dps,163,0,sn,16,0.002291831,deg/s,Desired Sun Rot Rate (deg/s),,,,big
+bct_rotisserie_rate_rpm,163,0,sn,16,0.000381972,RPM,Desired Sun Rot Rate (RPM),,,,big
+bct_adcs_mode,165,0,dn,8,1,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,ADCS Mode,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,0,7,big
+bct_safe_mode_reason,166,0,dn,8,1,1/BOOT 2/COMMAND 4/ATTITUDE_INVALID 8/TIME_INVALID 12/ATTITUDE_TIME_INVALID 16/REFS_INVALID,Safe Mode Reason,1/BOOT 2/COMMAND 4/ATTITUDE_INVALID 8/TIME_INVALID 12/ATTITUDE_TIME_INVALID 16/REFS_INVALID,1,16,big
+bct_recommend_sun_point,167,0,dn,8,1,1/YES 0/NO,RecommendSunPoint,1/YES 0/NO,0,1,big
+bct_filtered_speed_rpm1,168,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,,big
+bct_filtered_speed_rpm2,170,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,,big
+bct_filtered_speed_rpm3,172,0,sn,16,0.40000001,RPM,Wheel Meas Speed,,,,big
+bct_operating_mode1,174,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2,big
+bct_operating_mode2,175,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2,big
+bct_operating_mode3,176,0,dn,8,1,0/IDLE 1/INT 2/EXT,Wheel Operating Mode,0/IDLE 1/INT 2/EXT,0,2,big
+bct_tracker1_operating_mode,177,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,0,5,big
+bct_tracker1_star_id_step,178,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,0,10,big
+bct_tracker1_att_status,179,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,0,10,big
+bct_tracker1_det_timeout_count,180,0,dn,16,1,counts,Number of detector timeouts,,,,big
+bct_tracker1_num_attitude_stars,182,0,dn,8,1,none,Num Stars Used in Att,,,,big
+bct_position_error1,183,0,sn,32,2.00E-09,rad,Attitude Error,,,,big
+bct_position_error2,187,0,sn,32,2.00E-09,rad,Attitude Error,,,,big
+bct_position_error3,191,0,sn,32,2.00E-09,rad,Attitude Error,,,,big
+bct_eigen_error,195,0,dn,32,1.52E-09,rad,Eigen Error,,,,big
+bct_time_into_search,199,0,dn,16,1,sec,Time Into Sun Search,,,,big
+bct_wait_timer,201,0,dn,16,1,sec,Sun Search Wait Timer,,,,big
+bct_sun_point_angle_error,203,0,dn,16,0.003,deg,Sun Point Angle Error,,,,big
+bct_sun_point_state,205,0,dn,8,1,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,Sun Point State,0/SUN_POINT 1/FINE_REF_POINT 2/SEARCH_INIT 3/SEARCHING 4/WAITING 5/CONVERGING 6/ON_SUN 7/NOT_ACTIVE,0,7,big
+bct_momentum_vector_body1,206,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,,big
+bct_momentum_vector_body2,208,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,,big
+bct_momentum_vector_body3,210,0,sn,16,0.0002,Nms,System Momentum in Body Frame,,,,big
+bct_total_momentum_mag,212,0,dn,16,0.0005,Nms,System Momentum Magnitude,,,,big
+bct_duty_cycle1,214,0,sn,8,1,none,Torque Rod Duty Cycle,,,,big
+bct_duty_cycle2,215,0,sn,8,1,none,Torque Rod Duty Cycle,,,,big
+bct_duty_cycle3,216,0,sn,8,1,none,Torque Rod Duty Cycle,,,,big
+bct_torque_rod_mode1,217,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7,big
+bct_torque_rod_mode2,218,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7,big
+bct_torque_rod_mode3,219,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Torque Rod Ctrl Mode,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7,big
+bct_mag_source_used,220,0,dn,8,1,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,Mag Field Source,0/OFF 1/ON_POS 2/ON_NEG 3/AUTO 4/MEASURED 5/MODELED 6/DELAYED_AUTO 7/NO_FIELD_VALID,0,7,big
+bct_momentum_vector_valid,221,0,dn,8,1,1/YES 0/NO,Momentum Vector Valid,1/YES 0/NO,,,big
+bct_sun_vector_body1,222,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,,big
+bct_sun_vector_body2,224,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,,big
+bct_sun_vector_body3,226,0,sn,16,1.00E-04,none,Meas Sun Body Vector,,,,big
+bct_sun_vector_status,228,0,dn,8,1,0/GOOD 1/COARSE 2/BAD,Meas Sun Body Vector Status,0/GOOD 1/COARSE 2/BAD,0,2,big
+bct_css_invalid_count,229,0,dn,16,1,none,CSS Invalid Measurement Count,,,,big
+bct_sun_sensor_used,231,0,dn,8,1,none,Sun Sensor Package Used,,,,big
+bct_mag_vector_body1,232,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,,big
+bct_mag_vector_body2,234,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,,big
+bct_mag_vector_body3,236,0,sn,16,5.00E-09,T,Meas Mag Field Body,,,,big
+bct_mag_invalid_count,238,0,dn,16,1,counts,Cycles with invalid Measured Mag Data,,,,big
+bct_mag_vector_valid,240,0,dn,8,1,1/YES 0/NO,Meas Mag Field Valid,1/YES 0/NO,0,1,big
+bct_mag_sensor_used,241,0,dn,8,1,none,Mag Sensor Used,,,,big
+bct_imu_invalid_count,242,0,dn,16,1,none,IMU Invalid Count,,,,big
+bct_new_packet_count,244,0,dn,8,1,none,IMU Packet Count,,,,big
+bct_imu_vector_valid,245,0,dn,8,1,1/YES 0/NO,IMU Rate Valid,1/YES 0/NO,0,1,big
+bct_hr_run_count,246,0,dn,32,1,none,High Rate Run Count,,,,big
+bct_hr_exec_time_ms1,250,0,dn,8,1,msec,High Rate Duration,,,,big
+bct_hr_exec_time_ms2,251,0,dn,8,1,msec,High Rate Duration,,,,big
+bct_hr_exec_time_ms3,252,0,dn,8,1,msec,High Rate Duration,,,,big
+bct_hr_exec_time_ms4,253,0,dn,8,1,msec,High Rate Duration,,,,big
+bct_hr_exec_time_ms5,254,0,dn,8,1,msec,High Rate Duration,,,,big
+bct_payload_sec_since_last_tlm,255,0,dn,32,1,sec,Seconds since last TLM received (by SW),,,,big
+bct_payload_tlm_rx_count,259,0,dn,16,1,none,Payload Tlm Receive Counter (by SW),,,,big
+bct_payload_tlm_ack_count,261,0,dn,16,1,none,Payload Tlm ACK Counter,,,,big
+bct_payload_tlm_nak_count,263,0,dn,16,1,none,Payload Tlm NAK Counter,,,,big
+bct_voltage_12p0,265,0,dn,8,0.1,V,Voltage_12p0,,,,big
+bct_voltage_8p0,266,0,dn,8,0.1,V,Voltage_8p0,,,,big
+bct_voltage_5p0,267,0,dn,8,0.025,V,Voltage_5p0,,,,big
+bct_voltage_3p3,268,0,dn,8,0.015000001,V,Voltage_3p3,,,,big
+bct_det_temp,269,0,sn,8,0.80000001,degC,Tracker Detector temperature,,,,big
+bct_det2_temp,270,0,sn,8,0.80000001,degC,Tracker 2 Detector temperature,,,,big
+bct_box1_temp,271,0,sn,16,0.005,degC,Box 1 Temp,,,,big
+bct_imu_temp,273,0,sn,16,0.005,decC,Imu Temp,,,,big
+bct_motor1_temp,275,0,sn,16,0.005,degC,Wheel 1 Temp,,,,big
+bct_motor2_temp,277,0,sn,16,0.005,degC,Wheel 2 Temp,,,,big
+bct_motor3_temp,279,0,sn,16,0.005,degC,Wheel 3 Temp,,,,big
+bct_bus_voltage,281,0,sn,16,0.001,V,Bus Voltage,,,,big
+bct_battery_voltage,283,0,dn,16,0.002,V,Battery Voltage,,,,big
+bct_battery_current,285,0,sn,16,0.002,A,Battery Current,,,,big
+bct_battery1_temp,287,0,sn,16,0.005,degC,Battery 1 Temp,,,,big
+bct_battery2_temp,289,0,sn,16,0.005,degC,Battery 2 Temp,,,,big
+bct_user_analog1,291,0,sn,32,0.0005,none,User Analogs,,,,big
+bct_user_analog2,295,0,sn,32,0.0005,none,User Analogs,,,,big
+bct_tracker2_operating_mode,299,0,dn,8,1,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,Tracker Operating Mode,0/IDLE 1/INITIALIZE 2/STARID 3/TRACK 4/PHOTO 5/CAL,0,5,big
+bct_tracker2_star_id_step,300,0,dn,8,1,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,Star ID Step,0/IDLE 1/INITIALIZE 2/WAITING_FOR_IMAGE1 3/WAITING_FOR_IMAGE2 4/CALCULATE_RATE 5/MAKE_UNIT_VECTORS 6/AWAITING_TRISTAR 7/OK_FOUND_4 8/OK_FOUND_3 9/TIME_OUT 10/SPARE 11/NO_MATCH,0,10,big
+bct_tracker2_att_status,301,0,dn,8,1,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,Tracker Attitude Status,0/OK 1/PENDING 2/BAD 3/TOO_FEW_STARS 4/QUEST_FAILED 5/RESIDUALS_TOO_HIGH 6/TOO_CLOSE_TO_EDGE 7/PIX_AMP_TOO_LOW 8/PIX_AMP_TOO_HIGH 9/BACKGND_TOO_HIGH 10/TRACK_FAILURE 11/PIX_SUM_TOO_LOW 12/UNUSED 13/TOO_DIM_FOR_STARID 14/TOO_MANY_GROUPS 15/TOO_FEW_GROUPS 16/CHANNEL_DISABLED 17/TRACK_BLK_OVERLAP 18/OK_FOR_STARID 19/TOO_CLOSE_TO_OTHER 20/TOO_MANY_PIXELS 21/TOO_MANY_COLUMNS 22/TOO_MANY_ROWS 23/OPEN 24/CLOSED 25/RATE_TOO_HIGH,0,10,big
+bct_tracker2_det_timeout_count,302,0,dn,16,1,counts,Number of detector timeouts,,,,big
+bct_tracker2_num_attitude_stars,304,0,dn,8,1,none,Num Stars Used in Att,,,,big
+bct_cycles_since_crc_data,305,0,dn,32,1,none,Cycles Since Correct CRC GPS Data,,,,big
+bct_gps_lock_count,309,0,dn,16,1,none,spare,,,,big
+bct_gps_valid,311,0,dn,8,1,1/YES 0/NO,GPS Valid,1/YES 0/NO,,,big
+bct_gps_enable,312,0,dn,8,1,1/YES 0/NO,GPS Enabled,1/YES 0/NO,,,big
+bct_latched_resp_fire_pack1,313,0,dn,8,1,bitpack,Latched Response Fired Bitpack,,,,big
+bct_latched_resp_fire_pack_bit8,313,0,dn,1,1,none,Latched Response Fired Bitpack bit 8,,,,big
+bct_latched_resp_fire_pack_bit7,313,1,dn,1,1,none,Latched Response Fired Bitpack bit 7,,,,big
+bct_latched_resp_fire_pack_bit6,313,2,dn,1,1,none,Latched Response Fired Bitpack bit 6,,,,big
+bct_latched_resp_fire_pack_bit5,313,3,dn,1,1,none,Latched Response Fired Bitpack bit 5,,,,big
+bct_latched_resp_fire_pack_bit4,313,4,dn,1,1,none,Latched Response Fired Bitpack bit 4,,,,big
+bct_latched_resp_fire_pack_bit3,313,5,dn,1,1,none,Latched Response Fired Bitpack bit 3,,,,big
+bct_latched_resp_fire_pack_bit2,313,6,dn,1,1,none,Latched Response Fired Bitpack bit 2,,,,big
+bct_latched_resp_fire_pack_bit1,313,7,dn,1,1,none,Latched Response Fired Bitpack bit 1,,,,big
+bct_latched_resp_fire_pack2,314,0,dn,8,1,bitpack,Latched Response Fired Bitpack,,,,big
+bct_latched_resp_fire_pack_bit16,314,0,dn,1,1,none,Latched Response Fired Bitpack bit 16,,,,big
+bct_latched_resp_fire_pack_bit15,314,1,dn,1,1,none,Latched Response Fired Bitpack bit 15,,,,big
+bct_latched_resp_fire_pack_bit14,314,2,dn,1,1,none,Latched Response Fired Bitpack bit 14,,,,big
+bct_latched_resp_fire_pack_bit13,314,3,dn,1,1,none,Latched Response Fired Bitpack bit 13,,,,big
+bct_latched_resp_fire_pack_bit12,314,4,dn,1,1,none,Latched Response Fired Bitpack bit 12,,,,big
+bct_latched_resp_fire_pack_bit11,314,5,dn,1,1,none,Latched Response Fired Bitpack bit 11,,,,big
+bct_latched_resp_fire_pack_bit10,314,6,dn,1,1,none,Latched Response Fired Bitpack bit 10,,,,big
+bct_latched_resp_fire_pack_bit9,314,7,dn,1,1,none,Latched Response Fired Bitpack bit 9,,,,big
+bct_sd_minute_cur,315,0,dn,32,1,none,SD Card Current Minute Number,,,,big
+bct_sd_percent_used_total,319,0,dn,8,1,percent,SD Card Used Space Percentage Total,,,,big
+bct_sd_percent_used_fsw,320,0,dn,8,1,percent,SD Card Used Space Percentage For Fsw Database,,,,big
+bct_sd_percent_used_soh,321,0,dn,8,1,percent,SD Card Used Space Percentage For Soh Database,,,,big
+bct_sd_percent_used_line,322,0,dn,8,1,percent,SD Card Used Space Percentage For Line Database,,,,big
+bct_sd_percent_used_tbl,323,0,dn,8,1,percent,SD Card Used Space Percentage For Tbl Database,,,,big
+bct_sd_percent_used_pay,324,0,dn,8,1,percent,SD Card Used Space Percentage For Pay Database,,,,big
+bct_sdr_tx_frames,325,0,dn,32,1,none,BCT-SDR tx frame counter,,,,big
+bct_sdr_rx_frames,329,0,dn,32,1,none,BCT_SDR rx valid frame counter,,,,big
+bct_sdr_tx,333,0,dn,8,1,0/NO 1/YES,BCT-SDR tx state,0/NO 1/YES,0,1,big
+bct_sdr_tx_power,334,0,sn,8,1,dBm,BCT-SDR tx power,,,,big
+bct_sdr_rx_lock,335,0,dn,8,1,0/NO 1/YES,BCT-SDR rx pll lock,0/NO 1/YES,0,1,big
+bct_sdr_rx_power,336,0,sn,8,1,dBm,BCT-SDR rx power level,,,,big
+bct_sdr_rx_freq_offset,337,0,sn,32,1,Hz,BCT-SDR rx frequency offset,,,,big
+bct_sdr_temp,341,0,sn,8,1,C,BCT-SDR temperature,,,,big
+bct_sdr_comm_error,342,0,dn,8,1,0/NO 1/YES,BCT-SDR temperature,0/NO 1/YES,0,1,big
+bct_sq_channel,343,0,sn,8,1,none,SpaceQuest Current Channel Selection,,,,big
+bct_sq_trap_count,344,0,dn,8,1,none,SpaceQuest Trap-Error Cycle Count,,,,big
+bct_sq_temp,345,0,dn,8,1,C,SpaceQuest Temperature,,,,big
+bct_aid_status1,346,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,,,,big
+bct_aid_status_bit8,346,0,dn,1,1,none,Tracker Aiding Status bit 8,,,,big
+bct_aid_status_bit7,346,1,dn,1,1,none,Tracker Aiding Status bit 7,,,,big
+bct_aid_status_bit6,346,2,dn,1,1,none,Tracker Aiding Status bit 6,,,,big
+bct_aid_status_bit5,346,3,dn,1,1,none,Tracker Aiding Status bit 5,,,,big
+bct_aid_status_bit4,346,4,dn,1,1,none,Tracker Aiding Status bit 4,,,,big
+bct_aid_status_bit3,346,5,dn,1,1,none,Tracker Aiding Status bit 3,,,,big
+bct_aid_status_bit2,346,6,dn,1,1,none,Tracker Aiding Status bit 2,,,,big
+bct_aid_status_bit1,346,7,dn,1,1,none,Tracker Aiding Status bit 1,,,,big
+bct_aid_status2,347,0,dn,8,1,bitpack_(see_User_Guide),Tracker Aiding Status,,,,big
+bct_aid_status_bit16,347,0,dn,1,1,none,Tracker Aiding Status bit 16,,,,big
+bct_aid_status_bit15,347,1,dn,1,1,none,Tracker Aiding Status bit 15,,,,big
+bct_aid_status_bit14,347,2,dn,1,1,none,Tracker Aiding Status bit 14,,,,big
+bct_aid_status_bit13,347,3,dn,1,1,none,Tracker Aiding Status bit 13,,,,big
+bct_aid_status_bit12,347,4,dn,1,1,none,Tracker Aiding Status bit 12,,,,big
+bct_aid_status_bit11,347,5,dn,1,1,none,Tracker Aiding Status bit 11,,,,big
+bct_aid_status_bit10,347,6,dn,1,1,none,Tracker Aiding Status bit 10,,,,big
+bct_aid_status_bit9,347,7,dn,1,1,none,Tracker Aiding Status bit 9,,,,big
+bct_star_id_status,348,0,dn,8,1,none,Tracker Performing StarId,,,,big
+bct_power_status,349,0,dn,32,1,none,Power Status,,,,big
+bct_io24_out_,350,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io23_out_,350,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io22_out_rel2_en,350,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io21_out_,350,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io20_out_pld_htr_vbus,350,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io19_out_pld_htr_vbus,350,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io18_out_rel1_en,350,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io17_in_boot_red,350,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io16_in_bat_chg_stat,351,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io15_out_det2,351,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io14_out_12v_mode,351,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io13_in_,351,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io12_out_12v_en,351,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io11_in_sep_mon,351,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io10_out_pld_rst_req,351,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io9_out_pld_vbus,351,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io8_out_pld_htr2,352,0,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io7_out_pld_htr1,352,1,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io6_out_pld_12v,352,2,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io5_out_pld_5v,352,3,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io4_out_pld_flash_cs,352,4,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io3_out_gps,352,5,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io2_out_sdr_12v,352,6,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
+bct_io1_out_rf_8v,352,7,dn,1,1,1/ON 0/OFF,Power Status,1/ON 0/OFF,,,big
