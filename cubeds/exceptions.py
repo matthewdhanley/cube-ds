@@ -102,3 +102,21 @@ class TelemetryError(CubeDsError):
         if msg is None:
             msg = "There was an error extracting telemetry data"
         super(TelemetryError, self).__init__(msg=msg)
+
+
+class DbError(CubeDsError):
+    """Raise when there is an issue with the database"""
+
+    def __init__(self, msg=None):
+        if msg is None:
+            msg = "There was a database error"
+        super(DbError, self).__init__(msg=msg)
+
+
+class DbConnError(DbError):
+    """Raise when there is an issue with the database"""
+
+    def __init__(self, msg=None):
+        if msg is None:
+            msg = "There was a database connection error"
+        super(DbConnError, self).__init__(msg=msg)

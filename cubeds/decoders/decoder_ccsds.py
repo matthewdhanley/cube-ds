@@ -2,30 +2,26 @@ import cubeds.exceptions
 import cubeds.pylogger
 import cubeds.helpers
 import cubeds.shared
+import cubeds.decoders.base
 import struct
 import pandas as pd
-import numpy as np
 
 
-class Decoder:
+class Decoder(cubeds.decoders.base.Decoder):
     def __init__(self, raw_data, config, stats):
-        # ================= DO NOT CHANGE =====================
-        self.in_data = raw_data
-        self.out_data = []
-        self.config = config
-        self.yaml_key = self.config.yaml_key
-        self._logger = cubeds.pylogger.get_logger(__name__)
-        self.stats = stats
+        # ========== Inherit base class =======================
+        super().__init__(raw_data, config, stats)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
-        if type(self.in_data) != list:
+        if type(raw_data) != list:
             raise cubeds.exceptions.DecoderDataError
 
         # ========== CUSTOM INIT STUFF ========================
         self.packets = []
         self.tlm = []
         self.tlm_df = pd.DataFrame()
+
 
     def decode(self):
         """
@@ -41,7 +37,11 @@ class Decoder:
         packets_sorted = {}
         strip_length = 12
         for packet in self.in_data:
-            header = cubeds.shared.extract_CCSDS_header(packet)
+            try:
+                header = cubeds.shared.extract_CCSDS_header(packet)
+            except struct.error:
+                self._logger.warning("File ended mid packet")
+                continue
             try:
                 packet_id = str(header['apid'])
             except IndexError:
@@ -72,7 +72,7 @@ class Decoder:
             try:
                 csv_info = self.packets[key]['csv_info']
             except KeyError:
-                self._logger.info("No packet def found. Continuing")
+                self._logger.info("No packet def found for apid "+str(key)+". Skipping . . .")
                 continue
             points_file = csv_info['pointsFile']
 
@@ -82,7 +82,7 @@ class Decoder:
                 raise cubeds.exceptions.TelemetryError(msg='error finding points definitions for packet '
                                                            + csv_info['packetName'])
 
-            # extract the telemetry points from the file
+            # extract the telemetry points from the config csv file
             tlm_points = cubeds.helpers.get_tlm_points(points_file, self.config)
             for data in self.packets[key]['raw_packets']:
                 if not len(data):
@@ -139,17 +139,15 @@ class Decoder:
                 endian = 'big'
 
             # generate a format string for struct.unpack
-            unpack_data_format = cubeds.helpers.get_unpack_format(dtype, tlm_length, endian=endian)
+            unpack_data_format = cubeds.helpers.get_unpack_format(dtype, tlm_length, endian=endian, logger=self._logger)
             # try to unpack the data (if it's not a char, chars are having issues?)
 
             if point['dtype'] != 'char':
                 try:
                     tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
                 except struct.error as e:
-                    # not extracting the right amount of data. Print some debug information and move on
-                    self._logger.debug("Packet ended unexpectedly.")
-                    self._logger.debug(e)
-                    self._logger.debug(point['name']+" is the point it ended on")
+                    # not extracting the right amount of data. Make sure we at least got the time and move on.
+                    # Likely a partial packet.
                     try:
                         extracted_data['time_index'] = extracted_data[csv_info['time_index']]
                     except KeyError:
@@ -162,9 +160,9 @@ class Decoder:
                     return extracted_data
                 except TypeError as e:
                     # had an issue with types. Print debug info and exit. This is a more serious issue.
-                    print(point)
-                    print(tlm_value)
-                    print(e)
+                    self._logger.debug(point)
+                    self._logger.debug(tlm_value)
+                    self._logger.critical(e)
                     raise cubeds.exceptions.TelemetryError
 
                 if extract_bits_length > 0:

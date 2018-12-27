@@ -4,6 +4,7 @@ runtime:
   test: True
   debug: False
   verbose: True
+  epoch: 12/31/1999-23:59:23
 
 
 save:
@@ -12,7 +13,7 @@ save:
       enabled: False
       file: tlm.csv
     test:
-      enabled: False
+      enabled: True
       file: tlm.csv
   netcdf:
     prod:
@@ -30,7 +31,7 @@ save:
       port: 5432
       host: localhost
     test:
-      enabled: False
+      enabled: True
       dbname: test_telemetry
       user: postgres
       password: password
@@ -46,34 +47,29 @@ save:
       enabled: True
     test:
       enabled: True
-  individual_csv:
-    prod:
-      enabled: True
-    test:
-      enabled: True
   key: bct_tai_seconds
 
 
 ingest_stats:
-  text_file:
-    prod:
+  prod:
+    text_file:
       enabled: True
-    test:
+    std_out:
       enabled: True
-  std_out:
-    prod:
-      enabled: True
-    test:
-      enabled: True
-  slack:
-    prod:
+    slack:
       enabled: False
-      key: xoxb-462801636821-509499870758-gktiwnP6D3LbAEo7yGhUnzgq
+      key: api-bot-token
       channel: cube-ds-stats
-    test:
+  test:
+    text_file:
+      enabled: True
+    std_out:
+      enabled: True
+    slack:
       enabled: False
-      key: xoxb-509075681543-507291854528-iju8yNayFsrPCH4GQuSEYqtz
-      channel: general
+      key: api-bot-token
+      channel: cube-ds-stats
+
 
 
 satnogs:
@@ -94,9 +90,13 @@ cleaning:
 
 rundirs:
   prod:
-    location: test\sband
+    location:
+      - test\sband
+      - test\kss
   test:
-    location: test\kss
+    location:
+      - test\sband
+      - test\kss
 
 
 process_log:
@@ -105,7 +105,7 @@ process_log:
     enabled: True
   test:
     location: test\processed_file_log.txt
-    enabled: False
+    enabled: True
 
 
 telemetry:
@@ -157,13 +157,13 @@ decoders:
   test:
     decoder_vcdu:
       regex:
-      - .*sband.*
+      - .*band.*
       frame_size: 2048  # size of a vcdu frame
       priority: 1
 
     decoder_vcdu_to_ccsds:
       regex:
-      - .*sband.*
+      - .*band.*
       header_length: 6
       priority: 2
 

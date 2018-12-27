@@ -1,24 +1,15 @@
 import cubeds.exceptions
 import cubeds.pylogger
 import cubeds.helpers
+import cubeds.decoders.base
 import numpy as np
 
 
-class Decoder:
+class Decoder(cubeds.decoders.base.Decoder):
     def __init__(self, raw_data, config, stats):
-        # ================= DO NOT CHANGE =====================
-        self.in_data = raw_data
-        self.out_data = []
-        self.config = config
-        self.yaml_key = self.config.yaml_key
-        self._logger = cubeds.pylogger.get_logger(__name__)
-        self.stats = stats
+        # Using class inherited from cubeds.decoders.base
+        super().__init__(raw_data, config, stats)
 
-        # ============= INPUT DATA CHECKS =====================
-        # Check to make sure data is in the format expected!
-        if type(self.in_data) != np.ndarray:
-            raise cubeds.exceptions.DecoderDataError
-        
         # ========== CUSTOM INIT STUFF ========================
         self.vcdu_packets = []
 
@@ -45,6 +36,10 @@ class Decoder:
         assert type(frame_size) == int
         i = 0
         vcdu_packets = []
+        if self.in_data is None:
+            self._logger.info("No data was found. Returning empty array.")
+            self.out_data = []
+            return
         while i + frame_size < len(self.in_data):
             vcdu_packets.append(self.in_data[i:i + frame_size])
             i += frame_size

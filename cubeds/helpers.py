@@ -1,12 +1,14 @@
-import yaml
-from bitarray import bitarray
 import cubeds.pylogger
 import cubeds.exceptions
+import cubeds.config
+import yaml
+from bitarray import bitarray
 import struct
 import os
 import numpy as np
 import csv
 import json
+import datetime as dt
 
 
 def read_yaml(file):
@@ -52,7 +54,7 @@ def bitstring_to_int(bitstr):
     return b
 
 
-def get_unpack_format(in_dtype, dsize, endian='big'):
+def get_unpack_format(in_dtype, dsize, endian='big', logger=cubeds.pylogger.get_logger(__name__)):
     """
     Given data type and size, generate a format for struct.unpack.
     ASSUMES BIG ENDIAN for the data that will be unpacked. can specifiy by using endian="little"
@@ -61,7 +63,7 @@ def get_unpack_format(in_dtype, dsize, endian='big'):
     :param endian: endianess of the data
     :return:
     """
-    logger = cubeds.pylogger.get_logger(__name__)
+    # logger = cubeds.pylogger.get_logger(__name__)
     if dsize <= 8:
         # bits
         letter = 'b'
@@ -217,3 +219,34 @@ def get_tlm_points(points_file, config):
             # append the new dictionary to the list
             points_dict_list.append(dict(row))
     return points_dict_list
+
+
+def add_utc_to_df(df, time_index, conversion_function):
+    """
+    Adds a utc column to dataframe
+    :param df: dataframe that needs utc column
+    :param time_index: column to convert to utc
+    :param conversion_function: function to convert values in time_index function to utc
+    :return: updated dataframe
+    """
+    df['UTC'] = df[time_index].map(lambda x: conversion_function(x))
+    return df
+
+
+def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S", config_file=None):
+    """
+    Converts TAI time to UTC time
+    :param tai: TAI time
+    :param time_format: Format of output UTC time
+    :return: UTC time string
+    """
+    if config_file is not None:
+        config = cubeds.config.Config(file=config_file)
+    else:
+        config = cubeds.config.Config(file=config_file)
+    epoch = dt.datetime.strptime(config.config['runtime']['epoch'], "%m/%d/%Y-%H:%M:%S")
+    try:
+        utc = epoch + dt.timedelta(seconds=int(tai))
+    except OverflowError:
+        utc = epoch
+    return utc.strftime(time_format)

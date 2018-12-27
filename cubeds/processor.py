@@ -3,10 +3,12 @@ import cubeds.exceptions
 import cubeds.config
 import cubeds.pylogger
 import cubeds.statistics
+import cubeds.telemetry_saver
 from cubeds.decoders import *
 import re
 import os
 import numpy as np
+
 
 class Processor:
     """
@@ -14,6 +16,7 @@ class Processor:
     """
     def __init__(self, file, config_file=None, endian='big'):
         self._get_logger()
+        self._logger.info("Processing "+file+" . . .")
         self.file = file
         self.file_basename = os.path.split(file)[-1]
         if config_file is None:
@@ -32,16 +35,19 @@ class Processor:
 
         self.decoders = self.config.config['decoders'][self.yaml_key]
         self.max_priority = self.config.config['decoders']['max_priority']
+        self.data = None
         self._load_data()
         self.stats = cubeds.statistics.Statistics(self.file_basename, self.config)
 
+    def process(self):
         for i in range(1, self.max_priority):
             for decoder in self.decoders:
                 done_flag = False
                 if self.decoders[decoder]['priority'] == i:
                     for r in self.decoders[decoder]['regex']:
                         if re.search(r, self.file_basename):
-                            exec_cmd = decoder+'.Decoder(self.data, self.config, self.stats)'
+                            self._logger.verbose("Applying "+decoder+" decoder module . . .")
+                            exec_cmd = decoder+'.Decoder(self.data, self.config, '+self.file_basename+')'
                             self._logger.debug(exec_cmd)
                             d = eval(exec_cmd)
                             d.decode()
@@ -50,7 +56,14 @@ class Processor:
                             done_flag = True
                         if done_flag:
                             break
-        print(self.data)
+        if type(self.data) == list:
+            self._logger.warning("Output was a list, could be an issue. It's likely that there was no data found in the"
+                                 "file. Continuing . . .")
+            return
+
+    def save(self):
+        telemetry_saver = cubeds.telemetry_saver.TelemetrySaver(self.data, self.config, filename=self.file_basename)
+        telemetry_saver.run()
 
     def _get_logger(self):
         self._logger = cubeds.pylogger.get_logger(__name__)
@@ -60,7 +73,7 @@ class Processor:
         reads in raw data
         """
         self._logger.debug("Telemetry file -  " + self.file)
-
+        self._logger.verbose("Reading in data to be processed . . .")
         # check that the file exists
         if not os.path.exists(self.file):
             self._logger.debug(self.file)
@@ -78,6 +91,7 @@ class Processor:
             raise cubeds.exceptions.DataLoadError
 
         self.data = raw_data
+        self._logger.verbose("Raw file length - "+str(len(raw_data)))
 
 
 

@@ -4,18 +4,11 @@ import cubeds.pylogger
 
 class Decoder:
     def __init__(self, raw_data, config, stats):
-        # ================= DO NOT CHANGE =====================
-        self.in_data = raw_data
-        self.out_data = []
-        self.config = config
-        self.yaml_key = self.config.yaml_key
-        self._logger = cubeds.pylogger.get_logger(__name__)
-        self.stats = stats
+        # ========== Inherit base class =======================
+        super().__init__(raw_data, config, stats)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
-        if type(self.in_data) != list:
-            raise cubeds.exceptions.DecoderDataError
 
         # ========== CUSTOM INIT STUFF ========================
 

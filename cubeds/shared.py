@@ -14,10 +14,11 @@ def extract_CCSDS_header(packet_data):
     seq_count = cubeds.helpers.bitstring_to_int(cubeds.helpers.extract_bits_from_bytes(bytes(header[2:4]), 2, 13))
     packet_length = struct.unpack('>H', header[4:6])[0]
     if secondary_hdr:
-        header_length = 12
+        header_length = 12  # this isn't necessarily true ...
         time_stamp = struct.unpack('>I', header[6:10])[0]
         sub_seconds = struct.unpack('>B', header[10])[0]
         reserved = struct.unpack('>B', header[11])[0]
+
     else:
         time_stamp = -1
         sub_seconds = -1

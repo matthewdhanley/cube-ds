@@ -26,13 +26,13 @@ class TestTest(unittest.TestCase):
 
     def test_config_not_found_error(self):
         with self.assertRaises(cubeds.exceptions.NoConfigFoundError):
-            cubeds.config.get_config('adsf.cfg')
+            cubeds.config.Config(file='adsf.yml')
         with self.assertRaises(cubeds.exceptions.NoConfigFoundError):
-            cubeds.config.get_config('cfg/adsfeasd.cfg')
-        self.assertIsNotNone(cubeds.config.get_config('cfg/example.cfg'))
+            cubeds.config.Config(file='cfg/adsfeasd.yml')
+        self.assertIsNotNone(cubeds.config.Config(file='cfg/example.yml'))
 
     def test_find_files(self):
-        config = cubeds.config.get_config('cfg/example.cfg')
+        config = cubeds.config.Config(file='cfg/example.yml')
         runner = cubeds.cube_ds_3.CubeDsRunner(mission='doesntmatter', config=config)
         runner.find_files()
         self.assertGreater(len(runner.raw_files), 1)  # make sure some files are found
@@ -54,7 +54,7 @@ class TestTest(unittest.TestCase):
         self.assertGreater(len1, len2)  # make sure some files are found
 
     def test_process_log(self):
-        config = cubeds.config.get_config('cfg/example.cfg')
+        config = cubeds.config.Config(file='cfg/example.yml')
         runner = cubeds.cube_ds_3.CubeDsRunner(mission='doesntmatter', config=config, regex_positive=['sband', '2018'],
                                                regex_negative=['354'])
         runner.find_files()
@@ -65,6 +65,8 @@ class TestTest(unittest.TestCase):
             # make sure it handles incorrect process log locations
             runner.config['process_log']['prod'] = 'somebadlocation/process_file_log.csv'
             runner.find_files()
+
+
 
 
 if __name__ == "__main__":

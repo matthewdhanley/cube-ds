@@ -25,6 +25,8 @@ class Config:
             self.test = 0
             self.yaml_key = 'prod'
 
+        self.mission = self.config['runtime']['mission']
+
         self.clean = self.config['cleaning'][self.yaml_key]['enabled']
 
     def get_config(self, file='cfg/example.yml'):

@@ -54,10 +54,6 @@ class CubeDsRunner:
         else:
             self.regex_negative = regex_negative
 
-        self.outputFile = "cube_ds_" + mission + "_"
-        self.outputFile += str("{}.out".format(dt.datetime.now().strftime('%y%j%H%M%S')))
-        self._logger.verbose("Output file: "+self.outputFile)
-
     @staticmethod
     def _display_help():
         print("You need help.")
@@ -72,7 +68,7 @@ class CubeDsRunner:
             self._logger.verbose("Using production rundirs location "+self.rundirs)
         else:
             self.rundirs = self.config.config['rundirs']['test']['location']
-            self._logger.verbose("Using test rundirs location "+self.rundirs)
+            self._logger.verbose("Using test rundirs locations: " + ' '.join(self.rundirs))
 
     def _get_process_log(self):
         self._logger.verbose("Fetching process log")
@@ -81,7 +77,7 @@ class CubeDsRunner:
             self._logger.verbose("Using production process_log location "+self.rundirs)
         else:
             self.process_log_location = self.config.config['process_log']['test']['location']
-            self._logger.verbose("Using test process_log location "+self.rundirs)
+            self._logger.verbose("Using test process_log location "+self.process_log_location)
 
         if not os.path.exists(self.process_log_location):
             raise cubeds.exceptions.ProcessLogError
@@ -102,41 +98,56 @@ class CubeDsRunner:
             self._get_process_log()
         raw_files = []
         # Recursively look from the root of rundirs.
-        for root, directories, filenames in os.walk(self.rundirs):
-            for filename in filenames:  # Check each filename
+        for rundir in self.rundirs:
+            for root, directories, filenames in os.walk(rundir):
+                for filename in filenames:  # Check each filename
 
-                found_flag = False  # flag to continue if file is found.
-                # Check each file against all the files in the process log. We don't want to waste time processing
-                # all files every time this code is run.
-                for done in self.process_log:
-                    if done == filename:
-                        self._logger.debug("Continuing. File already processed: "+filename)
-                        found_flag = True
-                if found_flag:
-                    continue
+                    found_flag = False  # flag to continue if file is found.
+                    # Check each file against all the files in the process log. We don't want to waste time processing
+                    # all files every time this code is run.
+                    if self.config.config['process_log'][self.config.yaml_key]['enabled']:
+                        for done in self.process_log:
+                            if done == filename:
+                                self._logger.debug("Continuing. File already processed: "+filename)
+                                found_flag = True
+                        if found_flag:
+                            continue
 
-                if self.regex_negative:  # if it matches a negative regex, move on.
-                    for re_string in self.regex_negative:
+                    if self.regex_negative:  # if it matches a negative regex, move on.
+                        for re_string in self.regex_negative:
+                            m = re.search(re_string, filename)
+                            if m:
+                                found_flag = True
+                        if found_flag:
+                            continue
+
+                    for re_string in self.regex_positive:  # if it matches a positive regex, add it!
                         m = re.search(re_string, filename)
                         if m:
-                            found_flag = True
-                    if found_flag:
-                        continue
-
-                for re_string in self.regex_positive:  # if it matches a positive regex, add it!
-                    m = re.search(re_string, filename)
-                    if m:
-                        raw_files.append(os.path.join(root, filename))
+                            raw_files.append(os.path.join(root, filename))
 
         if not raw_files:
             self._logger.warning("Didn't find any raw files in " + self.rundirs)
         self.raw_files = raw_files
+
+    def log_processed_file(self, file):
+        with open(self.process_log_location, 'a') as f:
+            f.write(file+'\n')
+        f.close()
 
     def run(self):
         self._logger.verbose("Finding files . . .")
         self.find_files()
         for file in self.raw_files:
             processor = cubeds.processor.Processor(file, config_file=self.config.file)
+            processor.process()
+            processor.save()
+
+            if self.config.config['process_log'][self.config.yaml_key]['enabled']:
+                self.log_processed_file(file)
+
+
+# -------------- HELPER FUNCTIONS FOR THIS MAIN MODULE -----------------------------------------------------------------
 
 
 def parse_command_line_args():
@@ -205,6 +216,7 @@ def main():
                           regex_negative=['.*flatsat.*'])
 
     runner.run()
+
 
 if __name__ == "__main__":
     main()

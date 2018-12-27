@@ -3,24 +3,16 @@ import cubeds.pylogger
 import cubeds.shared
 import pandas as pd
 import numpy as np
+import cubeds.decoders.base
 
 
-class Decoder:
+class Decoder(cubeds.decoders.base.Decoder):
     def __init__(self, raw_data, config, stats):
-        # ================= DO NOT CHANGE =====================
-        self.in_data = raw_data
-        self.out_data = []
-        self.config = config
-        self.yaml_key = self.config.yaml_key
-        self._logger = cubeds.pylogger.get_logger(__name__)
-        self.stats = stats
-
-        # ============= INPUT DATA CHECKS =====================
-        # Check to make sure data is in the format expected!
-        if type(self.in_data) != list:
-            raise cubeds.exceptions.DecoderDataError
+        # ==========Inherit the base class ====================
+        super().__init__(raw_data, config, stats)
 
         # ========== CUSTOM INIT STUFF ========================
+        # None
 
     def decode(self):
         """

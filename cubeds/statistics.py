@@ -3,11 +3,21 @@ import cubeds.pylogger
 
 
 class Statistics:
+
+    # CLASS VARIABLES - Kind of like global log
+    num_files_processed = 0
+    num_potential_packets = 0
+    num_packets_cleaned = 0
+
     def __init__(self, basefile, config):
         self.basefile = basefile
         self.stats = []
         self.config = config
         self._logger = cubeds.pylogger.get_logger(__name__)
+
+    def __del__(self):
+        self._logger.verbose("Writing statistics to file.")
+        self.write()
 
     def add_stat(self, stat):
         self.stats.append(stat)

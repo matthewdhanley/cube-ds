@@ -2,26 +2,22 @@ import cubeds.exceptions
 import cubeds.pylogger
 import cubeds.helpers
 import cubeds.shared
+import cubeds.decoders.base
 import struct
 
 
-class Decoder:
+class Decoder(cubeds.decoders.base.Decoder):
     def __init__(self, raw_data, config, stats):
-        # ================= DO NOT CHANGE =====================
-        self.in_data = raw_data
-        self.out_data = []
-        self.config = config
-        self.yaml_key = self.config.yaml_key
-        self._logger = cubeds.pylogger.get_logger(__name__)
-        self.stats = stats
+        super().__init__(raw_data, config, stats)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
-        if type(self.in_data) != list:
-            raise cubeds.exceptions.DecoderDataError
+        if not len(raw_data):
+            self._logger.info("No input data found to this decoder. Decoding will not be preformed for this file.")
 
         # ========== CUSTOM INIT STUFF ========================
         self.packets = []
+        self.primary_header_length = 6
         self.local_config = self.config.config['decoders'][self.yaml_key]['decoder_vcdu_to_ccsds']
 
     def decode(self):
@@ -30,6 +26,8 @@ class Decoder:
         looping through the yaml file. If this method is not present, there will be issues. Think of it like
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
+        if not len(self.in_data):
+            return
         self.extract_ccsds_packets()
 
     def extract_vcdu_header(self, frame):
@@ -155,7 +153,7 @@ class Decoder:
         :param packets: list of vcdu frames, assumed in order of recipt
         :return: list of ccsds packets
         """
-        self._logger.info("Extracting CCSDS packets from " + str(len(self.packets)) + " VCDU frames")
+        self._logger.info("Extracting CCSDS packets from " + str(len(self.in_data)) + " VCDU frames")
         header_len = self.local_config['header_length']
         ccsds_packets = []
         last_vc_frame_count = self.extract_vcdu_header(self.in_data[0])['vc_frame_count']
@@ -180,25 +178,31 @@ class Decoder:
                 continue
 
             ccsds_start = header_len + vcdu_header['frame_pointer']
-            ccsds_header = cubeds.shared.extract_CCSDS_header(packet[ccsds_start:ccsds_start + 13])
+            # Note that the below line extracts 20 bytes. That's just to ensure that we get all the bytes of the header
+            # processed as the header can and will be variable length if a secondary header is included.
+            ccsds_header = cubeds.shared.extract_CCSDS_header(packet[ccsds_start:ccsds_start + 20])
             if not cubeds.shared.check_ccsds_valid(ccsds_header, sband=True):
                 continue
 
             last_ccsds_frame_count = ccsds_header['sequence']
 
-            while ccsds_start + ccsds_header['length'] + 12 < len(packet):
-                new_packet = packet[ccsds_start:ccsds_start + ccsds_header['length'] + 12]
+            while ccsds_start + ccsds_header['length'] + self.primary_header_length < len(packet):
+                new_packet = packet[ccsds_start:ccsds_start + ccsds_header['length'] + self.primary_header_length]
                 ccsds_packets.append(new_packet)
-                ccsds_start += ccsds_header['length'] + 12
+                # The primary header is always 6 octets = 6 bytes
+                # The secondary header is variable length...
+                # The length field of the header tells x-1 bytes of the packet data field (includes secondary header)
+                # https://public.ccsds.org/Pubs/133x0b1c2.pdf
+                ccsds_start += ccsds_header['length'] + self.primary_header_length - 1
                 try:
-                    ccsds_header = cubeds.shared.extract_CCSDS_header(packet[ccsds_start:ccsds_start + 14])
+                    ccsds_header = cubeds.shared.extract_CCSDS_header(packet[ccsds_start:ccsds_start + 20])
                 except struct.error:
                     self._logger.debug("not enough for another frame. bailing.")
                     self.out_data = ccsds_packets
                     return
                 if abs(ccsds_header['sequence'] - last_ccsds_frame_count % 255) > 1:
                     self._logger.debug("Missing CCSDS Packets " + str(last_ccsds_frame_count) + " to " +
-                                 str(ccsds_header['sequence']))
+                                       str(ccsds_header['sequence']))
                 last_ccsds_frame_count = ccsds_header['sequence']
 
         self.out_data = ccsds_packets
