@@ -3,15 +3,14 @@ import cubeds.pylogger
 
 
 class Decoder:
-    def __init__(self, raw_data, config, stats):
+    def __init__(self, raw_data, config, stats, basefile):
         # ========== Inherit base class =======================
-        super().__init__(raw_data, config, stats)
+        super().__init__(raw_data, config, stats, basefile)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
 
         # ========== CUSTOM INIT STUFF ========================
-
 
     def decode(self):
         """

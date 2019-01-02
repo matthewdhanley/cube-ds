@@ -31,7 +31,7 @@ save:
       port: 5432
       host: localhost
     test:
-      enabled: True
+      enabled: False
       dbname: test_telemetry
       user: postgres
       password: password
@@ -41,12 +41,12 @@ save:
     prod:
       enabled: True
     test:
-      enabled: True
+      enabled: False
   ccsds_stats:
     prod:
       enabled: True
     test:
-      enabled: True
+      enabled: False
   key: bct_tai_seconds
 
 
@@ -62,13 +62,13 @@ ingest_stats:
       channel: cube-ds-stats
   test:
     text_file:
-      enabled: True
+      enabled: False
     std_out:
       enabled: True
     slack:
       enabled: False
-      key: api-bot-token
-      channel: cube-ds-stats
+      key: xoxb-509075681543-507291854528-yG0GysMjRJXjGgOu2bYedQgg
+      channel: development
 
 
 

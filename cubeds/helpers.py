@@ -250,3 +250,17 @@ def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S", config_file=None):
     except OverflowError:
         utc = epoch
     return utc.strftime(time_format)
+
+
+def get_apids(config):
+    """
+    Returns list of apids from file specified in cfg file
+    :return: list of apids
+    """
+    csv_file = config.config['telemetry'][config.yaml_key]['packet_definitions']
+    csv_info = get_csv_info(csv_file)
+    apids = []
+    for line in csv_info:
+        if int(line['apid']) not in apids:
+            apids.append(int(line['apid']))
+    return apids

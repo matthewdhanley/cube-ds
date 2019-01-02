@@ -1,5 +1,6 @@
 import cubeds.slack
 import cubeds.pylogger
+import os
 
 
 class Statistics:
@@ -16,7 +17,7 @@ class Statistics:
         self._logger = cubeds.pylogger.get_logger(__name__)
 
     def __del__(self):
-        self._logger.verbose("Writing statistics to file.")
+        self._logger.verbose("Writing statistics.")
         self.write()
 
     def add_stat(self, stat):
@@ -30,6 +31,9 @@ class Statistics:
         print("==============================================================")
 
     def write_to_file(self):
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'text_summaries')
+        if not os.path.exists(path):
+            os.makedirs(path)
         with open('text_summaries/'+self.basefile+'.txt', mode='w+') as f:
             f.write("==============================================================")
             f.write("Info from " + self.basefile + " processing:\n")
@@ -49,9 +53,9 @@ class Statistics:
         self.stats = []
 
     def write(self):
-        if self.config.config['ingest_stats'][self.config.yaml_key]['text_file']:
+        if self.config.config['ingest_stats'][self.config.yaml_key]['text_file']['enabled']:
             self.write_to_file()
-        if self.config.config['ingest_stats'][self.config.yaml_key]['std_out']:
+        if self.config.config['ingest_stats'][self.config.yaml_key]['std_out']['enabled']:
             self.print_stats()
-        if self.config.config['ingest_stats'][self.config.yaml_key]['slack']:
+        if self.config.config['ingest_stats'][self.config.yaml_key]['slack']['enabled']:
             self.post_to_slack()

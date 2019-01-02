@@ -1,0 +1,2 @@
+==============================================================Info from sband_2018_354_09_55_53 processing:
+Found 8 different APIDsRemoved 253 corrupted packets with out of range data.Extracted telemetry from 2 packets==============================================================

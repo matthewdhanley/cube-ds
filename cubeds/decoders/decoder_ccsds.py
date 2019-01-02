@@ -8,9 +8,9 @@ import pandas as pd
 
 
 class Decoder(cubeds.decoders.base.Decoder):
-    def __init__(self, raw_data, config, stats):
+    def __init__(self, raw_data, config, stats, basefile):
         # ========== Inherit base class =======================
-        super().__init__(raw_data, config, stats)
+        super().__init__(raw_data, config, stats, basefile)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
@@ -22,7 +22,6 @@ class Decoder(cubeds.decoders.base.Decoder):
         self.tlm = []
         self.tlm_df = pd.DataFrame()
 
-
     def decode(self):
         """
         This is where the magic happens. The cubeds.processor.Processor class will make a call to decode when it is
@@ -30,8 +29,10 @@ class Decoder(cubeds.decoders.base.Decoder):
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
         self.sort_packets()
+        self.stats.add_stat("Found "+str(len(self.packets))+" different APIDs")
         self.extract_tlm_from_sorted_packets()
         self.tlm_to_df()
+        self.stats.add_stat("Extracted telemetry from "+str(self.out_data.shape[0])+" packets")
 
     def sort_packets(self):
         packets_sorted = {}
@@ -72,7 +73,7 @@ class Decoder(cubeds.decoders.base.Decoder):
             try:
                 csv_info = self.packets[key]['csv_info']
             except KeyError:
-                self._logger.info("No packet def found for apid "+str(key)+". Skipping . . .")
+                self._logger.debug("No packet def found for apid "+str(key)+". Skipping . . .")
                 continue
             points_file = csv_info['pointsFile']
 

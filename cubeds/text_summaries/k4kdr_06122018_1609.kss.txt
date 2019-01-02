@@ -1,0 +1,2 @@
+==============================================================Info from k4kdr_06122018_1609.kss processing:
+Found 1 different APIDsExtracted telemetry from 3 packets==============================================================

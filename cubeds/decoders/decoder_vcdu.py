@@ -6,9 +6,9 @@ import numpy as np
 
 
 class Decoder(cubeds.decoders.base.Decoder):
-    def __init__(self, raw_data, config, stats):
-        # Using class inherited from cubeds.decoders.base
-        super().__init__(raw_data, config, stats)
+    def __init__(self, raw_data, config, stats, basefile):
+        # ========== Inherit base class =======================
+        super().__init__(raw_data, config, stats, basefile)
 
         # ========== CUSTOM INIT STUFF ========================
         self.vcdu_packets = []
@@ -22,7 +22,9 @@ class Decoder(cubeds.decoders.base.Decoder):
         self.extract_sband_vcdus()
         if len(self.out_data) < 1:
             self._logger.warning("No VCDU packets were found")
+            self.stats.add_stat("No VCDU packets were found")
             return
+        self.stats.add_stat("Found "+str(len(self.out_data))+" potential VCDU packets")
 
     def extract_sband_vcdus(self):
         """

@@ -3,9 +3,9 @@ import numpy as np
 
 
 class Decoder(cubeds.decoders.base.Decoder):
-    def __init__(self, raw_data, config, stats):
+    def __init__(self, raw_data, config, stats, basefile):
         # ========== Inherit base class =======================
-        super().__init__(raw_data, config, stats)
+        super().__init__(raw_data, config, stats, basefile)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
@@ -20,6 +20,7 @@ class Decoder(cubeds.decoders.base.Decoder):
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
         self.extract_ax25_packets()
+        self.stats.add_stat("Found "+str(len(self.packets))+" AX.25 packets.")
         self.strip_ax25()
 
     def extract_ax25_packets(self):

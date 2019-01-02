@@ -26,6 +26,7 @@ class Processor:
 
         self.config_file = config_file
         self.config = cubeds.config.Config(self.config_file)
+        self.stats = cubeds.statistics.Statistics(self.file_basename, self.config)
         self.test = self.config.test
 
         if self.test:
@@ -47,7 +48,7 @@ class Processor:
                     for r in self.decoders[decoder]['regex']:
                         if re.search(r, self.file_basename):
                             self._logger.verbose("Applying "+decoder+" decoder module . . .")
-                            exec_cmd = decoder+'.Decoder(self.data, self.config, '+self.file_basename+')'
+                            exec_cmd = decoder+'.Decoder(self.data, self.config, self.stats, self.file_basename)'
                             self._logger.debug(exec_cmd)
                             d = eval(exec_cmd)
                             d.decode()

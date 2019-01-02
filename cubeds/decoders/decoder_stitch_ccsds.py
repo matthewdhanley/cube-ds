@@ -7,9 +7,9 @@ import cubeds.decoders.base
 
 
 class Decoder(cubeds.decoders.base.Decoder):
-    def __init__(self, raw_data, config, stats):
-        # ==========Inherit the base class ====================
-        super().__init__(raw_data, config, stats)
+    def __init__(self, raw_data, config, stats, basefile):
+        # ========== Inherit base class =======================
+        super().__init__(raw_data, config, stats, basefile)
 
         # ========== CUSTOM INIT STUFF ========================
         # None
@@ -21,6 +21,7 @@ class Decoder(cubeds.decoders.base.Decoder):
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
         self.stitch_ccsds_new()
+        self.stats.add_stat("Stitched together "+str(len(self.out_data))+" CCSDS packets")
 
     def stitch_ccsds_new(self):
         full_packets = []

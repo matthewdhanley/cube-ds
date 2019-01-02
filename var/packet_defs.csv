@@ -1,4 +1,0 @@
-﻿packetName,apid,length,pointsFile,header_length
-bct_fsw,62,1600,var/points/bct_fsw.csv,12
-bct_soh,63,400,var/points/bct_soh.csv,12
-csim_sw,1,110,var/points/csim_sw.csv,20

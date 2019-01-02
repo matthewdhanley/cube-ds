@@ -3,12 +3,14 @@ import cubeds.pylogger
 import cubeds.helpers
 import cubeds.shared
 import cubeds.decoders.base
+import numpy as np
 import struct
 
 
 class Decoder(cubeds.decoders.base.Decoder):
-    def __init__(self, raw_data, config, stats):
-        super().__init__(raw_data, config, stats)
+    def __init__(self, raw_data, config, stats, basefile):
+        # ========== Inherit base class =======================
+        super().__init__(raw_data, config, stats, basefile)
 
         # ============= INPUT DATA CHECKS =====================
         # Check to make sure data is in the format expected!
@@ -19,6 +21,7 @@ class Decoder(cubeds.decoders.base.Decoder):
         self.packets = []
         self.primary_header_length = 6
         self.local_config = self.config.config['decoders'][self.yaml_key]['decoder_vcdu_to_ccsds']
+        self.stats.add_stat("Extracted "+str(len(self.out_data))+" CCSDS Packets")
 
     def decode(self):
         """
@@ -29,6 +32,10 @@ class Decoder(cubeds.decoders.base.Decoder):
         if not len(self.in_data):
             return
         self.extract_ccsds_packets()
+        if not len(self.out_data):
+            self._logger.info("Did not find any packets assuming alignment. "
+                              "Looking for them a bit more brute force now.")
+            self.find_ccsds_packets()
 
     def extract_vcdu_header(self, frame):
         """
@@ -206,3 +213,21 @@ class Decoder(cubeds.decoders.base.Decoder):
                 last_ccsds_frame_count = ccsds_header['sequence']
 
         self.out_data = ccsds_packets
+
+    def find_ccsds_packets(self):
+        # Fetch relevant apids from file
+        apids = np.array(cubeds.helpers.get_apids(self.config))
+
+        inds = []
+        for x in range(1, len(self.in_data)):
+            for apid in apids:
+                if self.in_data[x] == apid:
+                    inds.append(x - 1)
+
+        packets = []
+        for ind in inds:
+            header_dict = cubeds.shared.extract_CCSDS_header(self.in_data[ind:ind + 12])
+            if cubeds.shared.check_ccsds_valid(header_dict, sband=True):
+                packets.append(self.in_data[ind:ind + header_dict['length'] + header_dict['header_length']])
+
+        self.out_data = packets
