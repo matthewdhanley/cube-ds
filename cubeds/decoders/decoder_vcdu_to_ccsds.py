@@ -21,7 +21,6 @@ class Decoder(cubeds.decoders.base.Decoder):
         self.packets = []
         self.primary_header_length = 6
         self.local_config = self.config.config['decoders'][self.yaml_key]['decoder_vcdu_to_ccsds']
-        self.stats.add_stat("Extracted "+str(len(self.out_data))+" CCSDS Packets")
 
     def decode(self):
         """
@@ -36,6 +35,7 @@ class Decoder(cubeds.decoders.base.Decoder):
             self._logger.info("Did not find any packets assuming alignment. "
                               "Looking for them a bit more brute force now.")
             self.find_ccsds_packets()
+        self.stats.add_stat("Extracted "+str(len(self.out_data))+" CCSDS Packets")
 
     def extract_vcdu_header(self, frame):
         """

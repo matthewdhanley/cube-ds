@@ -156,16 +156,19 @@ def get_csv_info(config):
     csv_filename = config.config['telemetry'][config.yaml_key]['packet_definitions']
 
     # make sure file exists
+
+    file = os.path.join(os.path.dirname(os.path.realpath(__file__)), csv_filename)
+
     try:
-        assert os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), csv_filename))
+        assert os.path.exists(file)
     except AssertionError as e:
         logger.fatal(e)
-        logger.fatal("Cannot find packet definition file "+csv_filename)
+        logger.fatal("Cannot find packet definition file "+file)
         raise cubeds.exceptions.DecoderError
 
     csv_encoding = get_csv_encoding(config)
 
-    with open(csv_filename, mode='r', encoding=csv_encoding) as csv_f:
+    with open(file, mode='r', encoding=csv_encoding) as csv_f:
         reader = csv.DictReader(csv_f)
         csv_dict_list = []
         for row in reader:
@@ -182,6 +185,7 @@ def get_tlm_points(points_file, config):
     """
     logger = cubeds.pylogger.get_logger(__name__)
     # make sure file exists
+    points_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), points_file)
     assert os.path.exists(points_file)
 
     csv_encoding = get_csv_encoding(config)

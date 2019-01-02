@@ -1,5 +1,5 @@
 import datetime as dt
-import cubeds.exceptions
+from . import exceptions
 import cubeds.pylogger
 import cubeds.config
 import cubeds.processor
@@ -65,7 +65,7 @@ class CubeDsRunner:
         self._logger.verbose("Fetching rundirs location from config")
         if not self.test:
             self.rundirs = self.config.config['rundirs']['prod']['location']
-            self._logger.verbose("Using production rundirs location "+self.rundirs)
+            self._logger.verbose("Using production rundirs locations: " + ' '.join(self.rundirs))
         else:
             self.rundirs = self.config.config['rundirs']['test']['location']
             self._logger.verbose("Using test rundirs locations: " + ' '.join(self.rundirs))
@@ -74,7 +74,7 @@ class CubeDsRunner:
         self._logger.verbose("Fetching process log")
         if not self.test:
             self.process_log_location = self.config.config['process_log']['prod']['location']
-            self._logger.verbose("Using production process_log location "+self.rundirs)
+            self._logger.verbose("Using production process_log location "+self.process_log_location)
         else:
             self.process_log_location = self.config.config['process_log']['test']['location']
             self._logger.verbose("Using test process_log location "+self.process_log_location)
@@ -85,7 +85,7 @@ class CubeDsRunner:
         self._logger.verbose("Reading in process log . . .")
         with open(self.process_log_location, mode='r') as f:
             for line in f:
-                self.process_log.append(line.rstrip())
+                self.process_log.append(line)
 
     def find_files(self):
         """
@@ -101,14 +101,15 @@ class CubeDsRunner:
         for rundir in self.rundirs:
             for root, directories, filenames in os.walk(rundir):
                 for filename in filenames:  # Check each filename
-
+                    basename = os.path.split(filename)[-1]
                     found_flag = False  # flag to continue if file is found.
                     # Check each file against all the files in the process log. We don't want to waste time processing
                     # all files every time this code is run.
                     if self.config.config['process_log'][self.config.yaml_key]['enabled']:
                         for done in self.process_log:
-                            if done == filename:
-                                self._logger.debug("Continuing. File already processed: "+filename)
+                            done = os.path.split(done)[-1]
+                            if done.rstrip() == basename.rstrip():
+                                self._logger.debug("Continuing. File already processed: "+basename)
                                 found_flag = True
                         if found_flag:
                             continue
@@ -127,7 +128,7 @@ class CubeDsRunner:
                             raw_files.append(os.path.join(root, filename))
 
         if not raw_files:
-            self._logger.warning("Didn't find any raw files in " + self.rundirs)
+            self._logger.warning("Didn't find any raw files")
         self.raw_files = raw_files
 
     def log_processed_file(self, file):
@@ -145,78 +146,3 @@ class CubeDsRunner:
 
             if self.config.config['process_log'][self.config.yaml_key]['enabled']:
                 self.log_processed_file(file)
-
-
-# -------------- HELPER FUNCTIONS FOR THIS MAIN MODULE -----------------------------------------------------------------
-
-
-def parse_command_line_args():
-    # Parsing command line arguments
-    parser = argparse.ArgumentParser(description='Command Line Parser')
-
-    parser.add_argument('-t', '--test', action="store_true", help="If present, program will be run in test mode")
-    parser.add_argument('-d', '--debug', action="store_true", help="If present, program will be run in debug mode")
-    parser.add_argument('-v', '--verbose', action="store_true", help="If present, program will be run in verbose mode")
-    parser.add_argument('-m', '--mission', type=str, help="Specify specific mission using this parameter")
-    parser.add_argument('-c', '--config', type=str,
-                        help="Specifies what config file to use. If absent, cfg/example.cfg will be used")
-
-    args = parser.parse_args()  # test bool will be stored in args.test
-    return args
-
-
-def main():
-    args = parse_command_line_args()
-
-    # Check if user set the config file command line arguement. If so, extract it. This argument should
-    # really always be used, unless "example.cfg" is changed to be something else.
-    if args.config:
-        config_file = args.config  # user specified config file
-    else:
-        config_file = 'cfg/example.yml'  # example config file
-
-    # Load the config info from the file specified. Will get exception if file does not exist.
-    config = cubeds.config.Config(file=config_file)
-
-    # SETUP runtime parameters.
-    if int(config.config['runtime']['verbose']):
-        verbose = True
-    elif args.verbose:
-        verbose = True
-    else:
-        verbose = False
-
-    if int(config.config['runtime']['test']):
-        test = True
-    elif args.test:
-        test = True
-    else:
-        test = False
-
-    if int(config.config['runtime']['debug']):
-        debug = True
-    elif args.debug:
-        debug = True
-    else:
-        debug = False
-
-    if config.config['runtime']['mission']:
-        mission = config.config['runtime']['mission']
-    elif args.mission:
-        mission = args.mission
-    else:
-        mission = None  # gonna get an error!
-
-    runner = CubeDsRunner(mission=mission,
-                          verbose=verbose,
-                          debug=debug,
-                          test=test,
-                          config=config,
-                          regex_positive=['^raw.*', '.*\.kss', '.*sband.*'],
-                          regex_negative=['.*flatsat.*'])
-
-    runner.run()
-
-
-if __name__ == "__main__":
-    main()

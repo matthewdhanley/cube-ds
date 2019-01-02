@@ -59,7 +59,7 @@ class Processor:
                             break
         if type(self.data) == list:
             self._logger.warning("Output was a list, could be an issue. It's likely that there was no data found in the"
-                                 "file. Continuing . . .")
+                                 " file. Continuing . . .")
             return
 
     def save(self):
