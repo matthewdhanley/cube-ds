@@ -67,7 +67,7 @@ ingest_stats:
       enabled: True
     slack:
       enabled: False
-      key: xoxb-509075681543-507291854528-yG0GysMjRJXjGgOu2bYedQgg
+      key: api-bot-token
       channel: development
 
 
