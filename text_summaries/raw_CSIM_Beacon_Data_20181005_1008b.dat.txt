@@ -1,0 +1,2 @@
+==============================================================Info from raw_CSIM_Beacon_Data_20181005_1008b.dat processing:
+Interpreting as stripped KISS fileFound 11 AX.25 PacketsStitched together 6 CCSDS PacketsNo data found.Extracted 1 Unique APIDsRemoved 1 corrupted packets with out of range data.Extracted data from 5 full CCSDS packetsRemoved 4 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_CSIM_Beacon_Data_20181005_1008b.dat_summary.csvSaved telemetry to database telemetry==============================================================

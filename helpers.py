@@ -57,12 +57,16 @@ def tlm_to_df(tlm, time_index):
     :return:
     """
     if tlm:
-        df = pd.DataFrame().from_dict(tlm).sort_values(by=[time_index])
+        df = pd.DataFrame().from_dict(tlm)
+        df = df.dropna()
+        try:
+            df = df.sort_values(by=[time_index])
+        except KeyError:
+            pprint.pprint(df)
     else:
         LOGGER.warning("No data found. Returning empty dataframe")
         return pd.DataFrame()
     try:
-        df = df.dropna()
         df[time_index] = df[time_index].map(lambda x: int(x))
     except ValueError as e:
         LOGGER.debug(e)

@@ -1,0 +1,2 @@
+==============================================================Info from raw_k4kdr_05122018_1549.kss processing:
+Interpreted as KISS fileExtracted 19 AX.25 packetsNo data found.Stitched together 9 CCSDS PacketsExtracted 1 Unique APIDsExtracted data from 9 full CCSDS packetsRemoved 8 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_k4kdr_05122018_1549.kss_summary.csvSaved telemetry to database telemetry==============================================================

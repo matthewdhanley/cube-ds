@@ -1,0 +1,2 @@
+==============================================================Info from raw_record_2018_353_20_37_18 processing:
+Interpreting as stripped KISS fileFound 802 AX.25 PacketsStitched together 351 CCSDS PacketsNo data found.Extracted 2 Unique APIDsExtracted data from 351 full CCSDS packetsRemoved 4 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_record_2018_353_20_37_18_summary.csvHad 1 errors when inserting points into databaseSaved telemetry to database telemetry==============================================================

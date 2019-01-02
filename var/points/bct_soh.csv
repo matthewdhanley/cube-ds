@@ -147,10 +147,10 @@ bct_payload_sec_since_last_tlm,255,0,dn,32,1,sec,Seconds since last TLM received
 bct_payload_tlm_rx_count,259,0,dn,16,1,none,Payload Tlm Receive Counter (by SW),,,
 bct_payload_tlm_ack_count,261,0,dn,16,1,none,Payload Tlm ACK Counter,,,
 bct_payload_tlm_nak_count,263,0,dn,16,1,none,Payload Tlm NAK Counter,,,
-bct_voltage_12p0,265,0,dn,8,0.1,V,Voltage_12p0,,,
-bct_voltage_8p0,266,0,dn,8,0.1,V,Voltage_8p0,,,
-bct_voltage_5p0,267,0,dn,8,0.025,V,Voltage_5p0,,,
-bct_voltage_3p3,268,0,dn,8,0.015000001,V,Voltage_3p3,,,
+bct_voltage_12p0,265,0,dn,8,0.1,V,Voltage_12p0,,0,200
+bct_voltage_8p0,266,0,dn,8,0.1,V,Voltage_8p0,,0,200
+bct_voltage_5p0,267,0,dn,8,0.025,V,Voltage_5p0,,0,1000
+bct_voltage_3p3,268,0,dn,8,0.015000001,V,Voltage_3p3,,0,10000
 bct_det_temp,269,0,sn,8,0.80000001,degC,Tracker Detector temperature,,,
 bct_det2_temp,270,0,sn,8,0.80000001,degC,Tracker 2 Detector temperature,,,
 bct_box1_temp,271,0,sn,16,0.005,degC,Box 1 Temp,,,
@@ -158,9 +158,9 @@ bct_imu_temp,273,0,sn,16,0.005,decC,Imu Temp,,,
 bct_motor1_temp,275,0,sn,16,0.005,degC,Wheel 1 Temp,,,
 bct_motor2_temp,277,0,sn,16,0.005,degC,Wheel 2 Temp,,,
 bct_motor3_temp,279,0,sn,16,0.005,degC,Wheel 3 Temp,,,
-bct_bus_voltage,281,0,sn,16,0.001,V,Bus Voltage,,,
-bct_battery_voltage,283,0,dn,16,0.002,V,Battery Voltage,,,
-bct_battery_current,285,0,sn,16,0.002,A,Battery Current,,,
+bct_bus_voltage,281,0,sn,16,0.001,V,Bus Voltage,,0,50
+bct_battery_voltage,283,0,dn,16,0.002,V,Battery Voltage,,0,30
+bct_battery_current,285,0,sn,16,0.002,A,Battery Current,,-20,20
 bct_battery1_temp,287,0,sn,16,0.005,degC,Battery 1 Temp,,,
 bct_battery2_temp,289,0,sn,16,0.005,degC,Battery 2 Temp,,,
 bct_user_analog1,291,0,sn,32,0.0005,none,User Analogs,,,
@@ -172,8 +172,8 @@ bct_tracker2_det_timeout_count,302,0,dn,16,1,counts,Number of detector timeouts,
 bct_tracker2_num_attitude_stars,304,0,dn,8,1,none,Num Stars Used in Att,,,
 bct_cycles_since_crc_data,305,0,dn,32,1,none,Cycles Since Correct CRC GPS Data,,,
 bct_gps_lock_count,309,0,dn,16,1,none,spare,,,
-bct_gps_valid,311,0,dn,8,1,1/YES 0/NO,GPS Valid,1/YES 0/NO,,
-bct_gps_enable,312,0,dn,8,1,1/YES 0/NO,GPS Enabled,1/YES 0/NO,,
+bct_gps_valid,311,0,dn,8,1,1/YES 0/NO,GPS Valid,,0,1
+bct_gps_enable,312,0,dn,8,1,1/YES 0/NO,GPS Enabled,,0,1
 bct_latched_resp_fire_pack1,313,0,dn,8,1,bitpack,Latched Response Fired Bitpack,,,
 bct_latched_resp_fire_pack_bit8,313,0,dn,1,1,none,Latched Response Fired Bitpack bit 8,,,
 bct_latched_resp_fire_pack_bit7,313,1,dn,1,1,none,Latched Response Fired Bitpack bit 7,,,

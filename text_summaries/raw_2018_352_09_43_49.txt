@@ -1,0 +1,2 @@
+==============================================================Info from raw_2018_352_09_43_49 processing:
+Found 2826 potential packetsExtracted 2 unique APIDsRemoved 2821 corrupted packets with out of range data.Extracted data from 1 full CCSDS packetsRemoved 0 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_2018_352_09_43_49_summary.csvHad 1 errors when inserting points into databaseSaved telemetry to database telemetry==============================================================

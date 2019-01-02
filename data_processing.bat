@@ -10,5 +10,9 @@ set backup_dir_2="\\lasp-store\projects\Phase_Development\CSIM FD\Computer Backu
 
 robocopy %working_dir_1% %backup_dir_1% /z /e /mir 
 robocopy %working_dir_2% %backup_dir_2% /z /e /mir 
+
+echo Starting idl processing
+idl -e csim_fd_parse_raw_record_files
+
 echo Done!
 pause

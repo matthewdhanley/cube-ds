@@ -77,12 +77,14 @@ def add_df_to_db(tlm_df, index_key, db, user, password, host, port, stats=Statis
             LOGGER.info("Bad tlm point, can't insert into db")
             LOGGER.error(e)
             LOGGER.debug(data)
+            LOGGER.debug(column)
             bad_inserts += 1
             continue
         except psycopg2.InternalError as e:
             LOGGER.info("Bad tlm point, can't insert into db")
             LOGGER.error(e)
             LOGGER.debug(data)
+            LOGGER.debug(column)
             bad_inserts += 1
 
     if bad_inserts:

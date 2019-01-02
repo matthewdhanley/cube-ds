@@ -108,16 +108,23 @@ def extract_data(data, tlm_points):
                 exit(-1)
 
             if extract_bits_length > 0:
-                tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
-
+                try:
+                    tlm_value = extract_bits(int(tlm_value), startBit, length=extract_bits_length)
+                except struct.error as e:
+                    # not extracting the right amount of data. Print some debug information and move on
+                    LOGGER.debug("Packet ended unexpectedly.")
+                    LOGGER.debug(e)
+                    return extracted_data
         else:
             LOGGER.error("DTYPE IS CHAR, WHY YOU NOT DECODE?")
 
         # index into the struct and save the value for the tlm point
         if int(CONFIG_INFO['CLEANING']['CLEAN_DATA']):
             if point['min'] and float(point['min']) > tlm_value:
+                LOGGER.debug(point['name']+" out of range with tlm_value="+str(tlm_value))
                 return []
             if point['max'] and float(point['max']) < tlm_value:
+                LOGGER.debug(point['name']+" out of range with tlm_value="+str(tlm_value))
                 return []
         extracted_data[point['name']] = tlm_value
     return extracted_data

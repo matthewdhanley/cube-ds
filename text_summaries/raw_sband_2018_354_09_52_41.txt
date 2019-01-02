@@ -1,0 +1,2 @@
+==============================================================Info from raw_sband_2018_354_09_52_41 processing:
+Interpreted as SBand FilePotentially 1952 VCDU FramesFound 407 Potential CCSDS PacketsExtracted 33 Unique APIDsExtracted data from 1 full CCSDS packetsRemoved 1 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_sband_2018_354_09_52_41_summary.csvSaved telemetry to database telemetry==============================================================

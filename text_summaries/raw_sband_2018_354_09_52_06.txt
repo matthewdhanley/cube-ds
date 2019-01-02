@@ -1,0 +1,2 @@
+==============================================================Info from raw_sband_2018_354_09_52_06 processing:
+Found 1 potential packetsExtracted 1 unique APIDsExtracted data from 1 full CCSDS packetsRemoved 1 corrupted packets with bad timestampsData saved to individual csv in summaries/raw_sband_2018_354_09_52_06_summary.csvSaved telemetry to database telemetry==============================================================

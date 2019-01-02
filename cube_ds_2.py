@@ -96,6 +96,7 @@ if __name__ == "__main__":
             LOGGER.info("Extracting data from .kss file "+file_basename)
             packets = extract_ax25_packets(data)
             file_stats.add_stat("Extracted "+str(len(packets))+' AX.25 packets')
+            file_stats.add_stat("No data found.")
             packets = strip_ax25(packets, header_length)
             packets = strip_kiss(packets)
             if CONFIG_INFO['SAVE']['CCSDS_STATS']:
@@ -143,7 +144,8 @@ if __name__ == "__main__":
                 ccsds_stats(packets, file_basename)
 
             packets = stitch_ccsds_new(packets)
-            file_stats.add_stat("Stitched together "+str(len(packets)))+" CCSDS Packets"
+            file_stats.add_stat('Stitched together '+str(len(packets))+' CCSDS Packets')
+            file_stats.add_stat("No data found.")
             if DEBUG:
                 write_to_pickle(packets, "debug/ax25_ccsds_packets_"+file_basename+".pickle")
 
@@ -174,17 +176,16 @@ if __name__ == "__main__":
 
             packets = sort_packets(packets)
             file_stats.add_stat("Extracted " + str(len(packets.keys())) + " unique APIDs")
+            LOGGER.info("Extracted " + str(len(packets.keys())) + " unique APIDs")
 
             for key in packets:
                 for a in csv_info:
                     if key == a['source'] + a['apid']:
                         packets[key]['csv_info'] = a
-            out_data = extract_tlm_from_sorted_packets(packets, stats=file_stats)
-            file_stats.add_stat("Extracted data from "+str(len(out_data))+" full CCSDS packets")
 
-            if int(CONFIG_INFO['SAVE']['INDIVIDUAL_CSV']):
-                df = tlm_to_df(out_data, CONFIG_INFO['SAVE']['KEY'])
-                tlm_df_to_csv(df, file_basename + '_summary.csv', CONFIG_INFO['SAVE']['KEY'])
+            out_data = extract_tlm_from_sorted_packets(packets, stats=file_stats)
+            LOGGER.info("Extracted data from "+str(len(out_data))+" full CCSDS packets")
+            file_stats.add_stat("Extracted data from "+str(len(out_data))+" full CCSDS packets")
 
             if not out_data:
                 LOGGER.warning("No data found in "+file_basename)
@@ -196,6 +197,9 @@ if __name__ == "__main__":
                 continue
 
         out_data_df = tlm_to_df(out_data, CONFIG_INFO['SAVE']['KEY'])
+        if out_data_df.empty:
+            LOGGER.info("No data found")
+            continue
 
         if int(CONFIG_INFO['CLEANING']['CLEAN_DATA']):
             out_data_df = clean_times(out_data_df, CONFIG_INFO['SAVE']['KEY'], utc_to_tai, stats=file_stats)

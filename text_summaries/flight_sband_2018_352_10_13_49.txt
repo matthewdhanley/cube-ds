@@ -1,0 +1,2 @@
+==============================================================Info from flight_sband_2018_352_10_13_49 processing:
+Found 4826 potential packetsExtracted 4 unique APIDsRemoved 4797 corrupted packets with out of range data.Extracted data from 10 full CCSDS packetsRemoved 0 corrupted packets with bad timestampsData saved to individual csv in summaries/flight_sband_2018_352_10_13_49_summary.csvHad 1 errors when inserting points into databaseSaved telemetry to database telemetry==============================================================
