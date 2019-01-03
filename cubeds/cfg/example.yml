@@ -151,7 +151,7 @@ decoders:
     decoder_stitch_ccsds:
       regex:
       - .*\.kss
-      - .*raw.*
+      - .*raw_record.*
       priority: 5
 
   test:

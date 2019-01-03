@@ -180,7 +180,6 @@ def get_tlm_points(points_file, config):
     :param config: cubeds.config.Config object.
     :return: List of dictionaries of points.
     """
-    logger = cubeds.pylogger.get_logger(__name__)
     # make sure file exists
     assert os.path.exists(points_file)
 
