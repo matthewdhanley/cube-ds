@@ -31,16 +31,16 @@ class Statistics:
         print("==============================================================")
 
     def write_to_file(self):
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'text_summaries')
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'text_summaries/')
         if not os.path.exists(path):
             os.makedirs(path)
-        with open('text_summaries/'+self.basefile+'.txt', mode='w+') as f:
+        with open(path+self.basefile+'.txt', mode='w+') as f:
             f.write("==============================================================")
             f.write("Info from " + self.basefile + " processing:\n")
             for stat in self.stats:
                 f.write(stat)
             f.write("==============================================================")
-        self._logger.info("Wrote statistics to text_summaries/"+self.basefile+".txt")
+        self._logger.info("Wrote statistics to "+path+self.basefile+".txt")
 
     def post_to_slack(self):
         message = "Info from " + self.basefile + " processing:\n"

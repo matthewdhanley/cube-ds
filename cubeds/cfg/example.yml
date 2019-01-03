@@ -1,16 +1,16 @@
 ---
 runtime:
   mission: csim
-  test: True
-  debug: False
-  verbose: True
+  test: False
+  debug: True
+  verbose: False
   epoch: 12/31/1999-23:59:23
 
 
 save:
   csv:
     prod:
-      enabled: False
+      enabled: True
       file: tlm.csv
     test:
       enabled: True
@@ -24,16 +24,16 @@ save:
       file: test\csim.nc
   postgresql:
     prod:
-      enabled: False
-      dbname: test_telemetry
-      user: postgres
+      enabled: True
+      dbname: telemetry
+      user: user
       password: password
       port: 5432
       host: localhost
     test:
       enabled: False
       dbname: test_telemetry
-      user: postgres
+      user: user
       password: password
       port: 5432
       host: localhost
@@ -91,8 +91,7 @@ cleaning:
 rundirs:
   prod:
     location:
-      - test\sband
-      - test\kss
+      - C:\some\path\to\files
   test:
     location:
       - test\sband
@@ -101,7 +100,7 @@ rundirs:
 
 process_log:
   prod:
-    location: test\processed_file_log.txt
+    location: C:\some\path\to\files
     enabled: True
   test:
     location: test\processed_file_log.txt
@@ -133,7 +132,7 @@ decoders:
 
     decoder_ax25:
       regex:
-        - .*raw.*
+        - .*raw_record.*
       priority: 3
       frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
       header_length: 16

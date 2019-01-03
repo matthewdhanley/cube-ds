@@ -32,7 +32,10 @@ class Decoder(cubeds.decoders.base.Decoder):
         self.stats.add_stat("Found "+str(len(self.packets))+" different APIDs")
         self.extract_tlm_from_sorted_packets()
         self.tlm_to_df()
-        self.stats.add_stat("Extracted telemetry from "+str(self.out_data.shape[0])+" packets")
+        try:
+            self.stats.add_stat("Extracted telemetry from "+str(self.out_data.shape[0])+" packets")
+        except AttributeError:
+            self._logger.error("Hmmm")
 
     def sort_packets(self):
         packets_sorted = {}

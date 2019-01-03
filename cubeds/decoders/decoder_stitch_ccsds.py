@@ -3,6 +3,7 @@ import cubeds.pylogger
 import cubeds.shared
 import pandas as pd
 import numpy as np
+import struct
 import cubeds.decoders.base
 
 
@@ -28,7 +29,12 @@ class Decoder(cubeds.decoders.base.Decoder):
         i = 0
         full_df = pd.DataFrame()
         while i in range(0, len(self.in_data)):
-            ccsds_header = cubeds.shared.extract_CCSDS_header(self.in_data[i])
+            try:
+                ccsds_header = cubeds.shared.extract_CCSDS_header(self.in_data[i])
+            except IndexError:
+                continue
+            except struct.error:
+                continue
             ccsds_header['index'] = i
             tmp_df = pd.DataFrame([ccsds_header], columns=ccsds_header.keys())
             full_df = full_df.append(tmp_df)
