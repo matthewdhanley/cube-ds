@@ -1,0 +1,2 @@
+==============================================================Info from raw_sband_2018_361_10_34_40 processing:
+Found 103 potential VCDU packetsExtracted 103 CCSDS PacketsFound 1 different APIDsExtracted telemetry from 103 packets==============================================================
