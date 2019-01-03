@@ -1,11 +1,11 @@
-#cube-ds
+# cube-ds
 
 This software is intended to be used as a small-satellite data system. The goal was to create something that can be 
 easily configured for different missions and data schemas.
 
-##Getting Started
+## Getting Started
 
-###Project Layout
+### Project Layout
 This project is layed out in such a way that all the code needed for the project to function lives in the `cubeds` folder.
 In this folder, there is a `cubeds/cfg` folder that holds configuration files. There is a `cubeds/decoders` folder that holds all the 
 decoders for decoding data. The `cubeds/var` folder holds user defined information about telemetry. The `cubeds/test` folder is
@@ -17,7 +17,7 @@ changed. All configuration can be done using configuration files, var files, and
 On the same level as the `cubeds` folder, there is also a `tests` folder that holds both data used for unittesting as
 well as the unittests themselves, currently in the file `tests/tests.py`.
 
-###Important Files and Folders
+### Important Files and Folders
 The configuration of this software as it is on Github is a sample configuration for the CSIM spacecraft. There are some
 main components that need to be changed to get this software to work for a different spacecraft:
 1. `cubeds/cfg/example.yml` is the main configuration file to tell the program things such as where to find other 
@@ -30,7 +30,7 @@ for their data. Generic decoders like decoder_ccsds.py, decoder_ax25.py, decoder
 work for almost any mission as these are standard data protocols. A template is provided in this folder for an easy start
 to building a new decoder
 
-###Creating Telemetry Definition Files
+### Creating Telemetry Definition Files
 Telemetry definition files provide the program with the core information needed to convert a file from raw data to usable
 telemetry data. The file that defines all the packets that can be expected is currently `cubeds/var/packet_defs.csv`. 
 CSV files were chosen as they are easily interpreted by everyone therefore knowledge about other data formats are not needed
