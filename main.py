@@ -29,7 +29,7 @@ def main():
     if args.config:
         config_file = args.config  # user specified config file
     else:
-        config_file = 'cfg/example.yml'  # example config file
+        config_file = 'cfg/csim.yml'  # example config file
 
     # Load the config info from the file specified. Will get exception if file does not exist.
     config = cubeds.config.Config(file=config_file)
