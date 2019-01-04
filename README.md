@@ -82,9 +82,9 @@ For each `pointsFile`, there should be a header field and points defined as foll
 
 | name          | startByte  | startBit | dtype  | size  | conversion | unit | description       | state      | min | max | endian |
 | ------------- |:----------:| --------:| ------:| -----:| ----------:| ----:| -----------------:| ----------:| ---:| ---:| ------:|
-| l0_acpt_cnt   | 15         | 0        | dn     | 8     | 1          |      | L0 accept counter |            | 0   | 255 | big    |
-| tai_seconds   | 55         | 0        | double | 64    | 1          | sec  | TAI Seconds       |            |     |     | big    |
-| time_valid    | 63         | 0        | dn     | 8     | 1          |      | Time Valid        | 1/YES 0/NO | 0   | 1   | big    |
+| l0_acpt_cnt   | 15         | 0        | dn     | 8     | 0:1          |      | L0 accept counter |            | 0   | 255 | big    |
+| tai_seconds   | 55         | 0        | double | 64    | 0:1          | sec  | TAI Seconds       |            |     |     | big    |
+| time_valid    | 63         | 0        | dn     | 8     | 0:1          |      | Time Valid        | 1/YES 0/NO | 0   | 1   | big    |
 
 The `name` column is where you define the mnemonic for the telemetry point. This is what will determine how the point will
 be differentiated when it is saved. It MUST be unique. This field is required.
@@ -98,7 +98,7 @@ The `startBit` is the bit at which the data starts, relative to the startByte. T
 
 The size, in *bits* is defined by the `size` field. This field is required.
 
-`conversion` is a scalar which is used to scale the data. TODO: add polynomial support. If no conversion, enter `1`
+`conversion` is a polynomial which is used to scale the data. TODO: add polynomial support. If no conversion, enter `0:1`. A polymial conversion of 1.5x^2+3.2x+2.2 would translate to `2.2:3.2:1.5`.
 
 `unit` is the unit of the telemetry. This field can be anything and is not required.
 
