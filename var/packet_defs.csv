@@ -1,5 +1,0 @@
-﻿packetName,source,apid,length,headerFile,pointsFile
-bct_fsw,8,62,1600,var/headers/ccsds_bct_fsw.csv,var/points/bct_fsw.csv
-bct_fsw,12,62,1600,var/headers/ccsds_bct_fsw_playback.csv,var/points/bct_fsw.csv
-bct_soh,8,63,400,var/headers/ccsds_bct_soh.csv,var/points/bct_soh.csv
-bct_soh,12,63,400,var/headers/ccsds_bct_soh_playback.csv,var/points/bct_soh.csv

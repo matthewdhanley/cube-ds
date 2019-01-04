@@ -1,2 +1,0 @@
-==============================================================Info from skip_sband_raw_2018_346_10_50_30 processing:
-Interpreted as SBand FilePotentially 702 VCDU FramesFound 250 Potential CCSDS PacketsExtracted 10 Unique APIDsRemoved 178 corrupted packets with out of range data.Extracted data from 59 full CCSDS packetsRemoved 3 corrupted packets with bad timestampsData saved to individual csv in summaries/skip_sband_raw_2018_346_10_50_30_summary.csv==============================================================

@@ -1,2 +1,0 @@
-==============================================================Info from sband_2018_352_10_14_51 processing:
-Found 398 potential packetsExtracted 1 unique APIDsRemoved 97 corrupted packets with out of range data.Extracted data from 301 full CCSDS packetsRemoved 4 corrupted packets with bad timestampsData saved to individual csv in summaries/sband_2018_352_10_14_51_summary.csv==============================================================
