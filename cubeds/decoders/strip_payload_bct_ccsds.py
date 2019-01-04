@@ -1,6 +1,8 @@
 import cubeds.exceptions
 import cubeds.pylogger
 import cubeds.decoders.base
+import cubeds.shared
+import struct
 
 
 class Decoder(cubeds.decoders.base.Decoder):
@@ -19,4 +21,17 @@ class Decoder(cubeds.decoders.base.Decoder):
         looping through the yaml file. If this method is not present, there will be issues. Think of it like
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
-        pass
+        self.strip_ccsds()
+
+    def strip_ccsds(self):
+        strip_len = int(self.config.config['decoders'][self.config.yaml_key]['strip_payload_bct_ccsds']['strip_len'])
+        for packet in self.in_data:
+            try:
+                header = cubeds.shared.extract_CCSDS_header(packet[0:20])
+            except struct.error:
+                continue
+
+            if header['apid'] == self.config.config['decoders'][self.config.yaml_key]['strip_payload_bct_ccsds']['apid']:
+                self.out_data.append(packet[strip_len:-1])
+            else:
+                self.out_data.append(packet)

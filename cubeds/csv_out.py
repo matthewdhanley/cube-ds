@@ -34,7 +34,7 @@ class SaveCsv:
         self.filename = self.save_dir + '/' + output_file
 
     def add_utc(self):
-        self.data = cubeds.helpers.add_utc_to_df(self.data, self.save_index, cubeds.helpers.tai_to_utc)
+        self.data = cubeds.helpers.add_utc_to_df(self.data, self.save_index, cubeds.helpers.tai_to_utc, self.config)
         self.data = self.data.set_index('UTC')
 
     def write_csv(self):

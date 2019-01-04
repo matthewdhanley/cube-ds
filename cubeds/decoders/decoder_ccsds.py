@@ -121,8 +121,15 @@ class Decoder(cubeds.decoders.base.Decoder):
                 extract_bits_length = tlm_length
                 tlm_length = 8
 
-            # conver the conversion to a float
-            conversion = float(point['conversion'])
+            # extract conversion polynomial and convert to float
+            conversions = point['conversion'].split(':')
+            conversions = [float(x) for x in conversions]
+
+            def convert(tlm):
+                tlm_out = 0
+                for power, coeff in enumerate(conversions):
+                    tlm_out += coeff*tlm**power
+                return tlm_out
 
             # get the datatype
             dtype = point['dtype']
@@ -148,7 +155,8 @@ class Decoder(cubeds.decoders.base.Decoder):
 
             if point['dtype'] != 'char':
                 try:
-                    tlm_value = struct.unpack(unpack_data_format, tlmData)[0] * conversion
+                    tlm_value = struct.unpack(unpack_data_format, tlmData)[0]
+                    tlm_value = convert(tlm_value)
                 except struct.error as e:
                     # not extracting the right amount of data. Make sure we at least got the time and move on.
                     # Likely a partial packet.
@@ -214,7 +222,7 @@ class Decoder(cubeds.decoders.base.Decoder):
             self._logger.warning("No data found. Returning empty dataframe")
             return pd.DataFrame()
         try:
-            df = df.dropna()
+            # df = df.dropna()
             df['time_index'] = df['time_index'].map(lambda x: int(x))
         except ValueError as e:
             self._logger.debug(e)
