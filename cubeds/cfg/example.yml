@@ -117,41 +117,48 @@ telemetry:
 
 decoders:
   max_priority: 100
-  prod:
-    decoder_vcdu:
-      regex:
-        - .*sband.*
-      frame_size: 2048  # size of a vcdu frame
-      priority: 1
+  decoder_vcdu:
+    regex:
+    - .*band.*
+    frame_size: 2048  # size of a vcdu frame
+    priority: 1
 
-    decoder_vcdu_to_ccsds:
-      regex:
-        - .*sband.*
-      header_length: 6
-      priority: 2
+  strip_payload_bct_ccsds:
+    regex:
+    - .*
+    priority: 5
+    strip_len: 12  # size of a bct header
+    apid: 255   # bct apid when payload data
 
-    decoder_ax25:
-      regex:
-        - .*raw_record.*
-      priority: 3
-      frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
-      header_length: 16
+  decoder_vcdu_to_ccsds:
+    regex:
+    - .*band.*
+    header_length: 6
+    priority: 2
 
-    decoder_kiss:
-      regex:
-        - .*\.kss
-      priority: 4
+  decoder_ax25:
+    regex:
+    - .*raw.*
+    - .*\.kss
+    priority: 3
+    frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
+    header_length: 16
 
-    decoder_ccsds:
-      regex:
-        - .*
-      priority: 6
+  decoder_kiss:
+    regex:
+    - .*\.kss
+    priority: 4
 
-    decoder_stitch_ccsds:
-      regex:
-      - .*\.kss
-      - .*raw_record.*
-      priority: 5
+  decoder_ccsds:
+    regex:
+    - .*
+    priority: 7
+
+  decoder_stitch_ccsds:
+    regex:
+    - .*\.kss
+    - .*raw.*
+    priority: 6
 
   test:
     decoder_vcdu:
