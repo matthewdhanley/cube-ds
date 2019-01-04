@@ -80,7 +80,7 @@ class CubeDsRunner:
             self._logger.verbose("Using test process_log location "+self.process_log_location)
 
         if not os.path.exists(self.process_log_location):
-            raise cubeds.exceptions.ProcessLogError
+            return
 
         self._logger.verbose("Reading in process log . . .")
         with open(self.process_log_location, mode='r') as f:

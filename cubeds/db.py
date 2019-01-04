@@ -1,10 +1,13 @@
 import psycopg2
 import psycopg2.extras
+import cubeds.helpers
 import cubeds.pylogger
 import cubeds.exceptions
 
 
 class Database:
+    created_tables = False
+
     def __init__(self, config):
         self._logger = cubeds.pylogger.get_logger(__name__)
         self.config = config
@@ -29,8 +32,28 @@ class Database:
         self.table_cmd = """CREATE TABLE IF NOT EXISTS telemetry( 
                                 t INTEGER NOT NULL, 
                                 tlm_val float NOT NULL,
-                                mnemonic VARCHAR,
+                                mnemonic VARCHAR NOT NULL REFERENCES telemetry_definitions(mnemonic),
                                 PRIMARY KEY (t, mnemonic));"""
+
+        self.package_cmd = """CREATE TABLE IF NOT EXISTS telemetry_packages(
+                                package VARCHAR NOT NULL PRIMARY KEY,
+                                apid INTEGER UNIQUE NOT NULL,
+                                size INTEGER NOT NULL);"""
+
+        self.tlm_defs_cmd = """CREATE TABLE IF NOT EXISTS telemetry_definitions(
+                                mnemonic VARCHAR PRIMARY KEY UNIQUE,
+                                package VARCHAR REFERENCES telemetry_packages(package) NOT NULL,
+                                states JSON,
+                                unit VARCHAR,
+                                max_val NUMERIC DEFAULT NULL,
+                                min_val NUMERIC DEFAULT NULL,
+                                conv VARCHAR DEFAULT '0:1');"""
+
+        self.insert_package = """INSERT INTO telemetry_packages (package, apid, size) VALUES %s ON CONFLICT DO NOTHING;"""
+
+        self.insert_tlm_def = """INSERT INTO telemetry_definitions (
+                                                    mnemonic, package, states, unit, max_val, min_val, conv)
+                                        VALUES %s ON CONFLICT DO NOTHING;"""
 
         self.index_cmd = """CREATE INDEX IF NOT EXISTS common
                                 ON telemetry (mnemonic, t);"""
@@ -63,6 +86,34 @@ class Database:
             self.conn.close()
             self.conn = None
 
+    def add_packages(self):
+        csv_info = cubeds.helpers.get_csv_info(self.config)
+        cur = self.conn.cursor()
+        data = []
+        for package in csv_info:
+            data.append((package['packetName'], package['apid'], package['length']))
+        psycopg2.extras.execute_values(
+            cur, self.insert_package, data, page_size=self.page_size
+        )
+        cur.close()
+        self.conn.commit()
+
+    def add_points(self):
+        cur = self.conn.cursor()
+        csv_info = cubeds.helpers.get_csv_info(self.config)
+        data = []
+        for package in csv_info:
+            tlm_points = cubeds.helpers.get_tlm_points(package['pointsFile'], self.config)
+            for point in tlm_points:
+                # mnemonic, package, states, unit, max_val, min_val, conv
+                data.append((point['name'], package['packetName'], point['state'] or None, point['unit'] or None, point['max'] or None,
+                             point['min'] or None, point['conversion'] or None))
+        psycopg2.extras.execute_values(
+            cur, self.insert_tlm_def, data, page_size=self.page_size
+        )
+        cur.close()
+        self.conn.commit()
+
     def create_tlm_tables(self):
         if self.conn is None:
             self._logger.error("No database connection exists.")
@@ -70,16 +121,30 @@ class Database:
 
         try:
             cur = self.conn.cursor()
-            self._logger.debug(self.table_cmd)
+            cur.execute(self.package_cmd)
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            raise error
+        try:
+            cur.execute(self.tlm_defs_cmd)
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            raise error
+        try:
             cur.execute(self.table_cmd)
-
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            raise error
+        try:
             self._logger.debug(self.index_cmd)
             cur.execute(self.index_cmd)
             cur.close()
             self.conn.commit()
+            self.add_packages()
+            self.add_points()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
-            return False
+            raise error
 
         return True
 
@@ -87,11 +152,16 @@ class Database:
         if self.conn is None:
             self._logger.error("No database connection exists.")
             raise cubeds.exceptions.DbConnError("No database connection exists.")
-        self.create_tlm_tables()
+        if not Database.created_tables:
+            self.create_tlm_tables()
+            Database.created_tables = True
+
         cur = self.conn.cursor()
         self._logger.info("Adding data to db")
         bad_inserts = 0
         for column in tlm_df:
+            if column == 'time_index':
+                continue
             datadf = tlm_df[[self.index_key, column]]
             data = datadf[(datadf[self.index_key] > self.index_min)
                           & (datadf[self.index_key] < self.index_max)].dropna().values.tolist()

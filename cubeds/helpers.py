@@ -224,7 +224,7 @@ def get_tlm_points(points_file, config):
     return points_dict_list
 
 
-def add_utc_to_df(df, time_index, conversion_function):
+def add_utc_to_df(df, time_index, conversion_function, config):
     """
     Adds a utc column to dataframe
     :param df: dataframe that needs utc column
@@ -232,21 +232,17 @@ def add_utc_to_df(df, time_index, conversion_function):
     :param conversion_function: function to convert values in time_index function to utc
     :return: updated dataframe
     """
-    df['UTC'] = df[time_index].map(lambda x: conversion_function(x))
+    df['UTC'] = df[time_index].map(lambda x: conversion_function(x, config))
     return df
 
 
-def tai_to_utc(tai, time_format="%Y/%j-%H:%M:%S", config_file=None):
+def tai_to_utc(tai, config, time_format="%Y/%j-%H:%M:%S"):
     """
     Converts TAI time to UTC time
     :param tai: TAI time
     :param time_format: Format of output UTC time
     :return: UTC time string
     """
-    if config_file is not None:
-        config = cubeds.config.Config(file=config_file)
-    else:
-        config = cubeds.config.Config(file=config_file)
     epoch = dt.datetime.strptime(config.config['runtime']['epoch'], "%m/%d/%Y-%H:%M:%S")
     try:
         utc = epoch + dt.timedelta(seconds=int(tai))

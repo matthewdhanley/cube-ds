@@ -1,7 +1,7 @@
 ---
 runtime:
   mission: csim
-  test: False
+  test: True
   debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
@@ -31,9 +31,9 @@ save:
       port: 5432
       host: localhost
     test:
-      enabled: False
+      enabled: True
       dbname: test_telemetry
-      user: user
+      user: postgres
       password: password
       port: 5432
       host: localhost
@@ -94,8 +94,8 @@ rundirs:
       - C:\some\path\to\files
   test:
     location:
-      - test\sband
-      - test\kss
+      - cubeds\test\sband
+      - cubeds\test\kss
 
 
 process_log:
@@ -104,7 +104,7 @@ process_log:
     enabled: True
   test:
     location: test\processed_file_log.txt
-    enabled: True
+    enabled: False
 
 
 telemetry:
@@ -160,6 +160,13 @@ decoders:
       frame_size: 2048  # size of a vcdu frame
       priority: 1
 
+    strip_payload_bct_ccsds:
+      regex:
+      - .*
+      priority: 5
+      strip_len: 12  # size of a bct header
+      apid: 255   # bct apid when payload data
+
     decoder_vcdu_to_ccsds:
       regex:
       - .*band.*
@@ -182,11 +189,11 @@ decoders:
     decoder_ccsds:
       regex:
         - .*
-      priority: 6
+      priority: 7
 
     decoder_stitch_ccsds:
       regex:
       - .*\.kss
       - .*raw.*
-      priority: 5
+      priority: 6
 ...
