@@ -1,2 +1,2 @@
 ==============================================================Info from flight_sband_2018_352_10_13_49 processing:
-Found 976 potential VCDU packetsExtracted 0 CCSDS Packets==============================================================
+Found 976 potential VCDU packetsExtracted 4825 CCSDS PacketsFound 2 different APIDsRemoved 1621 corrupted packets with out of range data.Extracted telemetry from 3204 packets==============================================================

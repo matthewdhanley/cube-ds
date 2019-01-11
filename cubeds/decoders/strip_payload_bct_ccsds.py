@@ -30,6 +30,8 @@ class Decoder(cubeds.decoders.base.Decoder):
                 header = cubeds.shared.extract_CCSDS_header(packet[0:20])
             except struct.error:
                 continue
+            except IndexError:
+                continue
 
             if header['apid'] == self.config.config['decoders'][self.config.yaml_key]['strip_payload_bct_ccsds']['apid']:
                 self.out_data.append(packet[strip_len:-1])

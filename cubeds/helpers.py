@@ -256,8 +256,7 @@ def get_apids(config):
     Returns list of apids from file specified in cfg file
     :return: list of apids
     """
-    csv_file = config.config['telemetry'][config.yaml_key]['packet_definitions']
-    csv_info = get_csv_info(csv_file)
+    csv_info = get_csv_info(config)
     apids = []
     for line in csv_info:
         if int(line['apid']) not in apids:

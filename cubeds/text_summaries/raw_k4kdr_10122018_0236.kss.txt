@@ -1,0 +1,2 @@
+==============================================================Info from raw_k4kdr_10122018_0236.kss processing:
+Found 13 AX.25 packets.Stitched together 5 CCSDS packetsFound 1 different APIDsExtracted telemetry from 5 packets==============================================================

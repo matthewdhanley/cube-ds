@@ -1,2 +1,2 @@
 ==============================================================Info from raw_sband_2018_354_09_54_15 processing:
-Found 976 potential VCDU packetsExtracted 943 CCSDS PacketsFound 8 different APIDsRemoved 107 corrupted packets with out of range data.Extracted telemetry from 0 packets==============================================================
+Found 976 potential VCDU packetsExtracted 943 CCSDS PacketsFound 8 different APIDsRemoved 107 corrupted packets with out of range data.Extracted telemetry from 831 packets==============================================================

@@ -1,2 +1,2 @@
 ==============================================================Info from raw_record_2018_346_10_44_01 processing:
-Found 565 AX.25 packets.Stitched together 256 CCSDS packetsFound 1 different APIDsExtracted telemetry from 200 packets==============================================================
+Found 565 AX.25 packets.Stitched together 256 CCSDS packetsFound 1 different APIDsExtracted telemetry from 256 packets==============================================================

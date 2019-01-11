@@ -1,0 +1,2 @@
+==============================================================Info from raw_CSIM_Beacon_Data_20181005_1008b.dat processing:
+Found 0 different APIDsNo data extracted.==============================================================
