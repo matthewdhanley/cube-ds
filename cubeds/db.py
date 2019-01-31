@@ -190,6 +190,9 @@ class Database:
         cur.close()
         self.cluster()
 
+    def get_cursor(self):
+        return self.conn.cursor()
+
     def cluster(self):
         cur = self.conn.cursor()
         cur.execute(self.cluster_cmd)
