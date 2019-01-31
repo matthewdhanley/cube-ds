@@ -32,8 +32,10 @@ class Decoder(cubeds.decoders.base.Decoder):
             try:
                 ccsds_header = cubeds.shared.extract_CCSDS_header(self.in_data[i])
             except IndexError:
+                i += 1
                 continue
             except struct.error:
+                i += 1
                 continue
             ccsds_header['index'] = i
             tmp_df = pd.DataFrame([ccsds_header], columns=ccsds_header.keys())
