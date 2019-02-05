@@ -1,8 +1,8 @@
 ---
 runtime:
   mission: csim
-  test: True
-  debug: False
+  test: False
+  debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
 
@@ -74,9 +74,13 @@ ingest_stats:
 
 satnogs:
   prod:
-    enabled: False
+    enabled: True
+    db_api_base_url: https://db.satnogs.org/api/telemetry/
+    norad_id: 43793
   test:
     enabled: False
+    db_api_base_url: https://db.satnogs.org/api/telemetry/
+    norad_id: 43793
 
 
 cleaning:

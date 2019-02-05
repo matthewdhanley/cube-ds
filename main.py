@@ -1,4 +1,5 @@
 from cubeds.cube_ds_3 import CubeDsRunner
+from satnogs.satnogs import Satnogs
 import cubeds
 import argparse
 
@@ -15,6 +16,7 @@ def parse_command_line_args():
     parser.add_argument('-m', '--mission', type=str, help="Specify specific mission using this parameter")
     parser.add_argument('-c', '--config', type=str,
                         help="Specifies what config file to use. If absent, cfg/example.cfg will be used")
+    parser.add_argument('-s', '--skipsatnogs', action="store_true", help="If present, the program will skip SatNOGS data retrieval")
 
     args = parser.parse_args()  # test bool will be stored in args.test
     return args
@@ -62,6 +64,10 @@ def main():
         mission = args.mission
     else:
         mission = None  # gonna get an error!
+
+    if config.config['satnogs'][config.yaml_key]['enabled'] and not args.skipsatnogs:
+        nogs = Satnogs(config)
+        nogs.save_satnogs_data()
 
     runner = CubeDsRunner(mission=mission,
                           verbose=verbose,
