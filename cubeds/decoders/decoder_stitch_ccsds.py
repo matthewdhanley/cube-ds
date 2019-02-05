@@ -49,14 +49,27 @@ class Decoder(cubeds.decoders.base.Decoder):
             return full_packets
     
         for seq in unique_seqs:
-            parts_df = full_df[full_df['sequence'] == seq]
+            parts_df = full_df[full_df['sequence'] == seq]  # grab all frames with this sequence
+
+            packet_unsegmented_ind = parts_df[parts_df['grouping_flags'] == 3]
+            if not packet_unsegmented_ind.empty:
+                unseg_inds = packet_unsegmented_ind['index'].values
+                for i, unseg_ind in enumerate(unseg_inds):
+                    length = packet_unsegmented_ind['length'].values[i] + packet_unsegmented_ind['header_length'].values[i] - 5
+                    packet = self.in_data[unseg_ind][0:length]
+                    full_packets.append(packet)
+                continue
+
+            # the grouping flag 1 means that it is the start of packet
             packet_beginning_ind = parts_df[parts_df['grouping_flags'] == 1]
             if packet_beginning_ind.empty:
-                self._logger.debug("No start of packet found")
-                continue
-    
+                self._logger.verbose("No start of packet found")
+                continue  # nothing we can do here.
+
+            # The grouping flag 0 means that it is a middle part of the packet
             packet_middle_inds = parts_df[parts_df['grouping_flags'] == 0]
-    
+
+            # 2 is the end of the packet
             packet_end_ind = parts_df[parts_df['grouping_flags'] == 2]
     
             start_ind = packet_beginning_ind['index'].values
@@ -70,17 +83,21 @@ class Decoder(cubeds.decoders.base.Decoder):
             packet = self.in_data[start_ind][0:length]
     
             if not packet_middle_inds.empty:
-                print("APPEND MIDDLE PACKETS")
-                exit(1)
+                middle_inds = packet_middle_inds['index'].values
+                for i, middle in enumerate(middle_inds):
+                    mid_length = packet_middle_inds['length'].values[i] + packet_middle_inds['header_length'].values[i]+1
+                    mid_data = self.in_data[middle][packet_middle_inds['header_length'].values[i]:mid_length]
+                    packet = np.append(
+                        packet, mid_data)
     
             if packet_end_ind.empty:
-                self._logger.debug("No end of packet found for sequence number "+str(seq))
+                self._logger.verbose("No end of packet found for sequence number "+str(seq))
                 full_packets.append(packet)
                 continue
     
             end_ind = packet_end_ind['index'].values
             if len(end_ind) > 1:
-                self._logger.debug("Multiple frame ends for sequnce number "+str(seq))
+                self._logger.verbose("Multiple frame ends for sequnce number "+str(seq))
                 self._logger.debug("using the first one.")
     
             end_ind = end_ind[0]

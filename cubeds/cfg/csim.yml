@@ -1,7 +1,7 @@
 ---
 runtime:
   mission: csim
-  test: False
+  test: True
   debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
@@ -106,7 +106,7 @@ process_log:
     location: C:\data-processing\processed_file_log.txt
     enabled: True
   test:
-    location: test\processed_file_log.txt
+    location: Y:\Phase_Development\CSIM FD\Computer Backup\WinD3782\data-processing\processed_file_log.txt
     enabled: False
 
 
