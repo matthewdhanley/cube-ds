@@ -181,7 +181,7 @@ class Decoder(cubeds.decoders.base.Decoder):
                     tlm_value = cubeds.helpers.extract_bits(int(tlm_value), startBit, length=extract_bits_length)
 
             else:
-                self._logger.error("DTYPE IS CHAR, WHY YOU NOT DECODE?")
+                self._logger.verbose("DTYPE is char?")
 
             # index into the struct and save the value for the tlm point
             if self.config.clean:

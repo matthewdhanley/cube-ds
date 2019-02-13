@@ -1,7 +1,7 @@
 ---
 runtime:
   mission: csim
-  test: True
+  test: False
   debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
@@ -25,11 +25,11 @@ save:
   postgresql:
     prod:
       enabled: True
-      dbname: telemetry
-      user: anon
-      password: anon$password
-      port: 3001
-      host: 10.247.14.214
+      dbname: csim
+      user: csim
+      password: csim123
+      port: 5432
+      host: ds-pg-db-csim-vm
     test:
       enabled: False
       dbname: test_telemetry
