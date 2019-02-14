@@ -6,6 +6,8 @@ import cubeds.config
 import cubeds.pylogger
 import psycopg2.extras
 import os
+import re
+import maidenhead as mh
 
 
 class Satnogs:
@@ -68,12 +70,20 @@ class Satnogs:
         :param conn: database connection as defined by DB section in config file
         :return: void
         """
-        cmd = """CREATE TABLE IF NOT EXISTS satnogs( 
-            observation_t TIMESTAMP,
-            observer VARCHAR,
-            PRIMARY KEY (observer, observation_t));"""
-
         cur = self.db.get_cursor()
+
+        cmd = """CREATE TABLE IF NOT EXISTS satnogs_observers( 
+                            observer VARCHAR,
+                            latitude FLOAT,
+                            longitude FLOAT,
+                            PRIMARY KEY (observer));"""
+
+        cur.execute(cmd)
+
+        cmd = """CREATE TABLE IF NOT EXISTS satnogs_observations( 
+            id SERIAL PRIMARY KEY,
+            observation_t TIMESTAMP,
+            observer VARCHAR REFERENCES satnogs_observers(observer));"""
         cur.execute(cmd)
         cur.close()
 
@@ -83,8 +93,10 @@ class Satnogs:
         :param csv_info: csv_info dict as returned by helpers.get_csv_info
         :return: nothing.
         """
-        insert_cmd = """INSERT INTO satnogs (observer, observation_t) VALUES %s ON CONFLICT DO NOTHING;"""
+        insert_cmd = """INSERT INTO satnogs_observations (observer, observation_t) VALUES %s ON CONFLICT DO NOTHING;"""
+        insert_observer = """INSERT INTO satnogs_observers (observer, latitude, longitude) VALUES %s ON CONFLICT DO NOTHING;"""
         insert_data = []
+        insert_observer_data = []
 
         self.db = cubeds.db.Database(self.config)
         self.db.connect()
@@ -96,9 +108,7 @@ class Satnogs:
             self.get_paginated_endpoint(min_time=min_date)
         except (psycopg2.ProgrammingError, TypeError):
             self._logger.info("Fetching all data from satnogs db. This might take a while . . .")
-            self.get_paginated_endpoint()
-
-
+            self.get_paginated_endpoint(max_entries=10)
 
         if self.data is not None:
             self._logger.info("Found "+str(len(self.data))+" SatNOGS Frames")
@@ -108,8 +118,16 @@ class Satnogs:
                     fout.write(
                         binascii.unhexlify(d['frame'])
                     )
-                    insert_data.append((d['observer'], d['timestamp']))
+                    m = re.search('(.*)-(\w\w\d\d\w\w)', d['observer'])
+                    qthlocator = m.groups(1)[1]
+                    observer = m.groups(1)[0]
+                    latitude, longitude = mh.toLoc(qthlocator)
+                    insert_data.append((observer, d['timestamp']))
+                    insert_observer_data.append((observer, str(latitude), str(longitude)))
                 cur = self.db.get_cursor()
+                psycopg2.extras.execute_values(
+                    cur, insert_observer, insert_observer_data, page_size=1000
+                )
                 psycopg2.extras.execute_values(
                     cur, insert_cmd, insert_data, page_size=1000
                 )

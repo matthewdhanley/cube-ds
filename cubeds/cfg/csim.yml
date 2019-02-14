@@ -1,7 +1,7 @@
 ---
 runtime:
   mission: csim
-  test: False
+  test: True
   debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
@@ -15,13 +15,6 @@ save:
     test:
       enabled: True
       file: tlm.csv
-  netcdf:
-    prod:
-      enabled: False
-      file: C:\data-processing\NetCDF\csim.nc
-    test:
-      enabled: False
-      file: test\csim.nc
   postgresql:
     prod:
       enabled: True
@@ -31,12 +24,12 @@ save:
       port: 5432
       host: ds-pg-db-csim-vm
     test:
-      enabled: False
-      dbname: test_telemetry
-      user: postgres
-      password: password
+      enabled: True
+      dbname: csim_dev
+      user: csim
+      password: csim123
       port: 5432
-      host: localhost
+      host: ds-pg-db-csim-vm
   vcdu_stats:
     prod:
       enabled: True
@@ -78,7 +71,7 @@ satnogs:
     db_api_base_url: https://db.satnogs.org/api/telemetry/
     norad_id: 43793
   test:
-    enabled: False
+    enabled: True
     db_api_base_url: https://db.satnogs.org/api/telemetry/
     norad_id: 43793
 
