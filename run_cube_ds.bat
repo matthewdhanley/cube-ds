@@ -3,7 +3,7 @@
 python "C:\data-processing\cube-ds\main.py"
 
 echo Starting idl processing
-idl -e csim_fd_parse_raw_record_files
+"C:\Program Files\Exelis\IDL85\bin\bin.x86\idl.exe" -e csim_fd_parse_raw_record_files
 
 echo IDL processing finished
 
