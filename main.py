@@ -17,10 +17,10 @@ def parse_command_line_args():
     parser.add_argument('-c', '--config', type=str,
                         help="Specifies what config file to use. If absent, cfg/example.cfg will be used")
     parser.add_argument('-s', '--skipsatnogs', action="store_true", help="If present, the program will skip SatNOGS data retrieval")
+    # parser.add_argument('-b', '--skiprundirs', action="store_true", help="If present, the program will skip processing of files")
 
     args = parser.parse_args()  # test bool will be stored in args.test
     return args
-
 
 
 def main():

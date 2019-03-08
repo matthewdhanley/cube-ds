@@ -1,0 +1,203 @@
+---
+runtime:
+  mission: csim
+  test: True
+  debug: True
+  verbose: False
+  epoch: 12/31/1999-23:59:23
+
+
+save:
+  csv:
+    prod:
+      enabled: True
+      file: tlm.csv
+    test:
+      enabled: True
+      file: tlm.csv
+  postgresql:
+    prod:
+      enabled: False
+      dbname: csim
+      user: user
+      password: pword
+      port: 5432
+      host: host
+    test:
+      enabled: False
+      dbname: csim_dev
+      user: user
+      password: pword
+      port: 5432
+      host: host
+  vcdu_stats:
+    prod:
+      enabled: False
+    test:
+      enabled: False
+  ccsds_stats:
+    prod:
+      enabled: False
+    test:
+      enabled: False
+  key: bct_tai_seconds
+
+
+ingest_stats:
+  prod:
+    text_file:
+      enabled: True
+    std_out:
+      enabled: True
+    slack:
+      enabled: False
+      key: xoxb-462801636821-509499870758-Kar1nBNWQGRCqt2PSMjiP1Hn​
+      channel: cube-ds-stats
+  test:
+    text_file:
+      enabled: True
+    std_out:
+      enabled: True
+    slack:
+      enabled: False
+      key: api-bot-token
+      channel: development
+
+
+
+satnogs:
+  prod:
+    enabled: False
+    db_api_base_url: https://db.satnogs.org/api/telemetry/
+    norad_id: 43793
+  test:
+    enabled: False
+    db_api_base_url: https://db.satnogs.org/api/telemetry/
+    norad_id: 43793
+
+
+cleaning:
+  prod:
+    enabled: False
+    min_time: 12/10/2018-00:00:00
+  test:
+    enabled: True
+    min_time: 12/10/2018-00:00:00
+
+
+rundirs:
+  prod:
+    location:
+      - C:\csim\Rundirs
+  test:
+    location:
+      - cubeds\test\debug_data
+
+
+process_log:
+  prod:
+    location: C:\data-processing\processed_file_log.txt
+    enabled: True
+  test:
+    location: U:\processed_file_log.txt
+    enabled: True
+
+
+telemetry:
+  prod:
+    packet_definitions: var\packet_defs.csv
+    encoding: utf-8-sig
+  test:
+    packet_definitions: var\packet_defs.csv
+    encoding: utf-8-sig
+
+decoders:
+  max_priority: 100
+  prod:
+    decoder_vcdu:
+      regex:
+      - .*band.*
+      frame_size: 2048  # size of a vcdu frame
+      priority: 1
+
+    strip_payload_bct_ccsds:
+      regex:
+      - .*
+      priority: 5
+      strip_len: 12  # size of a bct header
+      apid: 255   # bct apid when payload data
+
+    decoder_vcdu_to_ccsds:
+      regex:
+      - .*band.*
+      header_length: 6
+      priority: 2
+
+    decoder_ax25:
+      regex:
+      - .*raw_record.*
+      - .*\.kss
+      priority: 3
+      frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
+      header_length: 16
+
+    decoder_kiss:
+      regex:
+      - .*\.kss
+      priority: 4
+
+    decoder_ccsds:
+      regex:
+      - .*
+      priority: 7
+
+    decoder_stitch_ccsds:
+      regex:
+      - .*\.kss
+      - .*raw_record.*
+      priority: 6
+
+  test:
+    decoder_vcdu:
+      regex:
+      - .*band.*
+      frame_size: 2048  # size of a vcdu frame
+      priority: 1
+
+    strip_payload_bct_ccsds:
+      regex:
+      - .*
+      priority: 5
+      strip_len: 12  # size of a bct header
+      apid: 255   # bct apid when payload data
+
+    decoder_vcdu_to_ccsds:
+      regex:
+      - .*band.*
+      header_length: 6
+      priority: 2
+
+    decoder_ax25:
+      regex:
+      - .*raw.*
+      - .*\.kss
+      priority: 3
+      frame: 84 86 A8 40 40 40 60 86 A6 92 9A 40 40 E1 03 F0
+      header_length: 16
+
+    decoder_kiss:
+      regex:
+      - .*\.kss
+      priority: 4
+
+    decoder_ccsds:
+      regex:
+        - .*
+      priority: 7
+
+    decoder_stitch_ccsds:
+      regex:
+      - .*\.kss
+      - .*raw_record.*
+      priority: 6
+...
