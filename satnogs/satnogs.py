@@ -57,7 +57,7 @@ class Satnogs:
         Gets latest frame in local satnogs database
         :return: datetime object of last time
         """
-        cmd = "SELECT observation_t FROM satnogs ORDER BY observation_t DESC LIMIT 1;"
+        cmd = "SELECT observation_t FROM satnogs_observations ORDER BY observation_t DESC LIMIT 1;"
         cur = self.db.get_cursor()
         cur.execute(cmd)
         date = cur.fetchone()[0]
@@ -108,7 +108,7 @@ class Satnogs:
             self.get_paginated_endpoint(min_time=min_date)
         except (psycopg2.ProgrammingError, TypeError):
             self._logger.info("Fetching all data from satnogs db. This might take a while . . .")
-            self.get_paginated_endpoint(max_entries=10)
+            self.get_paginated_endpoint()
 
         if self.data is not None:
             self._logger.info("Found "+str(len(self.data))+" SatNOGS Frames")

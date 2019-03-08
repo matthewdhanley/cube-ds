@@ -1,2 +1,2 @@
 ==============================================================Info from raw_record_2018_354_22_14_14 processing:
-Found 1263 AX.25 packets.Stitched together 333 CCSDS packetsFound 1 different APIDsExtracted telemetry from 333 packets==============================================================
+Found 1263 AX.25 packets.Stitched together 849 CCSDS packetsFound 5 different APIDsRemoved 2 corrupted packets with out of range data.Extracted telemetry from 846 packets==============================================================

@@ -1,7 +1,7 @@
 ---
 runtime:
   mission: csim
-  test: True
+  test: False
   debug: True
   verbose: False
   epoch: 12/31/1999-23:59:23
@@ -78,7 +78,7 @@ satnogs:
 
 cleaning:
   prod:
-    enabled: True
+    enabled: False
     min_time: 12/10/2018-00:00:00
   test:
     enabled: True

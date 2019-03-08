@@ -11,7 +11,7 @@ def extract_CCSDS_header(packet_data):
     zeros = cubeds.helpers.bitstring_to_int(cubeds.helpers.extract_bits_from_bytes(bytes([header[0]]), 5, 3))
     apid_lsb = struct.unpack('>B', header[1])[0]
     grouping_flags = cubeds.helpers.bitstring_to_int(cubeds.helpers.extract_bits_from_bytes(bytes([header[2]]), 0, 2))
-    seq_count = cubeds.helpers.bitstring_to_int(cubeds.helpers.extract_bits_from_bytes(bytes(header[2:4]), 2, 13))
+    seq_count = cubeds.helpers.bitstring_to_int(cubeds.helpers.extract_bits_from_bytes(bytes(header[2:4]), 2, 15))
     packet_length = struct.unpack('>H', header[4:6])[0]
     if secondary_hdr:
         header_length = 12  # this isn't necessarily true ...

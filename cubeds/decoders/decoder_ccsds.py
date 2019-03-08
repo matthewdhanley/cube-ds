@@ -29,7 +29,9 @@ class Decoder(cubeds.decoders.base.Decoder):
         the main function. THIS FUNCTION SHALL SET `self.out_data' equal to a list with packets.
         """
         self.sort_packets()
-        self.stats.add_stat("Found "+str(len(self.packets))+" different APIDs")
+        self.stats.add_stat("Found "+str(len(self.packets))+" different APIDs:")
+        for apid in self.packets:
+            self.stats.add_stat(str(apid))
         self.extract_tlm_from_sorted_packets()
         self.tlm_to_df()
         try:

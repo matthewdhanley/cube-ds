@@ -50,7 +50,7 @@ class Decoder(cubeds.decoders.base.Decoder):
     
         for seq in unique_seqs:
             parts_df = full_df[full_df['sequence'] == seq]  # grab all frames with this sequence
-
+            self._logger.debug(parts_df)
             packet_unsegmented_ind = parts_df[parts_df['grouping_flags'] == 3]
             if not packet_unsegmented_ind.empty:
                 unseg_inds = packet_unsegmented_ind['index'].values
@@ -61,6 +61,8 @@ class Decoder(cubeds.decoders.base.Decoder):
                 continue
 
             # the grouping flag 1 means that it is the start of packet
+            # self._logger.debug(seq)
+            # self._logger.debug(len(parts_df))
             packet_beginning_ind = parts_df[parts_df['grouping_flags'] == 1]
             if packet_beginning_ind.empty:
                 self._logger.verbose("No start of packet found")
